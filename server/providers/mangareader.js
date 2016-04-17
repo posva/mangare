@@ -10,7 +10,7 @@ const reChapters = /class="chico_manga".*\n?<a +href="([^"]+)[^>]*>[^<]+<.a> : (
 const reChapterPage = /id="img"[^>]*src="([^"]+)/i
 // const reNextPage = /<a[^>]*href="([^"]+)"[^>]*>next/i
 const reChapterAllPages = /id="selectpage".*\n(?:.*<option.*\n)*/i
-const reChapterSinglePage = /<option[^>]*value="([^"]+)".*\n/
+const reChapterSinglePage = /<option[^>]*value="([^"]+)".*\n/gi
 
 let mangaReader = {
   host: host,
@@ -107,8 +107,8 @@ let mangaReader = {
           uri: match[1],
           image: reChapterPage.exec(data)[1]
         })
-        match = reChapterSinglePage.exec(pagesText)
         let index = 0
+        match = reChapterSinglePage.exec(pagesText)
         while (match) {
           ++index
           pages.push({
@@ -120,7 +120,7 @@ let mangaReader = {
         pages.forEach((page, index) => {
           // We already got first image
           if (index > 0) {
-            imagesPromises.push(new Promise((resolve, reject) =>
+            imagesPromises.push(new Promise((resolve, reject) => {
               request.get(`${host}${page.uri}`, (err, response, data) => {
                 if (err) {
                   pages[index].image = null
@@ -128,9 +128,8 @@ let mangaReader = {
                   pages[index].image = reChapterPage.exec(data)[1]
                 }
                 resolve()
-              })))
-          } else {
-            pages[index].image = null
+              })
+            }))
           }
         })
         // Wait for all request to end

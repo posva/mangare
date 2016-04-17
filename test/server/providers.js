@@ -1,5 +1,6 @@
 /*global describe it before :true*/
 'use strict'
+const should = require('should')
 const nock = require('nock')
 const path = require('path')
 
@@ -29,6 +30,13 @@ describe('Providers', () => {
     nock(mangareader.host)
     .get(chapterFromList.uri)
     .replyWithFile(200, path.join(__dirname, './fixtures/mangareader/naruto-1.html'))
+
+    // All pages
+    for (let i = 1; i < 54; ++i) {
+      nock(mangareader.host)
+      .get(`${chapterFromList.uri}/${i}`)
+      .replyWithFile(200, path.join(__dirname, `./fixtures/mangareader/naruto-${i}.html`))
+    }
   })
 
   it('should get the list of mangas', done => {
@@ -62,12 +70,14 @@ describe('Providers', () => {
     .catch(done)
   })
 
-  it.skip('should get a specific chapter', done => {
+  it('should get a specific chapter', done => {
     mangareader.getPages(chapterFromList)
     .then(pages => {
       pages.forEach(page => {
         page.should.have.property('uri')
+        should(page.uri).be.ok()
         page.should.have.property('image')
+        should(page.image).be.ok()
       })
       done()
     })
