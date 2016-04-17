@@ -1,40 +1,43 @@
 const restify = require('restify')
+const restifyMongoose = require('restify-mongoose')
 const mongoose = require('mongoose')
 const Manga = require('./models/manga')
 
 const mangareader = require('./providers/mangareader.js')
 const prettyHrtime = require('pretty-hrtime')
 
-process.env.PORT = process.env.PORT || 8080
+process.env.PORT = process.env.PORT || 8090
 const server = restify.createServer()
+
+server.use(restify.acceptParser(server.acceptable))
+server.use(restify.queryParser())
+server.use(restify.bodyParser())
+
+server.get('/mangas', (req, res, next) => {
+  Manga.find({}, {
+    name: true,
+    completed: true
+  }, (err, mangas) => {
+    if (err) return next(err)
+    res.send(mangas)
+    next()
+  })
+})
+
+const manga = restifyMongoose(Manga)
+
+server.get('/mangas/:id', manga.detail())
 
 mongoose.connect('mongodb://localhost/mangare')
 const db = mongoose.connection
 
-server.get(/\/$/, restify.serveStatic({
-  directory: './public',
-  default: 'index.html'
-}))
-
-server.get(/\/images\/?.*/, restify.serveStatic({
-  directory: './public'
-}))
-
-server.get('/hello', (req, res, next) => {
-  res.send({
-    msg: 'Hello'
-  })
-  next()
-})
-
-server.get(/\/docs\/current\/?.*/, restify.serveStatic({
-  directory: './documentation/v1',
-  default: 'index.html'
-}))
-
 db.on('error', console.error.bind(console, 'connection error:'))
 
 db.once('open', () => {
+  server.listen(process.env.PORT, () => {
+    console.log(`Listening on ${process.env.PORT}`)
+  })
+  if (true) return
   console.log('Mongoose started')
   const start = process.hrtime()
   mangareader.getList()
@@ -46,7 +49,4 @@ db.once('open', () => {
     .catch((err) => {
       console.error(err)
     })
-  server.listen(process.env.PORT, () => {
-    console.log(`Listening on ${process.env.PORT}`)
-  })
 })

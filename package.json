@@ -21,7 +21,8 @@
     "mongoose": "^4.4.12",
     "pretty-hrtime": "^1.0.2",
     "request": "^2.71.0",
-    "restify": "^4.0.4"
+    "restify": "^4.0.4",
+    "restify-mongoose": "^0.2.6"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
@@ -62,6 +63,7 @@
     "karma-webpack": "^1.7.0",
     "lolex": "^1.4.0",
     "mocha": "^2.4.5",
+    "mocha-mongoose": "^1.2.0",
     "nightwatch": "^0.8.18",
     "nock": "^8.0.0",
     "ora": "^0.2.0",

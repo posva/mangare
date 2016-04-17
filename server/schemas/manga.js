@@ -1,11 +1,11 @@
 'use strict'
 const mongoose = require('mongoose')
-// const uniqueValidator = require('mongoose-unique-validator')
 const prettyHrtime = require('pretty-hrtime')
 const _ = require('lodash')
 
 let mangaSchema = mongoose.Schema({
   name: String,
+  image: String,
   uri: {
     type: String,
     required: true,
@@ -71,7 +71,5 @@ mangaSchema.statics.populateMangaList = function (mangaList) {
     })
   })
 }
-
-// mangaSchema.plugin(uniqueValidator)
 
 module.exports = mangaSchema
