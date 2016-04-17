@@ -1,4 +1,4 @@
-import Search from './components/Hello'
+import Search from './views/Search'
 
 export default function configRouter (router) {
   router.map({

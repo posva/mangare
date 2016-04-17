@@ -1,5 +1,5 @@
 <template>
-  <div id="default-app">
+  <div id="mangare">
     <img class="logo" src="./assets/logo.png">
     <a v-link="{ name: 'search' }">Go to Search</a>
     <hello></hello>
@@ -46,7 +46,7 @@ body {
   height: 100%;
 }
 
-#default-app {
+#mangare {
   color: #2c3e50;
   margin-top: -100px;
   max-width: 600px;
@@ -54,7 +54,7 @@ body {
   text-align: center;
 }
 
-#default-app a {
+#mangare a {
   color: #42b983;
   text-decoration: none;
 }

@@ -1,6 +1,8 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <h1>Search</h1>
+    <input v-model="searchQuery" @change="updateQuery">
+    <p>Results for {{ searchQuery }}</p>
   </div>
 </template>
 
@@ -8,12 +10,22 @@
 export default {
   data () {
     return {
-      // note: changing this line won't causes changes
-      // with hot-reload because the reloaded component
-      // preserves its current state and we are modifying
-      // its initial state.
-      msg: 'Hello World!'
+      searchQuery: ''
     }
+  },
+  methods: {
+    updateQuery () {
+      this.$router.go({
+        replace: true,
+        name: 'search',
+        query: {
+          query: this.searchQuery
+        }
+      })
+    }
+  },
+  created () {
+    this.searchQuery = this.$route.query.query || ''
   }
 }
 </script>
