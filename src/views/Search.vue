@@ -3,6 +3,9 @@
     <h1>Search</h1>
     <input v-model="searchQuery" @change="updateQuery">
     <p>Results for {{ searchQuery }}</p>
+    <ul>
+      <li v-for="manga in mangaList | filterBy searchQuery in 'name' | limitBy 10">{{ manga.name }}</li>
+    </ul>
   </div>
 </template>
 
@@ -10,6 +13,7 @@
 export default {
   data () {
     return {
+      mangaList: [],
       searchQuery: ''
     }
   },
@@ -26,6 +30,18 @@ export default {
   },
   created () {
     this.searchQuery = this.$route.query.query || ''
+  },
+  route: {
+    activate (transition) {
+      this.$http.get('/mangas')
+      .then((response) => {
+        this.mangaList = response.data
+        transition.next()
+      }, (response) => {
+        console.error('Cannot retrieve manga: ', response)
+        transition.abort()
+      })
+    }
   }
 }
 </script>

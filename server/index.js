@@ -1,32 +1,38 @@
-const restify = require('restify')
-const restifyMongoose = require('restify-mongoose')
+const path = require('path')
+const express = require('express')
 const mongoose = require('mongoose')
-const Manga = require('./models/manga')
-
-const mangareader = require('./providers/mangareader.js')
 const prettyHrtime = require('pretty-hrtime')
+const webpackMiddleware = require('../build/dev-server')
 
-process.env.PORT = process.env.PORT || 8090
-const server = restify.createServer()
+const Manga = require('./models/manga')
+const mangareader = require('./providers/mangareader.js')
 
-server.use(restify.acceptParser(server.acceptable))
-server.use(restify.queryParser())
-server.use(restify.bodyParser())
+process.env.PORT = process.env.PORT || 8080
+// const server = restify.createServer()
+const app = express()
 
-server.get('/mangas', (req, res, next) => {
+app.get('/mangas', (req, res) => {
   Manga.find({}, {
     name: true,
     completed: true
   }, (err, mangas) => {
-    if (err) return next(err)
+    if (err) return res.send(err)
     res.send(mangas)
-    next()
   })
 })
 
-const manga = restifyMongoose(Manga)
+// const manga = restifyMongoose(Manga)
 
-server.get('/mangas/:id', manga.detail())
+// server.get('/mangas/:id', manga.detail())
+app.get('/mangas/:id', (req, res) => {
+  Manga.findById(req.params.id, (err, manga) => {
+    if (err) res.send(err)
+    res.send(manga)
+  })
+})
+
+// XXX don't use this in production
+webpackMiddleware(app, express.static('./static'))
 
 mongoose.connect('mongodb://localhost/mangare')
 const db = mongoose.connection
@@ -34,9 +40,6 @@ const db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
 
 db.once('open', () => {
-  server.listen(process.env.PORT, () => {
-    console.log(`Listening on ${process.env.PORT}`)
-  })
   if (true) return
   console.log('Mongoose started')
   const start = process.hrtime()
@@ -50,3 +53,8 @@ db.once('open', () => {
       console.error(err)
     })
 })
+
+module.exports = app.listen(process.env.PORT, () => {
+  console.log(`Listening on ${process.env.PORT}`)
+})
+
