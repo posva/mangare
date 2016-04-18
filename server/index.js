@@ -8,10 +8,9 @@ const Manga = require('./models/manga')
 const mangareader = require('./providers/mangareader.js')
 
 process.env.PORT = process.env.PORT || 8080
-// const server = restify.createServer()
 const app = express()
 
-app.get('/mangas', (req, res) => {
+app.get('/api/mangas', (req, res) => {
   Manga.find({}, {
     name: true,
     completed: true
@@ -21,10 +20,7 @@ app.get('/mangas', (req, res) => {
   })
 })
 
-// const manga = restifyMongoose(Manga)
-
-// server.get('/mangas/:id', manga.detail())
-app.get('/mangas/:id', (req, res) => {
+app.get('/api/mangas/:id', (req, res) => {
   Manga.findById(req.params.id, (err, manga) => {
     if (err) res.send(err)
     res.send(manga)

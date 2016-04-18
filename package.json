@@ -6,7 +6,7 @@
   "index": "server/index.js",
   "private": true,
   "scripts": {
-    "dev": "node build/dev-server.js",
+    "dev": "nodemon -w server server/index.js",
     "build": "node build/build.js",
     "unit": "npm run unit:client && npm run unit:server",
     "unit:client": "karma start test/unit/karma.conf.js --single-run",
@@ -76,6 +76,7 @@
     "vue-hot-reload-api": "^1.2.0",
     "vue-html-loader": "^1.0.0",
     "vue-loader": "^8.2.1",
+    "vue-progressbar": "^0.2.4",
     "vue-resource": "^0.7.0",
     "vue-router": "^0.7.13",
     "vue-style-loader": "^1.0.0",

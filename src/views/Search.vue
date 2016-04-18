@@ -1,10 +1,12 @@
 <template>
-  <div class="hello">
+  <div>
     <h1>Search</h1>
     <input v-model="searchQuery" @change="updateQuery">
     <p>Results for {{ searchQuery }}</p>
     <ul>
-      <li v-for="manga in mangaList | filterBy searchQuery in 'name' | limitBy 10">{{ manga.name }}</li>
+      <li v-for="manga in mangaList | filterBy searchQuery in 'name' | limitBy 10">
+        <a v-link="mangaRoute(manga)">{{ manga.name }}</a>
+      </li>
     </ul>
   </div>
 </template>
@@ -18,6 +20,14 @@ export default {
     }
   },
   methods: {
+    mangaRoute (manga) {
+      return {
+        name: 'manga',
+        params: {
+          mangaId: manga._id
+        }
+      }
+    },
     updateQuery () {
       this.$router.go({
         replace: true,
@@ -33,7 +43,7 @@ export default {
   },
   route: {
     activate (transition) {
-      this.$http.get('/mangas')
+      this.$http.get('/api/mangas')
       .then((response) => {
         this.mangaList = response.data
         transition.next()
@@ -45,10 +55,3 @@ export default {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1 {
-  color: #42b983;
-}
-</style>

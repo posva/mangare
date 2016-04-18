@@ -1,5 +1,6 @@
 <template>
   <div id="mangare">
+    <vue-progress v-ref:progress :percent.sync="progress.percent" :options="progress.options"></vue-progress>
     <h1>Mangare</h1>
     <a v-link="{ path: '/' }">Home</a>
     <a v-link="{ name: 'search' }">Search</a>
@@ -8,11 +9,28 @@
 </template>
 
 <script>
-import Hello from './components/Hello'
+import VueProgress from 'vue-progressbar/vue-progressbar.vue'
 
 export default {
+  data () {
+    return {
+      progress: {
+        percent: 0,
+        options: {
+          show: true,
+          canSuccess: true,
+          color: 'rgb(32, 161, 255)',
+          failedColor: 'red',
+          height: '2px'
+        }
+      }
+    }
+  },
   components: {
-    Hello
+    VueProgress
+  },
+  ready () {
+    this.$progress.setHolder(this.$refs.progress)
   }
 }
 </script>
