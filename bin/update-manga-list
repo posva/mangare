@@ -1,0 +1,17 @@
+#! /app/bin/node
+const mongoose = require('mongoose')
+const tasks = require('../server/tasks')
+
+mongoose.connect(process.env.MONGODB_URI)
+const db = mongoose.connection
+
+db.on('error', console.error.bind(console, 'MongoDB error:'))
+db.once('open', () => {
+  tasks.updateMangaList()
+  .then(process.exit.bind(process))
+  .catch((err) => {
+    console.log('ERROR', err)
+    process.exit()
+  })
+})
+

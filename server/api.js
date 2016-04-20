@@ -27,16 +27,13 @@ module.exports = {
       if (!manga) return res.status(404).send('Manga not found')
 
       var chapter = manga.chapters[req.params.index]
-      console.log('chapter', chapter)
       if (!chapter) {
         return res.status(404).send(`Chapter ${req.params.index} doesn't exist`)
       }
-      console.log(!chapter.pages.length)
       if (!chapter.pages.length) {
         mangareader.getPages(chapter)
         .then((pages) => {
           chapter.pages = pages
-          console.log('pages', pages)
           manga.save()
           manga.chapter = chapter
           delete manga.chapters
@@ -66,7 +63,6 @@ module.exports = {
       if (manga.image == null) {
         mangareader.getManga(manga)
         .then((mangaData) => {
-          console.log(mangaData)
           Object.assign(manga, mangaData)
           manga.save()
           res.send(manga)

@@ -1,8 +1,5 @@
-const path = require('path')
 const express = require('express')
 const mongoose = require('mongoose')
-const _ = require('lodash')
-const prettyHrtime = require('pretty-hrtime')
 
 const Manga = require('./models/manga')
 const mangareader = require('./providers/mangareader')
@@ -28,25 +25,13 @@ if (process.env.NODE_ENV !== 'production' &&
 }
 
 process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/mangare'
-console.log(`Connecting on mongo to ${process.env.MONGOLAB_URI}`)
 mongoose.connect(process.env.MONGODB_URI)
 const db = mongoose.connection
 
 db.on('error', console.error.bind(console, 'connection error:'))
 
 db.once('open', () => {
-  if (true) return
-  console.log('Mongoose started')
-  const start = process.hrtime()
-  mangareader.getList()
-    .then((mangaList) => Manga.populateMangaList(mangaList))
-    .then((data) => {
-      const end = process.hrtime(start)
-      console.log(`Took ${prettyHrtime(end)} to get and populate(${data.time}) manga list(${data.data.insertedCount})`)
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+  console.log(`MongoDB started on ${process.env.MONGOLAB_URI}`)
 })
 
 module.exports = app.listen(process.env.PORT, () => {
