@@ -2,6 +2,7 @@
 const mongoose = require('mongoose')
 const prettyHrtime = require('pretty-hrtime')
 const _ = require('lodash')
+const chapterSchema = require('../schemas/chapter')
 
 let mangaSchema = mongoose.Schema({
   name: String,
@@ -14,15 +15,10 @@ let mangaSchema = mongoose.Schema({
   },
   completed: Boolean,
   updatedAt: Date,
-  chapters: [{
-    index: Number,
-    uri: String,
-    name: String,
-    pages: [{
-      uri: String,
-      image: String
-    }]
-  }]
+  chapters: {
+    type: [chapterSchema],
+    default: []
+  }
 }, {
   autoIndex: true
 })

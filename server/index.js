@@ -1,34 +1,31 @@
 const path = require('path')
 const express = require('express')
 const mongoose = require('mongoose')
+const _ = require('lodash')
 const prettyHrtime = require('pretty-hrtime')
 const webpackMiddleware = require('../build/dev-server')
 
 const Manga = require('./models/manga')
-const mangareader = require('./providers/mangareader.js')
+const mangareader = require('./providers/mangareader')
+
+const api = require('./api')
 
 process.env.PORT = process.env.PORT || 8080
 const app = express()
 
-app.get('/api/mangas', (req, res) => {
-  Manga.find({}, {
-    name: true,
-    completed: true
-  }, (err, mangas) => {
-    if (err) return res.send(err)
-    res.send(mangas)
-  })
-})
-
-app.get('/api/mangas/:id', (req, res) => {
-  Manga.findById(req.params.id, (err, manga) => {
-    if (err) res.send(err)
-    res.send(manga)
-  })
-})
+app.get('/api/mangas', api.mangaList)
+app.get('/api/mangas/:id/chapters/:index', api.mangaChapter)
+app.get('/api/mangas/:id', api.mangaDetail)
 
 // XXX don't use this in production
-webpackMiddleware(app, express.static('./static'))
+if (process.env.ENV !== 'production' &&
+    process.env.ENV !== 'debug' &&
+    process.env.ENV !== 'test'
+   ) {
+  webpackMiddleware(app, express.static('./static'))
+} else {
+  app.use('/', express.static('./dist'))
+}
 
 mongoose.connect('mongodb://localhost/mangare')
 const db = mongoose.connection

@@ -64,13 +64,9 @@ let mangaReader = {
           reject('wrong status')
         }
         let manga = {}
-        manga.name = reName.exec(data)[1]
+        manga.name = reName.exec(data)[1].trim()
         if (mangaDescriptor.name !== manga.name) {
-          reject({
-            error: 'Bad Name',
-            name: mangaDescriptor.name,
-            realName: manga.name
-          })
+          console.log(`Warning: Manga name missmatch: "${manga.name}" !=== "${mangaDescriptor.name}"`)
         }
         manga.image = reMangaImage.exec(data)[1]
         manga.alternate = reAlternateName.exec(data)
