@@ -27,7 +27,8 @@ if (process.env.ENV !== 'production' &&
   app.use('/', express.static('./dist'))
 }
 
-mongoose.connect('mongodb://localhost/mangare')
+process.env.MONGOLAB_URI = process.env.MONGOLAB_URI || 'mongodb://localhost/mangare'
+mongoose.connect(process.env.MONGOLAB_URI)
 const db = mongoose.connection
 
 db.on('error', console.error.bind(console, 'connection error:'))
