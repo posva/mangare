@@ -3,7 +3,6 @@ const express = require('express')
 const mongoose = require('mongoose')
 const _ = require('lodash')
 const prettyHrtime = require('pretty-hrtime')
-const webpackMiddleware = require('../build/dev-server')
 
 const Manga = require('./models/manga')
 const mangareader = require('./providers/mangareader')
@@ -22,6 +21,7 @@ if (process.env.ENV !== 'production' &&
     process.env.ENV !== 'debug' &&
     process.env.ENV !== 'test'
    ) {
+  const webpackMiddleware = require('../build/dev-server')
   webpackMiddleware(app, express.static('./static'))
 } else {
   app.use('/', express.static('./dist'))
