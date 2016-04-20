@@ -4,6 +4,9 @@
   "description": "Download Manga",
   "author": "Eduardo San Martin Morote <posva13@gmail.com>",
   "index": "server/index.js",
+  "engines": {
+    "node": "5.x"
+  },
   "private": true,
   "scripts": {
     "dev": "nodemon -w server server/index.js",

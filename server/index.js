@@ -17,9 +17,9 @@ app.get('/api/mangas/:id/chapters/:index', api.mangaChapter)
 app.get('/api/mangas/:id', api.mangaDetail)
 
 // XXX don't use this in production
-if (process.env.ENV !== 'production' &&
-    process.env.ENV !== 'debug' &&
-    process.env.ENV !== 'test'
+if (process.env.NODE_ENV !== 'production' &&
+    process.env.NODE_ENV !== 'debug' &&
+    process.env.NODE_ENV !== 'testing'
    ) {
   const webpackMiddleware = require('../build/dev-server')
   webpackMiddleware(app, express.static('./static'))
@@ -28,6 +28,7 @@ if (process.env.ENV !== 'production' &&
 }
 
 process.env.MONGOLAB_URI = process.env.MONGOLAB_URI || 'mongodb://localhost/mangare'
+console.log(`Connecting on mongo to ${process.env.MONGOLAB_URI}`)
 mongoose.connect(process.env.MONGOLAB_URI)
 const db = mongoose.connection
 
