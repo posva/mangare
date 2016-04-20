@@ -1,4 +1,4 @@
-#! /app/bin/node
+#!/usr/bin/env node
 const mongoose = require('mongoose')
 const tasks = require('../server/tasks')
 
