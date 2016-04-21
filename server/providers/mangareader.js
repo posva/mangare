@@ -29,9 +29,9 @@ let mangaReader = {
       request.get(this.getListURL(), (err, response, data) => {
         let p1, p2, text
         if (err) {
-          reject(err)
+          return reject(err)
         } else if (response.statusCode !== 200) {
-          reject('wrong status')
+          return reject('wrong status')
         }
         p1 = data.indexOf('class="content_bloc2"')
         p2 = data.indexOf('id="adfooter"')
@@ -59,9 +59,9 @@ let mangaReader = {
     return new Promise((resolve, reject) => {
       request.get(this.getMangaURL(mangaDescriptor), (err, response, data) => {
         if (err) {
-          reject(err)
+          return reject(err)
         } else if (response.statusCode !== 200) {
-          reject('wrong status')
+          return reject('wrong status')
         }
         let manga = {}
         manga.name = reName.exec(data)[1].trim()
@@ -92,9 +92,9 @@ let mangaReader = {
     return new Promise((resolve, reject) => {
       request.get(this.getChapterURL(chapterDescriptor), (err, response, data) => {
         if (err) {
-          reject(err)
+          return reject(err)
         } else if (response.statusCode !== 200) {
-          reject('wrong status')
+          return reject('wrong status')
         }
         let pages = []
 

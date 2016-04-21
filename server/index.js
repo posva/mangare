@@ -10,7 +10,7 @@ process.env.PORT = process.env.PORT || 8080
 const app = express()
 
 app.get('/api/mangas', api.mangaList)
-app.get('/api/mangas/:id/chapters/:index', api.mangaChapter)
+app.get('/api/mangas/:id/chapters/:chapterId', api.mangaChapter)
 app.get('/api/mangas/:id', api.mangaDetail)
 
 // XXX don't use this in production

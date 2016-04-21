@@ -86,13 +86,13 @@ describe('API', () => {
       doc.chapters.should.have.length(0)
 
       sinon.spy(mangareader, 'getManga')
-      api.mangaDetail({params: {id: doc._id.toString()}}, {send (mangaDetail) {
+      api.mangaDetail({params: {id: doc._id}}, {send (mangaDetail) {
         mangareader.getManga.callCount.should.be.eql(1)
         should(mangaDetail).be.ok()
         mangaDetail.image.should.be.ok()
         mangaDetail.chapters.length.should.be.eql(700)
 
-        api.mangaDetail({params: {id: doc._id.toString()}}, {send (mangaDetail) {
+        api.mangaDetail({params: {id: doc._id}}, {send (mangaDetail) {
           mangareader.getManga.callCount.should.be.eql(1)
           should(mangaDetail).be.ok()
           mangaDetail.image.should.be.ok()
@@ -123,20 +123,30 @@ describe('API', () => {
     manga.save((err, doc) => {
       if (err)
         return done(err)
-      api.mangaDetail({params: {id: doc._id.toString()} }, { send() {
+      api.mangaDetail({params: {id: doc._id} }, { send(mangaDetail) {
         sinon.spy(mangareader, 'getPages')
-        api.mangaChapter({params: {id: doc._id.toString(), index: 0}}, {send (chapter) {
+        const req = {
+          params: {
+            id: mangaDetail._id,
+            chapterId: mangaDetail.chapters[0]._id
+          }
+        }
+        api.mangaChapter(req, {send (chapter) {
           mangareader.getPages.calledOnce.should.be.true()
           should(chapter).be.ok()
-          chapter.should.have.property('name')
+          should(chapter._id).be.ok()
+          chapter.name.should.be.ok()
           chapter.uri.should.be.ok()
           chapter.pages.length.should.be.eql(53)
-          api.mangaChapter({params: {id: doc._id.toString(), index: 0}}, {send (chapter) {
+
+          api.mangaChapter(req, {send (chapter) {
             mangareader.getPages.calledOnce.should.be.true()
             should(chapter).be.ok()
-            chapter.should.have.property('name')
+            should(chapter._id).be.ok()
+            chapter.name.should.be.ok()
             chapter.uri.should.be.ok()
             chapter.pages.length.should.be.eql(53)
+
             done()
           }, status () { return this }})
         }, status () { return this }})
