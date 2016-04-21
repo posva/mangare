@@ -3,13 +3,13 @@
     <h1>{{ manga.name }}</h1>
     <img v-if="manga.image" :src="manga.image">
     <p>{{ manga.chapters.length }} chapters</p>
-    <ul>
-      <li v-for="chapter in manga.chapters">{{ chapter.name }}</li>
-    </ul>
+    <chapter v-for="chapter in manga.chapters" :chapter="chapter"></chapter>
   </div>
 </template>
 
 <script>
+import Chapter from '../components/Chapter'
+
 export default {
   data () {
     return {
@@ -32,6 +32,9 @@ export default {
         transition.abort()
       })
     }
+  },
+  components: {
+    Chapter
   }
 }
 </script>
