@@ -84,7 +84,6 @@ describe('API', () => {
       doc.should.have.property('completed', mangaFromList.completed)
       should(doc.image).not.be.ok()
       doc.chapters.should.have.length(0)
-      debugger
 
       sinon.spy(mangareader, 'getManga')
       api.mangaDetail({params: {id: doc._id.toString()}}, {send (mangaDetail) {
@@ -102,6 +101,47 @@ describe('API', () => {
           manga.remove(done)
         }})
       }})
+    })
+  })
+
+  it('populates chapters pages only on first access', (done) => {
+    nock(mangareader.host)
+    .get(mangaFromList.uri)
+    .replyWithFile(200, path.join(__dirname, './fixtures/mangareader/naruto.html'))
+    nock(mangareader.host)
+    .get(chapterFromList.uri)
+    .replyWithFile(200, path.join(__dirname, './fixtures/mangareader/naruto-1.html'))
+
+    // All pages
+    for (let i = 1; i < 54; ++i) {
+      nock(mangareader.host)
+      .get(`${chapterFromList.uri}/${i}`)
+      .replyWithFile(200, path.join(__dirname, `./fixtures/mangareader/naruto-${i}.html`))
+    }
+
+    let manga = new Manga(mangaFromList)
+    manga.save((err, doc) => {
+      if (err)
+        return done(err)
+      api.mangaDetail({params: {id: doc._id.toString()} }, { send() {
+        sinon.spy(mangareader, 'getPages')
+        api.mangaChapter({params: {id: doc._id.toString(), index: 0}}, {send (chapter) {
+          mangareader.getPages.calledOnce.should.be.true()
+          should(chapter).be.ok()
+          chapter.should.have.property('name')
+          chapter.uri.should.be.ok()
+          chapter.pages.length.should.be.eql(53)
+          api.mangaChapter({params: {id: doc._id.toString(), index: 0}}, {send (chapter) {
+            mangareader.getPages.calledOnce.should.be.true()
+            should(chapter).be.ok()
+            chapter.should.have.property('name')
+            chapter.uri.should.be.ok()
+            chapter.pages.length.should.be.eql(53)
+            done()
+          }, status () { return this }})
+        }, status () { return this }})
+      }})
+
     })
   })
 })

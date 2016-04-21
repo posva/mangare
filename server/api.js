@@ -35,18 +35,22 @@ module.exports = {
         .then((pages) => {
           chapter.pages = pages
           manga.save(() => {
-            manga.chapter = chapter
-            delete manga.chapters
-            res.send(manga)
+            res.send({
+              name: chapter.name,
+              uri: chapter.uri,
+              pages: chapter.pages
+            })
           })
         }).catch((err) => {
           console.log(err)
           res.send(err)
         })
       } else {
-        manga.chapter = chapter
-        delete manga.chapters
-        res.send(manga)
+        res.send({
+          name: chapter.name,
+          uri: chapter.uri,
+          pages: chapter.pages
+        })
       }
     })
   },
