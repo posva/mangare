@@ -13,7 +13,7 @@
     "build": "node build/build.js",
     "unit": "npm run unit:client && npm run unit:server",
     "unit:client": "karma start test/unit/karma.conf.js --single-run",
-    "unit:server": "mocha",
+    "unit:server": "NODE_ENV=testing mocha",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src server test/unit/specs test/e2e/specs test/server",

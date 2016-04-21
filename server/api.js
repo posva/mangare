@@ -34,10 +34,11 @@ module.exports = {
         mangareader.getPages(chapter)
         .then((pages) => {
           chapter.pages = pages
-          manga.save()
-          manga.chapter = chapter
-          delete manga.chapters
-          res.send(manga)
+          manga.save(() => {
+            manga.chapter = chapter
+            delete manga.chapters
+            res.send(manga)
+          })
         }).catch((err) => {
           console.log(err)
           res.send(err)
@@ -64,8 +65,7 @@ module.exports = {
         mangareader.getManga(manga)
         .then((mangaData) => {
           Object.assign(manga, mangaData)
-          manga.save()
-          res.send(manga)
+          manga.save(() => res.send(manga))
         }).catch((err) => {
           console.log(err)
           res.send(err)
