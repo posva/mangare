@@ -5,7 +5,7 @@ let pageSchema = mongoose.Schema({
   image: String,
   uri: {
     type: String,
-    required: true,
+    required: true
   },
   updatedAt: Date
 }, {

@@ -29,16 +29,19 @@ module.exports = {
       chapters: {
         $elemMatch: {
           _id: req.params.chapterId
-        },
+        }
       }
     }, (err, manga) => {
-      if (err)
+      if (err) {
         return res.status(500).send(err)
-      if (!manga)
+      }
+      if (!manga) {
         return res.status(404).send('Manga not found')
+      }
       const chapter = manga.chapters[0]
-      if (!chapter)
+      if (!chapter) {
         return res.status(404).send('Chapter not found')
+      }
 
       if (!chapter.pages.length) {
         mangareader.getPages(chapter)

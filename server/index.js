@@ -1,9 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
 
-const Manga = require('./models/manga')
-const mangareader = require('./providers/mangareader')
-
 const api = require('./api')
 
 process.env.PORT = process.env.PORT || 8080

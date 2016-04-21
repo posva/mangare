@@ -1,9 +1,8 @@
-/*global describe it beforeEach :true*/
+/*global describe it after beforeEach :true*/
 const dbURI = 'mongodb://localhost/test-mangare'
 const should = require('should')
 const mongoose = require('mongoose')
 const mangaSchema = require('../../server/schemas/manga')
-const pageSchema = require('../../server/schemas/page.js')
 const clearDB = require('mocha-mongoose')(dbURI)
 
 describe('Models', () => {

@@ -1,14 +1,12 @@
-/*global describe it beforeEach :true*/
+/*global describe before after afterEach it :true*/
 const dbURI = 'mongodb://localhost/test-mangare'
 const should = require('should')
 const sinon = require('sinon')
 const path = require('path')
 const mongoose = require('mongoose')
 const mangaSchema = require('../../server/schemas/manga')
-const pageSchema = require('../../server/schemas/page')
 const api = require('../../server/api')
 const clearDB = require('mocha-mongoose')(dbURI)
-const _ = require('lodash')
 const nock = require('nock')
 const mangareader = require('../../server/providers/mangareader')
 
@@ -28,8 +26,9 @@ describe('API', () => {
   let Manga = mongoose.model('Manga', mangaSchema)
 
   before((done) => {
-    if (mongoose.connection.db)
+    if (mongoose.connection.db) {
       return done()
+    }
     mongoose.connect(dbURI, done)
   })
 
@@ -40,8 +39,9 @@ describe('API', () => {
   })
 
   afterEach(() => {
-    if (mangareader.getManga.restore)
+    if (mangareader.getManga.restore) {
       mangareader.getManga.restore()
+    }
   })
 
   it('generates a manga list', (done) => {
@@ -53,8 +53,9 @@ describe('API', () => {
     }
     let manga = new Manga(mangaDesc)
     manga.save((err, doc) => {
-      if (err)
+      if (err) {
         return done(err)
+      }
       api.mangaList(null, {send (mangas) {
         mangas.should.have.length(1)
         let m = mangas[mangas.length - 1]
@@ -75,8 +76,9 @@ describe('API', () => {
     .replyWithFile(200, path.join(__dirname, './fixtures/mangareader/naruto.html'))
     let manga = new Manga(mangaFromList)
     manga.save((err, doc) => {
-      if (err)
+      if (err) {
         return done(err)
+      }
 
       doc.should.have.property('_id')
       doc.should.have.property('uri', mangaFromList.uri)
@@ -121,9 +123,10 @@ describe('API', () => {
 
     let manga = new Manga(mangaFromList)
     manga.save((err, doc) => {
-      if (err)
+      if (err) {
         return done(err)
-      api.mangaDetail({params: {id: doc._id} }, { send(mangaDetail) {
+      }
+      api.mangaDetail({params: {id: doc._id}}, {send (mangaDetail) {
         sinon.spy(mangareader, 'getPages')
         const req = {
           params: {
@@ -151,7 +154,6 @@ describe('API', () => {
           }, status () { return this }})
         }, status () { return this }})
       }})
-
     })
   })
 })
