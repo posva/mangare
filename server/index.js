@@ -1,4 +1,5 @@
 const express = require('express')
+const fallback = require('express-history-api-fallback')
 const mongoose = require('mongoose')
 
 const api = require('./api')
@@ -19,6 +20,7 @@ if (process.env.NODE_ENV !== 'production' &&
   webpackMiddleware(app, express.static('./static'))
 } else {
   app.use('/', express.static('./dist'))
+  app.use(fallback('index.html', {root: './dist'}))
 }
 
 process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/mangare'
