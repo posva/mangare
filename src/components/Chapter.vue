@@ -16,6 +16,7 @@
 </template>
 
 <script>
+/*global Image :true*/
 import Pdf from '../../lib/jspdf.min'
 import ProgressButton from './ProgressButton'
 import {nextTick, timeout} from '../utils'
@@ -62,8 +63,20 @@ export default {
       this.pages.forEach((page, i) => {
         imagesPromises.push(this.$http.get(`/api/image?url=${page}`)
         .then((response) => {
-          images[i] = response.data
-          this.progress = ++counter / total
+          images[i] = {
+            data: response.data,
+            format: null
+          }
+          const image = images[i]
+          return new Promise(resolve => {
+            const img = new Image()
+            img.onload = () => {
+              image.format = img.width > img.height ? ['a3', 'l'] : ['a4', 'p']
+              this.progress = ++counter / total
+              resolve()
+            }
+            img.src = image.data
+          })
         }).catch((err) => {
           console.error('Error getting image', err)
         }))
@@ -75,10 +88,9 @@ export default {
         images.forEach((image, i) => {
           p = p.then(() => {
             if (i > 0) {
-              pdf.addPage('a4', 'p')
-              // pdf.addPage.apply(pdf, ['a4', 'p'])
+              pdf.addPage.apply(pdf, image.format)
             }
-            pdf.addImage(image, 0, 0, 210, 297)
+            pdf.addImage(image.data, 0, 0, image.format[1] === 'l' ? 420 : 210, 297)
 
             this.progress = ++counter / total
             // using nextTick doesn't work
