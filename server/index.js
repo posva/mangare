@@ -9,7 +9,7 @@ const app = express()
 
 app.get('/api/mangas', api.mangaList)
 app.get('/api/mangas/:id/chapters/:chapterId', api.mangaChapter)
-app.get('/api/mangas/:id', api.mangaDetail)
+app.get('/api/mangas/:id', api.manga)
 app.get('/api/image', api.imageBase64)
 
 // XXX don't use this in production

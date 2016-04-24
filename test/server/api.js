@@ -88,15 +88,17 @@ describe('API', () => {
       doc.chapters.should.have.length(0)
 
       sinon.spy(mangareader, 'getManga')
-      api.mangaDetail({params: {id: doc._id}}, {send (mangaDetail) {
+      api.manga({params: {id: doc._id}}, {send (mangaDetail) {
         mangareader.getManga.callCount.should.be.eql(1)
         should(mangaDetail).be.ok()
         mangaDetail.image.should.be.ok()
+        mangaDetail.should.not.have.property('__v')
         mangaDetail.chapters.length.should.be.eql(700)
 
-        api.mangaDetail({params: {id: doc._id}}, {send (mangaDetail) {
+        api.manga({params: {id: doc._id}}, {send (mangaDetail) {
           mangareader.getManga.callCount.should.be.eql(1)
           should(mangaDetail).be.ok()
+          mangaDetail.should.not.have.property('__v')
           mangaDetail.image.should.be.ok()
           mangaDetail.chapters.length.should.be.eql(700)
 
@@ -152,7 +154,7 @@ describe('API', () => {
       if (err) {
         return done(err)
       }
-      api.mangaDetail({params: {id: doc._id}}, {send (mangaDetail) {
+      api.manga({params: {id: doc._id}}, {send (mangaDetail) {
         sinon.spy(mangareader, 'getPages')
         const req = {
           params: {

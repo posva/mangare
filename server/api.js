@@ -12,6 +12,17 @@ function chapterDetail (chapter) {
   }
 }
 
+function mangaDetail (manga) {
+  return {
+    _id: manga._id,
+    name: manga.name,
+    image: manga.image,
+    uri: manga.uri,
+    completed: manga.completed,
+    chapters: _.map(manga.chapters, (chapter) => _.pick(chapter, ['uri', 'name', '_id']))
+  }
+}
+
 module.exports = {
   mangaList (req, res) {
     Manga.find({}, {
@@ -68,7 +79,7 @@ module.exports = {
     })
   },
 
-  mangaDetail (req, res) {
+  manga (req, res) {
     Manga.findById(req.params.id, {
       name: true,
       completed: true,
@@ -84,13 +95,13 @@ module.exports = {
         mangareader.getManga(manga)
         .then((mangaData) => {
           Object.assign(manga, mangaData)
-          manga.save(() => res.send(manga))
+          manga.save(() => res.send(mangaDetail(manga)))
         }).catch((err) => {
           console.log(err)
           res.send(err)
         })
       } else {
-        res.send(manga)
+        res.send(mangaDetail(manga))
       }
     })
   },
