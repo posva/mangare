@@ -54,14 +54,15 @@ export default {
     download () {
       let imagesPromises = []
       let images = []
+      this.progress = 0
       this.$refs.progress.start()
-      this.progress = 0.0001 // display the progress bar
-      const ratio = 0.5 / this.pages.length
+      let counter = 0
+      const total = this.pages.length + 1
       this.pages.forEach((page, i) => {
         imagesPromises.push(this.$http.get(`/api/image?url=${page}`)
         .then((response) => {
           images[i] = response.data
-          this.progress += ratio
+          this.progress = ++counter / total
         }).catch((err) => {
           console.error('Error getting image', err)
         }))
@@ -74,9 +75,8 @@ export default {
             // pdf.addPage.apply(pdf, ['a4', 'p'])
           }
           pdf.addImage(image, 0, 0, 210, 297)
-          this.progress += ratio
         })
-        console.log('Save as', this.chapter.name)
+        this.progress = 1
         pdf.save(this.chapter.name + '.pdf')
       })
     }
