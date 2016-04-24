@@ -3,6 +3,8 @@ var config = require('../config')
 var utils = require('./utils')
 var projectRoot = path.resolve(__dirname, '../')
 
+var excludedDirs = /(node_modules|lib)/
+
 module.exports = {
   entry: {
     app: './src/main.js'
@@ -30,13 +32,13 @@ module.exports = {
         test: /\.vue$/,
         loader: 'eslint',
         include: projectRoot,
-        exclude: /node_modules/
+        exclude: excludedDirs
       },
       {
         test: /\.js$/,
         loader: 'eslint',
         include: projectRoot,
-        exclude: /node_modules/
+        exclude: excludedDirs
       }
     ],
     loaders: [
@@ -48,7 +50,7 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel',
         include: projectRoot,
-        exclude: /node_modules/
+        exclude: excludedDirs
       },
       {
         test: /\.json$/,

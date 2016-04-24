@@ -1,5 +1,6 @@
 const Manga = require('./models/manga')
 const _ = require('lodash')
+const request = require('request')
 const mangareader = require('./providers/mangareader')
 
 function chapterDetail (chapter) {
@@ -91,6 +92,24 @@ module.exports = {
       } else {
         res.send(manga)
       }
+    })
+  },
+
+  imageBase64 (req, res) {
+    const query = req.query.url
+    if (!query) {
+      return res.status(404).send('Pass un url query')
+    }
+    const image = query.replace(/^(https?:)?\/\//, '')
+    const url = `https://images.weserv.nl?url=${image}&encoding=base64`
+    request.get(url, (err, response, data) => {
+      if (err) {
+        return res.status(500).send(err)
+      }
+      if (response.statusCode !== 200) {
+        return res.status(response.statusCode).send('Error')
+      }
+      res.send(data)
     })
   }
 }

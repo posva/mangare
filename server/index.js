@@ -10,6 +10,7 @@ const app = express()
 app.get('/api/mangas', api.mangaList)
 app.get('/api/mangas/:id/chapters/:chapterId', api.mangaChapter)
 app.get('/api/mangas/:id', api.mangaDetail)
+app.get('/api/image', api.imageBase64)
 
 // XXX don't use this in production
 if (process.env.NODE_ENV !== 'production' &&
@@ -30,7 +31,7 @@ const db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
 
 db.once('open', () => {
-  console.log(`MongoDB started on ${process.env.MONGOLAB_URI}`)
+  console.log(`MongoDB started on ${process.env.MONGODB_URI}`)
 })
 
 module.exports = app.listen(process.env.PORT, () => {

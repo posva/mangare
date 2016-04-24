@@ -106,6 +106,32 @@ describe('API', () => {
     })
   })
 
+  it('generates base64 from image', (done) => {
+    let manga = new Manga(mangaFromList)
+    manga.chapters.push({
+      uri: '/naruto/1',
+      name: 'Uzumaki Naruto',
+      pages: [{
+        uri: '/fake',
+        image: 'http://i10.mangareader.net/naruto/1/naruto-1564773.jpg'
+      } ]
+    })
+
+    const imageUrl = 'i10.mangareader.net/naruto/1/naruto-1564773.jpg'
+    nock('https://images.weserv.nl')
+    .get(`/?url=${imageUrl}&encoding=base64`)
+    .reply(200, 'T0sk')
+    manga.save((err, doc) => {
+      if (err) {
+        done(err)
+      }
+      api.imageBase64({query: {url: doc.chapters[0].pages[0].image}}, {send (encodedImage) {
+        encodedImage.should.be.eql('T0sk')
+        manga.remove(done)
+      }, status () { return this }})
+    })
+  })
+
   it('populates chapters pages only on first access', (done) => {
     nock(mangareader.host)
     .get(mangaFromList.uri)
@@ -149,8 +175,10 @@ describe('API', () => {
             chapter.name.should.be.ok()
             chapter.uri.should.be.ok()
             chapter.pages.length.should.be.eql(53)
+            const page = chapter.pages[0]
+            page.should.be.a.String
 
-            done()
+            manga.remove(done)
           }, status () { return this }})
         }, status () { return this }})
       }})
