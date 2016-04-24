@@ -4,7 +4,7 @@
     <input v-model="searchQuery" @change="updateQuery">
     <p>Results for {{ searchQuery }}</p>
     <ul>
-      <li v-for="manga in mangaList | filterBy searchQuery in 'name' | limitBy 10">
+      <li v-for="manga in mangaList | filterBy searchQuery in 'name' | limitBy 20">
         <a v-link="mangaRoute(manga)">{{ manga.name }}</a>
       </li>
     </ul>

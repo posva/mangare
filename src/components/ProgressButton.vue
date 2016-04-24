@@ -1,5 +1,5 @@
 <template>
-  <button :disabled="isDisabled" @click="test" :class="state" class="progress-button" data-style="shrink" data-horizontal>
+  <button :disabled="isDisabled" :class="state" class="progress-button" data-style="shrink" data-horizontal>
     <span class="content">Download</span>
     <span class="progress">
       <span class="progress-inner" :class="innerClass" :style="style">
@@ -39,20 +39,19 @@ export default {
     }
   },
   watch: {
-    progress () {
+    progress (progress) {
+      // don't use transition because generation is faster
+      // and transition prevents the width from actually updating
+      // when there are too many updates on a css property
+      if (progress >= 0.5) {
+        this.innerClass = 'notransition'
+      }
       if (this.isFinished) {
         this.finish()
       }
     }
   },
   methods: {
-    test () {
-      this.start()
-      timeout(300).then(() => {
-        this.progress += 0.5
-        return timeout(300)
-      }).then(() => this.progress += 0.5)
-    },
     start () {
       this.innerClass = 'notransition'
       this.progress = 0
@@ -66,6 +65,7 @@ export default {
       this.end('state-success')
     },
     end (state) {
+      this.innerClass = ''
       timeout(300)
       .then(() => {
         this.state = state

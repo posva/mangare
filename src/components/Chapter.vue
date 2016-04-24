@@ -18,6 +18,7 @@
 <script>
 import Pdf from '../../lib/jspdf.min'
 import ProgressButton from './ProgressButton'
+import {nextTick, timeout} from '../utils'
 
 export default {
   props: {
@@ -57,7 +58,7 @@ export default {
       this.progress = 0
       this.$refs.progress.start()
       let counter = 0
-      const total = this.pages.length + 1
+      const total = this.pages.length * 2
       this.pages.forEach((page, i) => {
         imagesPromises.push(this.$http.get(`/api/image?url=${page}`)
         .then((response) => {
@@ -67,17 +68,26 @@ export default {
           console.error('Error getting image', err)
         }))
       })
+
       Promise.all(imagesPromises).then(() => {
         const pdf = new Pdf()
+        let p = nextTick(this)
         images.forEach((image, i) => {
-          if (i > 0) {
-            pdf.addPage(pdf, 'a4', 'p')
-            // pdf.addPage.apply(pdf, ['a4', 'p'])
-          }
-          pdf.addImage(image, 0, 0, 210, 297)
+          p = p.then(() => {
+            if (i > 0) {
+              pdf.addPage('a4', 'p')
+              // pdf.addPage.apply(pdf, ['a4', 'p'])
+            }
+            pdf.addImage(image, 0, 0, 210, 297)
+
+            this.progress = ++counter / total
+            // using nextTick doesn't work
+            return timeout(0)
+          })
         })
-        this.progress = 1
-        pdf.save(this.chapter.name + '.pdf')
+        p.then(() => {
+          pdf.save(this.chapter.name + '.pdf')
+        })
       })
     }
   },
