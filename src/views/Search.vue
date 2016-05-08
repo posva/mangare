@@ -1,7 +1,7 @@
 <template>
   <div class="_flex">
     <div class="search-container" :class="searchContainerClass">
-      <input autocomplete="off" id="search-input" v-model="searchQuery"
+      <input autocomplete="off" id="search-input" v-model="searchQuery" debounce="100"
         name="query" type="text" @change="updateQuery"
         @focus="searchFocused = true"
         @blur="searchFocused = false"
@@ -12,11 +12,12 @@
     </div>
     <div v-show="searchQuery" class="search-resutls">
       <div class="manga-card"
-          v-for="manga in mangaList | filterBy searchQuery in 'name' | limitBy 20"
-          transition="item">
+          v-for="manga in searchResults">
         <a v-link="mangaRoute(manga)">
-          <h5>{{ manga.name }}</h5>
           <img :src="manga.image">
+          <div>
+            <span class="manga-card__title" v-html="manga.highlighted"></span>
+          </div>
         </a>
       </div>
 
@@ -35,15 +36,49 @@
 </template>
 
 <script>
+import {
+  fetchMangaList
+} from '../vuex/actions'
+
+import {
+  mangaList
+} from '../vuex/getters'
+
+import _ from 'lodash'
+import { filter as fuzzy } from 'fuzzy'
+
+const fuzzyOptions = {
+  pre: '<em>',
+  post: '</em>',
+  extract (manga) {
+    return manga.name
+  }
+}
+
 export default {
+  vuex: {
+    actions: {
+      fetchMangaList
+    },
+    getters: {
+      mangaList
+    }
+  },
   data () {
     return {
-      mangaList: [],
       searchFocused: false,
       searchQuery: ''
     }
   },
   computed: {
+    searchResults () {
+      let results = fuzzy(this.searchQuery, this.mangaList, fuzzyOptions)
+      return _.map(_.take(results, 20)
+      , (manga) => {
+        manga.original.highlighted = manga.string
+        return manga.original
+      })
+    },
     searchContainerClass () {
       return {
         filled: this.searchQuery || this.searchFocused
@@ -71,17 +106,8 @@ export default {
   },
   created () {
     this.searchQuery = this.$route.query.query || ''
-  },
-  route: {
-    activate (transition) {
-      this.$http.get('/api/mangas')
-      .then((response) => {
-        this.mangaList = response.data
-        transition.next()
-      }, (response) => {
-        console.error('Cannot retrieve manga: ', response)
-        transition.abort()
-      })
+    if (!this.mangaList.length) {
+      this.fetchMangaList(this.$http.get('/api/mangas'))
     }
   }
 }
@@ -94,6 +120,11 @@ export default {
 .manga-card
   display inline-block
   border solid 1px
+  font-weight 500
+  em
+    font-style normal
+    font-weight 600
+    color darken(primary, 30%)
 
 .search-message
   baseSize = 148px
@@ -121,7 +152,7 @@ export default {
 
   &.filled
     label::before
-      transform scale3d(48, 48, 1)
+      transform scale3d(120, 120, 1)
 
     &::after
       transform translate3d(-100%, 0, 0)
@@ -135,7 +166,6 @@ export default {
     bottom 0
     transform translate3d(-200%, 0, 0)
     transition transform 0.3s
-
 
   label
     position absolute
