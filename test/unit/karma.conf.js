@@ -31,7 +31,7 @@ webpackConfig.module.preLoaders.unshift({
   test: /\.js$/,
   loader: 'isparta',
   include: projectRoot,
-  exclude: /test\/unit|node_modules/
+  exclude: /test\/unit|node_modules|lib/
 })
 
 // only apply babel for test files when using isparta
