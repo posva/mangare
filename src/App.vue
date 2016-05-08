@@ -79,7 +79,8 @@ body
     text-decoration none
   h1
     display inline-flex
-    font-weight normal
+    font-weight 300
+    letter-spacing 2px
     margin 0
     font-size 2rem
     .logo

@@ -141,7 +141,9 @@ export default {
     position absolute
     padding 0 2.5rem
     left 2rem
-    top .5rem
+    top 0.1rem
+    @media (max-width 700px)
+      top 0.5rem
     width 100%
     text-align left
     pointer-events none
@@ -151,7 +153,9 @@ export default {
       content ''
       position absolute
       left 0
-      top 0
+      top 0.3rem
+      @media (max-width 700px)
+        top 0
       width 2rem
       height @width
       background url(../assets/img/search.svg) no-repeat center center
