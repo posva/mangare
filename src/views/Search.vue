@@ -10,21 +10,27 @@
         <span>Search</span>
       </label>
     </div>
-    <div class="manga-card"
-        v-for="manga in mangaList | filterBy searchQuery in 'name' | limitBy 20"
-        transition="item">
-      <a v-link="mangaRoute(manga)">
-        <h5>{{ manga.name }}</h5>
-        <img :src="manga.image">
-      </a>
-    </div>
-
-    <ul>
-      <li v-for="manga in mangaList | filterBy searchQuery in 'name' | limitBy 20"
+    <div v-show="searchQuery" class="search-resutls">
+      <div class="manga-card"
+          v-for="manga in mangaList | filterBy searchQuery in 'name' | limitBy 20"
           transition="item">
-        <a v-link="mangaRoute(manga)">{{ manga.name }}</a>
-      </li>
-    </ul>
+        <a v-link="mangaRoute(manga)">
+          <h5>{{ manga.name }}</h5>
+          <img :src="manga.image">
+        </a>
+      </div>
+
+      <ul>
+        <li v-for="manga in mangaList | filterBy searchQuery in 'name' | limitBy 20"
+            transition="item">
+          <a v-link="mangaRoute(manga)">{{ manga.name }}</a>
+        </li>
+      </ul>
+    </div>
+    <div v-show="!searchQuery" class="search-message">
+      <img src="../assets/img/gon.png">
+      <p>What do you want to read today?</p>
+    </div>
   </div>
 </template>
 
@@ -85,11 +91,20 @@ export default {
 @import '../assets/style/palette'
 @import '../assets/style/flex'
 
-.item-move
-  transition transform .5s cubic-bezier(.55,0,.1,1)
 .manga-card
   display inline-block
   border solid 1px
+
+.search-message
+  baseSize = 148px
+  img
+    max-width baseSize
+  @extend .flex
+  font-size 2rem
+  @media (max-width 700px)
+    font-size 1rem
+  font-weight 300
+  flex-direction column
 
 .search-container
   @extend .flex
@@ -98,6 +113,9 @@ export default {
   overflow hidden
   user-select none
   font-smoothing antialised
+  font-size 2rem
+  @media (max-width 700px)
+    font-size 1.5rem
   background-color darken(clear, 20%)
   border-radius 2rem
 
@@ -121,9 +139,9 @@ export default {
 
   label
     position absolute
-    padding 0 3em
+    padding 0 2.5rem
     left 2rem
-    top 1rem
+    top .5rem
     width 100%
     text-align left
     pointer-events none
@@ -133,7 +151,7 @@ export default {
       content ''
       position absolute
       left 0
-      top -0.5rem
+      top 0
       width 2rem
       height @width
       background url(../assets/img/search.svg) no-repeat center center
@@ -143,7 +161,6 @@ export default {
   input
     width 100%
     height 3rem
-    font-size 2rem
     font-weight 100
     border none
     outline none
@@ -151,6 +168,4 @@ export default {
     padding-left 2rem
     background-color transparent
     z-index 2
-
-    // border-bottom 1px solid dark
 </style>

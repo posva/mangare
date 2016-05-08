@@ -17,8 +17,10 @@
 
 <script>
 import VueProgress from 'vue-progressbar/vue-progressbar.vue'
+import store from './vuex/store'
 
 export default {
+  store,
   data () {
     return {
       progress: {
@@ -68,7 +70,7 @@ body
 
 #nav
   @extend .flex
-  padding 0.75rem
+  padding 0.5rem
   width 100%
   background-color lighten(dark, 30%)
   color clear
@@ -83,5 +85,9 @@ body
     .logo
       margin-right .75rem
       height: @font-size
+    @media (max-width 700px)
+      font-size 1.5rem
+      .logo
+        height @font-size
 
 </style>

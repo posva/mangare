@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import VueProgressbar from 'vue-progressbar'
 import configRouter from './config-router'
+import store from './vuex/store'
+import { sync } from 'vuex-router-sync'
 
 require('normalize.css')
 
@@ -31,6 +33,8 @@ let router = new VueRouter({
   history: true,
   saveScrollPosition: true
 })
+sync(store, router)
 configRouter(router)
 
 router.start(App, '#app')
+
