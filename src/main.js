@@ -12,7 +12,6 @@ Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(VueProgressbar)
 
-// TODO progress bar
 Vue.http.interceptors.push({
   request (request) {
     this.$progress.start(2000)
@@ -26,7 +25,6 @@ Vue.http.interceptors.push({
     }
     return response
   }
-
 })
 
 let router = new VueRouter({

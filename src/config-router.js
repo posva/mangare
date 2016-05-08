@@ -12,4 +12,8 @@ export default function configRouter (router) {
       component: Manga
     }
   })
+
+  router.redirect({
+    '/': '/search'
+  })
 }

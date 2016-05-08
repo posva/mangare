@@ -1,10 +1,17 @@
 <template>
   <div id="mangare">
     <vue-progress v-ref:progress :percent.sync="progress.percent" :options="progress.options"></vue-progress>
-    <h1>Mangare</h1>
-    <a v-link="{ path: '/' }">Home</a>
-    <a v-link="{ name: 'search' }">Search</a>
-    <router-view></router-view>
+    <nav id="nav">
+      <a v-link="{ name: 'search' }">
+        <h1>
+          <img class="logo emoji" draggable="false" alt="🍙" src="https://twemoji.maxcdn.com/2/72x72/1f359.png">
+          Mangare
+        </h1>
+      </a>
+    </nav>
+    <section id="container">
+      <router-view></router-view>
+    </section>
   </div>
 </template>
 
@@ -35,22 +42,46 @@ export default {
 }
 </script>
 
-<style>
-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+<style lang="stylus">
+@import './assets/style/palette'
+@import './assets/style/flex'
+@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700)
 
-#mangare {
-  color: #2c3e50;
-  max-width: 600px;
-  font-family: Source Sans Pro, Helvetica, sans-serif;
-  text-align: center;
-}
+*
+  box-sizing border-box
 
-#mangare a {
-  color: #42b983;
-  text-decoration: none;
-}
+body
+  background-color clear
+
+#mangare
+  @extend .flex
+  justify-content space-between
+  flex-direction column
+  font-family Lato, Source Sans Pro, Helvetica, sans-serif
+  color dark
+#container
+  width 100%
+  padding 0.75rem
+  a
+    color primary
+    text-decoration none
+
+#nav
+  @extend .flex
+  padding 0.75rem
+  width 100%
+  background-color lighten(dark, 30%)
+  color clear
+  a
+    color @color
+    text-decoration none
+  h1
+    display inline-flex
+    font-weight normal
+    margin 0
+    font-size 2rem
+    .logo
+      margin-right .75rem
+      height: @font-size
+
 </style>
