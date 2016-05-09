@@ -17,7 +17,7 @@
 
 <script>
 /*global Image :true*/
-import Pdf from '../../lib/jspdf.min'
+import Pdf from '../../lib/jspdf'
 import ProgressButton from './ProgressButton'
 import {nextTick, timeout} from '../utils'
 
