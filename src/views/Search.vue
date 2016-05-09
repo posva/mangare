@@ -3,22 +3,9 @@
     <search-bar :value.sync="searchQuery" @change="updateQuery">
     </search-bar>
     <div v-show="searchQuery" class="search-resutls">
-      <div class="manga-card"
-          v-for="manga in searchResults">
-        <a v-link="mangaRoute(manga)">
-          <img :src="manga.image">
-          <div>
-            <span class="manga-card__title" v-html="manga.highlighted"></span>
-          </div>
-        </a>
-      </div>
-
-      <ul>
-        <li v-for="manga in mangaList | filterBy searchQuery in 'name' | limitBy 20"
-            transition="item">
-          <a v-link="mangaRoute(manga)">{{ manga.name }}</a>
-        </li>
-      </ul>
+      <manga-card v-for="manga in searchResults"
+        :manga="manga"
+      ></manga-card>
     </div>
     <div v-show="!searchQuery" class="search-message">
       <img src="../assets/img/gon.png">
@@ -39,6 +26,7 @@ import {
 import _ from 'lodash'
 import { filter as fuzzy } from 'fuzzy'
 import SearchBar from '../components/SearchBar'
+import MangaCard from '../components/MangaCard'
 
 const fuzzyOptions = {
   pre: '<em>',
@@ -73,14 +61,6 @@ export default {
     }
   },
   methods: {
-    mangaRoute (manga) {
-      return {
-        name: 'manga',
-        params: {
-          mangaId: manga._id
-        }
-      }
-    },
     updateQuery () {
       this.$router.go({
         replace: true,
@@ -98,7 +78,8 @@ export default {
     }
   },
   components: {
-    SearchBar
+    SearchBar,
+    MangaCard
   }
 }
 </script>
@@ -106,15 +87,6 @@ export default {
 <style lang="stylus">
 @import '../assets/style/palette'
 @import '../assets/style/flex'
-
-.manga-card
-  display inline-block
-  border solid 1px
-  font-weight 500
-  em
-    font-style normal
-    font-weight 600
-    color darken(primary, 30%)
 
 .search-message
   baseSize = 148px
@@ -126,4 +98,9 @@ export default {
     font-size 1rem
   font-weight 300
   flex-direction column
+
+.search-resutls
+  @extend .flex
+  flex-wrap wrap
+  justify-content space-around
 </style>
