@@ -51,7 +51,6 @@ export default {
 <style lang="stylus">
 @import '../assets/style/palette'
 @import '../assets/style/flex'
-@import '../assets/style/shadow'
 
 .manga-card
   position relative
