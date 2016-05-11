@@ -32,7 +32,7 @@ export default {
   directives: {
     fit () {
       requestAnimationFrame(() => {
-        const maxHeight = 0.2 * 360
+        const maxHeight = this.el.parentNode.offsetHeight
         let height = this.el.offsetHeight
         let fontSize = parseInt(window.getComputedStyle(this.el).fontSize)
         // let 1rem of distance
