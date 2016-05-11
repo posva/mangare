@@ -6,6 +6,7 @@ const chapterSchema = require('../schemas/chapter')
 
 let mangaSchema = mongoose.Schema({
   name: String,
+  description: String,
   image: String,
   uri: {
     type: String,
@@ -15,6 +16,10 @@ let mangaSchema = mongoose.Schema({
   },
   completed: Boolean,
   updatedAt: Date,
+  chapterCount: {
+    Number,
+    default: 0
+  },
   chapters: {
     type: [chapterSchema],
     default: []
@@ -25,6 +30,7 @@ let mangaSchema = mongoose.Schema({
 
 mangaSchema.pre('save', function (next) {
   this.updatedAt = new Date()
+  this.chapterCount = this.chapters.length
   next()
 })
 

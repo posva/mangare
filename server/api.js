@@ -31,7 +31,9 @@ module.exports = {
       name: true,
       image: true,
       uri: true,
-      completed: true
+      description: true,
+      completed: true,
+      chapterCount: true
     }, (err, mangas) => {
       if (err) return res.send(err)
       res.send(mangas)
