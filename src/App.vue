@@ -65,7 +65,6 @@ body
   width 100%
   padding 0.75rem
   a
-    color primary
     text-decoration none
 
 #nav

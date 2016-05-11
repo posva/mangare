@@ -1,9 +1,24 @@
 <template>
-<figure v-link="route(manga)" class="manga-card">
+<figure class="manga-card">
   <img class="manga-card__image" :title="manga.name" :src="image(manga)">
   <figcaption class="manga-card__hover">
-    <div class="manga-card__title-container">
+    <div v-link="route(manga)" class="manga-card__title-container">
       <h2 v-fit="manga.name" class="manga-card__title">{{ manga.name }}</h2>
+    </div>
+    <div class="manga-card__information">
+      <p class="manga-card__information__chapters">{{ chapterCount }} Chapters</p>
+      <p class="manga-card__information__description">{{ manga.description }}</p>
+      <ul class="manga-card__information__actions">
+        <li>
+          <a title="Go to the Manga page" v-link="route(manga)">Details</a>
+        </li>
+        <li>
+          <a @click.stop.prevent="quickRead" title="Read last chapter online" href="#">Quick Read</a>
+        </li>
+        <li>
+          <a @click.stop.prevent="quickDownload" title="Download last chapter online" href="#">Quick Download</a>
+        </li>
+      </ul>
     </div>
   </figcaption>
 </figure>
@@ -13,6 +28,12 @@
 export default {
   props: {
     manga: Object
+  },
+  computed: {
+    chapterCount () {
+      return typeof this.manga.chapterCount === 'number'
+        ? this.manga.chapterCount : '?'
+    }
   },
   methods: {
     image (manga) {
@@ -25,6 +46,10 @@ export default {
           mangaId: manga._id
         }
       }
+    },
+    quickRead () {
+    },
+    quickDownload () {
     }
   },
   directives: {
@@ -60,18 +85,9 @@ export default {
   height 360px
   width 100%
   text-align center
-  cursor pointer
   border solid 1px darken(clear, 20%)
   border-radius 2px
   font-weight 500
-
-  &:hover
-    .manga-card__hover
-      transform translate3d(0,0,0)
-      opacity .8
-      background-color dark
-      color clear
-
 
   .manga-card__hover
     backface-visibility hidden
@@ -110,9 +126,81 @@ export default {
     @extend .flex
   .manga-card__title
     font-size 1.5rem
+    cursor pointer
     text-align center
     display inline-block
     margin 0
+
+  .manga-card__information
+    @extend .flex
+    justify-content space-between
+    flex-direction column
+    width 100%
+    height .8 * @height
+    .manga-card__information__chapters,
+    .manga-card__information__description
+      font-weight 200
+    .manga-card__information__description
+      font-size .85rem
+      max-height 5rem
+      text-overflow ellipsis
+      padding 0 .5rem
+
+    .manga-card__information__actions
+      padding 1rem
+      margin 0
+      align-self flex-end
+      list-style none
+      text-align right
+
+      li
+        color info
+        transition transform .25s
+        for i in (1..5)
+          &:nth-child({i})
+            transition-delay .10s + i * .05s
+        transform translate3d(0,200%,0)
+      a
+        color primary
+        position relative
+        text-decoration none
+        font-size 1.2rem
+        display inline-block
+        margin 2px 0
+        transition transform .2s
+        &:hover, &:focus
+          transform scale(.833)
+
+          &::before
+            opacity 1
+            transform scale(1.2)
+        &::before
+          position absolute
+          top -2px
+          left -7px
+          box-sizing content-box
+          padding 0 5px
+          width 100%
+          height 100%
+          border 2px solid @color
+          content ''
+          opacity 0
+          transition opacity .2s, transform .2s
+          transform scale(.833)
+
+  // Apply these in the end
+  &:hover
+    .manga-card__hover
+      transform translate3d(0,0,0)
+      opacity .8
+      background-color dark
+      color clear
+
+    .manga-card__information__actions
+      li
+        transform translate3d(0,0,0)
+
+
 
 </style>
 
