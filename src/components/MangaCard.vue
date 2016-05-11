@@ -1,13 +1,11 @@
 <template>
 <figure v-link="route(manga)" class="manga-card">
-  <div>
-    <img class="manga-card__image" :title="manga.name" :src="image(manga)">
-    <figcaption class="manga-card__hover">
-      <div class="manga-card__title-container">
-        <h2 v-fit="manga.name" class="manga-card__title">{{ manga.name }}</h2>
-      </div>
-    </figcaption>
-  </div>
+  <img class="manga-card__image" :title="manga.name" :src="image(manga)">
+  <figcaption class="manga-card__hover">
+    <div class="manga-card__title-container">
+      <h2 v-fit="manga.name" class="manga-card__title">{{ manga.name }}</h2>
+    </div>
+  </figcaption>
 </figure>
 </template>
 

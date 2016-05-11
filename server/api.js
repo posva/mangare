@@ -3,6 +3,8 @@ const _ = require('lodash')
 const request = require('request')
 const mangareader = require('./providers/mangareader')
 
+const cloudinary = require('./cloudinary')
+
 function chapterDetail (chapter) {
   return {
     _id: chapter._id,
@@ -94,8 +96,18 @@ module.exports = {
       if (manga.image == null) {
         mangareader.getManga(manga)
         .then((mangaData) => {
-          Object.assign(manga, mangaData)
-          manga.save(() => res.send(mangaDetail(manga)))
+          // upload image if we don't have it yet
+          if (mangaData.image && !manga.image) {
+            cloudinary.upload(mangaData.image)
+            .then((url) => {
+              mangaData.image = url
+              Object.assign(manga, mangaData)
+              manga.save(() => res.send(mangaDetail(manga)))
+            })
+          } else {
+            Object.assign(manga, mangaData)
+            manga.save(() => res.send(mangaDetail(manga)))
+          }
         }).catch((err) => {
           console.log(err)
           res.send(err)
