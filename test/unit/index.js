@@ -8,6 +8,12 @@ Vue.prototype.$ = function (selector) {
   return this.$el.querySelector(selector)
 }
 
+Vue.prototype.$raf = function () {
+  return new Promise((resolve) => {
+    requestAnimationFrame(resolve)
+  })
+}
+
 Vue.prototype.$tick = function () {
   return new Promise((resolve) => {
     this.$nextTick(resolve)

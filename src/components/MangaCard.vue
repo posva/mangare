@@ -1,8 +1,8 @@
 <template>
 <figure class="manga-card">
-  <img class="manga-card__image" :title="manga.name" :src="image(manga)">
+  <img class="manga-card__image" :title="manga.name" :src="image">
   <figcaption class="manga-card__hover">
-    <div v-link="route(manga)" class="manga-card__title-container">
+    <div v-link="route" class="manga-card__title-container">
       <h2 v-fit="manga.name" class="manga-card__title">{{ manga.name }}</h2>
     </div>
     <div class="manga-card__information">
@@ -10,7 +10,7 @@
       <p class="manga-card__information__description">{{ manga.description }}</p>
       <ul class="manga-card__information__actions">
         <li>
-          <a title="Go to the Manga page" v-link="route(manga)">Details</a>
+          <a title="Go to the Manga page" v-link="route">Details</a>
         </li>
         <li>
           <a @click.stop.prevent="quickRead" title="Read last chapter online" href="#">Quick Read</a>
@@ -33,20 +33,20 @@ export default {
     chapterCount () {
       return typeof this.manga.chapterCount === 'number'
         ? this.manga.chapterCount : '?'
-    }
-  },
-  methods: {
-    image (manga) {
-      return manga.image || 'https://placeholdit.imgix.net/~text?txtsize=33&txt=%F0%9F%8D%99Mangare&w=221&h=350'
     },
-    route (manga) {
+    image () {
+      return this.manga.image || 'https://placeholdit.imgix.net/~text?txtsize=33&txt=%F0%9F%8D%99Mangare&w=221&h=350'
+    },
+    route () {
       return {
         name: 'manga',
         params: {
-          mangaId: manga._id
+          mangaId: this.manga._id
         }
       }
-    },
+    }
+  },
+  methods: {
     quickRead () {
     },
     quickDownload () {
