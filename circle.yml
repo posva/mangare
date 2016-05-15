@@ -1,3 +1,7 @@
+general:
+  branches:
+    ignore:
+      - heroku
 machine:
   node:
     version: 5
