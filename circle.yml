@@ -1,3 +1,8 @@
 machine:
   node:
     version: 5
+deployment:
+  heroku:
+    branch: master
+    commands:
+      - ./build/heroku.sh
