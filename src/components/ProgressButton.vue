@@ -6,7 +6,6 @@
       </span>
     </span>
   </button>
-  </div>
 </template>
 
 <script>
