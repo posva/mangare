@@ -35,7 +35,7 @@ export default {
         ? this.manga.chapterCount : '?'
     },
     image () {
-      return this.manga.image || 'https://placeholdit.imgix.net/~text?txtsize=33&txt=%F0%9F%8D%99Mangare&w=221&h=350'
+      return this.manga.image || '//placeholdit.imgix.net/~text?txtsize=33&txt=%F0%9F%8D%99Mangare&w=221&h=350'
     },
     route () {
       return {

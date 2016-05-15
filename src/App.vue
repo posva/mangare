@@ -4,7 +4,7 @@
     <nav id="nav">
       <a v-link="{ name: 'search' }">
         <h1>
-          <img class="logo emoji" draggable="false" alt="🍙" src="https://twemoji.maxcdn.com/2/72x72/1f359.png">
+          <img class="logo emoji" draggable="false" alt="🍙" src="//twemoji.maxcdn.com/2/72x72/1f359.png">
           Mangare
         </h1>
       </a>
@@ -47,7 +47,7 @@ export default {
 <style lang="stylus">
 @import './assets/style/palette'
 @import './assets/style/flex'
-@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700)
+@import url(//fonts.googleapis.com/css?family=Lato:100,300,400,700)
 
 *
   box-sizing border-box
