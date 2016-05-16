@@ -58,6 +58,8 @@ describe('Providers', () => {
       manga.should.have.property('name', 'Naruto')
       manga.should.have.property('alternate', '???,Naruto')
       manga.should.have.property('chapters')
+      manga.should.have.property('description')
+      manga.description.should.match(/a great demon/)
       manga.should.have.property('image', 'http://s3.mangareader.net/cover/naruto/naruto-l0.jpg')
       manga.chapters.should.have.length(700)
       manga.chapters.forEach(chapter => {
