@@ -19,6 +19,7 @@ function mangaDetail (manga) {
   return {
     _id: manga._id,
     name: manga.name,
+    description: manga.description,
     image: manga.image,
     uri: manga.uri,
     updatedAt: manga.updatedAt,
@@ -32,9 +33,9 @@ module.exports = {
   mangaList (req, res) {
     Manga.find({}, {
       name: true,
+      description: true,
       image: true,
       uri: true,
-      description: true,
       completed: true,
       updatedAt: true,
       chapterCount: true
@@ -90,6 +91,7 @@ module.exports = {
   manga (req, res) {
     Manga.findById(req.params.id, {
       name: true,
+      description: true,
       completed: true,
       image: true,
       updatedAt: true,
