@@ -5,6 +5,9 @@ const mangareader = require('./providers/mangareader')
 
 const cloudinary = require('./cloudinary')
 
+// One day in milliseconds
+const DAY = 1000 * 60 * 60 * 24
+
 function chapterDetail (chapter) {
   return {
     _id: chapter._id,
@@ -102,7 +105,9 @@ module.exports = {
     }, (err, manga) => {
       if (err) return res.send(err)
 
-      if (manga.image == null) {
+      const needsUpdate = manga.image == null ||
+        (new Date() - new Date(manga.updatedAt)) > DAY
+      if (needsUpdate) {
         mangareader.getManga(manga)
         .then((mangaData) => {
           // upload image if we don't have it yet

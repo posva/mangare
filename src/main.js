@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueMoment from 'vue-moment'
 import VueResource from 'vue-resource'
 import VueProgressbar from 'vue-progressbar'
 import configRouter from './config-router'
@@ -13,6 +14,7 @@ import App from './App'
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(VueProgressbar)
+Vue.use(VueMoment)
 
 Vue.http.interceptors.push({
   request (request) {
