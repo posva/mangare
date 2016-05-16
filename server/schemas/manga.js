@@ -17,7 +17,7 @@ let mangaSchema = mongoose.Schema({
   completed: Boolean,
   updatedAt: Date,
   chapterCount: {
-    Number,
+    type: Number,
     default: 0
   },
   chapters: {
@@ -29,6 +29,7 @@ let mangaSchema = mongoose.Schema({
 })
 
 mangaSchema.pre('save', function (next) {
+  console.log('pre save')
   this.updatedAt = new Date()
   this.chapterCount = this.chapters.length
   next()

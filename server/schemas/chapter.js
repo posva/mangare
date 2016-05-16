@@ -10,13 +10,17 @@ let chapterSchema = mongoose.Schema({
     required: true
   },
   updatedAt: Date,
-  pages: [pageSchema]
+  pages: {
+    type: [pageSchema],
+    default: []
+  }
 }, {
   autoIndex: true
 })
 
 chapterSchema.pre('save', function (next) {
   this.updatedAt = new Date()
+  this.pageCount = this.pages.length
   next()
 })
 
