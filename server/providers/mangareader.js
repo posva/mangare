@@ -12,6 +12,7 @@ const reChapterPage = /id="img"[^>]*src="([^"]+)/i
 const reChapterAllPages = /id="selectpage".*\n(?:.*<option.*\n)*/i
 const reChapterSinglePage = /<option[^>]*value="([^"]+)".*\n/gi
 const reMangaImage = /id="mangaimg" *>[ \n]*<img[^>]*src="([^"]+)/i
+const reMangaDescription = /id="readmangasum" *>[ \n]*<h2[^>]*>[^<]*<\/h2>[ \n]*<p[^>]*>([^<]+)/i
 
 let mangaReader = {
   host: host,
@@ -70,6 +71,7 @@ let mangaReader = {
         }
         manga.image = reMangaImage.exec(data)[1]
         manga.alternate = reAlternateName.exec(data)
+        manga.description = reMangaDescription.exec(data)[1]
         manga.alternate = manga.alternate && manga.alternate[1]
         manga.chapters = []
         data = data.substring(data.indexOf('id="chapterlist"'))
