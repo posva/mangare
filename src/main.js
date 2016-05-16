@@ -16,7 +16,7 @@ Vue.use(VueProgressbar)
 
 Vue.http.interceptors.push({
   request (request) {
-    this.$progress.start(2000)
+    this.$progress.start(5000)
     return request
   },
   response (response) {

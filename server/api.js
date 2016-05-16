@@ -10,6 +10,7 @@ function chapterDetail (chapter) {
     _id: chapter._id,
     name: chapter.name,
     uri: chapter.uri,
+    updatedAt: chapter.updatedAt,
     pages: _.map(chapter.pages, (page) => page.image)
   }
 }
@@ -20,7 +21,9 @@ function mangaDetail (manga) {
     name: manga.name,
     image: manga.image,
     uri: manga.uri,
+    updatedAt: manga.updatedAt,
     completed: manga.completed,
+    chapterCount: manga.chapterCount,
     chapters: _.map(manga.chapters, (chapter) => _.pick(chapter, ['uri', 'name', '_id']))
   }
 }
@@ -33,6 +36,7 @@ module.exports = {
       uri: true,
       description: true,
       completed: true,
+      updatedAt: true,
       chapterCount: true
     }, (err, mangas) => {
       if (err) return res.send(err)
@@ -88,6 +92,7 @@ module.exports = {
       name: true,
       completed: true,
       image: true,
+      updatedAt: true,
       uri: true,
       'chapters.name': true,
       'chapters.uri': true,

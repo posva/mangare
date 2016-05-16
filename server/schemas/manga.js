@@ -17,7 +17,7 @@ let mangaSchema = mongoose.Schema({
   completed: Boolean,
   updatedAt: Date,
   chapterCount: {
-    Number,
+    type: Number,
     default: 0
   },
   chapters: {

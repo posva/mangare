@@ -58,12 +58,15 @@ describe('API', () => {
       }
       api.mangaList(null, {send (mangas) {
         mangas.should.have.length(1)
-        let m = mangas[mangas.length - 1]
+        let m = mangas[0]
         m.should.have.property('uri', mangaDesc.uri)
         m.should.have.property('name', mangaDesc.name)
         m.should.have.property('completed', mangaDesc.completed)
         m.should.have.property('image', mangaDesc.image)
-        should(m.updatedAt).not.be.ok()
+        m.should.have.property('chapterCount', 0)
+        m.should.have.property('updatedAt')
+        m.updatedAt.should.be.a.String
+        new Date(m.updatedAt).should.be.a.Date
         should(m.chapters).not.be.ok()
         done()
       }})
@@ -85,6 +88,7 @@ describe('API', () => {
       doc.should.have.property('name', mangaFromList.name)
       doc.should.have.property('completed', mangaFromList.completed)
       should(doc.image).not.be.ok()
+      doc.chapterCount.should.equal(0)
       doc.chapters.should.have.length(0)
 
       sinon.spy(mangareader, 'getManga')
@@ -92,12 +96,14 @@ describe('API', () => {
         mangareader.getManga.callCount.should.be.eql(1)
         should(mangaDetail).be.ok()
         mangaDetail.image.should.be.ok()
+        should(mangaDetail.updatedAt).be.ok()
         mangaDetail.should.not.have.property('__v')
         mangaDetail.chapters.length.should.be.eql(700)
 
         api.manga({params: {id: doc._id}}, {send (mangaDetail) {
           mangareader.getManga.callCount.should.be.eql(1)
           should(mangaDetail).be.ok()
+          should(mangaDetail.updatedAt).be.ok()
           mangaDetail.should.not.have.property('__v')
           mangaDetail.image.should.be.ok()
           mangaDetail.chapters.length.should.be.eql(700)
@@ -166,6 +172,7 @@ describe('API', () => {
           mangareader.getPages.calledOnce.should.be.true()
           should(chapter).be.ok()
           should(chapter._id).be.ok()
+          should(chapter.updatedAt).be.ok()
           chapter.name.should.be.ok()
           chapter.uri.should.be.ok()
           chapter.pages.length.should.be.eql(53)
@@ -173,6 +180,7 @@ describe('API', () => {
           api.mangaChapter(req, {send (chapter) {
             mangareader.getPages.calledOnce.should.be.true()
             should(chapter).be.ok()
+            should(chapter.updatedAt).be.ok()
             should(chapter._id).be.ok()
             chapter.name.should.be.ok()
             chapter.uri.should.be.ok()

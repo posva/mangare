@@ -7,7 +7,7 @@ describe('ProgressButton.vue', () => {
   before(() => {
     vm = new Vue({
       data: {
-        progress: ''
+        progress: 0
       },
       el: 'body',
       replace: false,
