@@ -12,6 +12,7 @@ describe('MangaCard.vue', () => {
           chapterCount: 700,
           completed: true,
           description: 'Description',
+          updatedAt: new Date(),
           image: 'image'
         }
       },
@@ -30,7 +31,7 @@ describe('MangaCard.vue', () => {
     mangaCard.$('.manga-card__title').should.have.text('Naruto')
     mangaCard.$('.manga-card__information__chapters').should.contain.text(700)
     mangaCard.$('.manga-card__information__chapters').should.contain.text(700)
-    mangaCard.$('.manga-card__information__description').should.have.text('Description')
+    mangaCard.$('.manga-card__information__updated-at').should.contain.text('Updated')
   })
 
   it('displays a placeholder when no image', () => {

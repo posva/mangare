@@ -9,7 +9,7 @@
     </a>
     <div class="manga-card__information">
       <p class="manga-card__information__chapters">{{ chapterCount }} Chapters</p>
-      <div class="manga-card__information__description">
+      <div class="manga-card__information__updated-at">
         <span>Updated {{ manga.updatedAt | moment 'from' }}</span>
         <button class="manga-card__refresh-button">
           <img src="../assets/img/refresh-icon.png">
@@ -148,9 +148,9 @@ export default {
     width 100%
     height .8 * @height
     .manga-card__information__chapters,
-    .manga-card__information__description
+    .manga-card__information__updated-at
       font-weight 200
-    .manga-card__information__description
+    .manga-card__information__updated-at
       font-size 1rem
       max-height 5rem
       padding 0 .5rem
