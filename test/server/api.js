@@ -88,6 +88,7 @@ describe('API', () => {
       doc.should.have.property('name', mangaFromList.name)
       doc.should.have.property('completed', mangaFromList.completed)
       should(doc.image).not.be.ok()
+      should(doc.description).not.be.ok()
       doc.chapterCount.should.equal(0)
       doc.chapters.should.have.length(0)
 
@@ -97,6 +98,7 @@ describe('API', () => {
         should(mangaDetail).be.ok()
         mangaDetail.image.should.be.ok()
         should(mangaDetail.updatedAt).be.ok()
+        should(mangaDetail.description).be.ok()
         mangaDetail.should.not.have.property('__v')
         mangaDetail.chapters.length.should.be.eql(700)
 
