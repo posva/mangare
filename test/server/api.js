@@ -196,4 +196,35 @@ describe('API', () => {
       }})
     })
   })
+
+  it('uses the provider if the last update is bigger than 1d', (done) => {
+    nock(mangareader.host)
+    .get(mangaFromList.uri)
+    .replyWithFile(200, path.join(__dirname, './fixtures/mangareader/naruto.html'))
+    sinon.spy(mangareader, 'getManga')
+
+    // directly use mongo to hack updatedAt
+    let updatedAt = new Date()
+    let now = new Date()
+    updatedAt.setMonth(updatedAt.getMonth() - 1)
+    Manga.collection.insert(Object.assign({}, mangaFromList, {updatedAt, image: 'image'}))
+
+    mangareader.getManga.callCount.should.be.eql(0)
+
+    Manga.findOne({uri: mangaFromList.uri}, (err, doc) => {
+      debugger
+      if (err) return done(err)
+      mangareader.getManga.callCount.should.be.eql(0)
+
+      api.manga({params: {id: doc._id}}, {send (mangaDetail) {
+        should(mangaDetail).be.ok()
+        mangareader.getManga.callCount.should.be.eql(1)
+
+        api.manga({params: {id: doc._id}}, {send (mangaDetail) {
+          mangareader.getManga.callCount.should.be.eql(1)
+          doc.remove(done)
+        }})
+      }})
+    })
+  })
 })

@@ -2,12 +2,19 @@
 <figure class="manga-card">
   <img class="manga-card__image" :title="manga.name" :src="image">
   <figcaption class="manga-card__hover">
-    <div v-link="route" class="manga-card__title-container">
-      <h2 v-fit="manga.name" class="manga-card__title">{{ manga.name }}</h2>
-    </div>
+    <a v-link="route">
+      <div class="manga-card__title-container">
+        <h2 v-fit="manga.name" class="manga-card__title">{{ manga.name }}</h2>
+      </div>
+    </a>
     <div class="manga-card__information">
       <p class="manga-card__information__chapters">{{ chapterCount }} Chapters</p>
-      <p class="manga-card__information__description">{{ manga.description }}</p>
+      <div class="manga-card__information__updated-at">
+        <span>Updated {{ manga.updatedAt | moment 'from' }}</span>
+        <button class="manga-card__refresh-button">
+          <img src="../assets/img/refresh-icon.png">
+        </button>
+      </div>
       <ul class="manga-card__information__actions">
         <li>
           <a title="Go to the Manga page" v-link="route">Details</a>
@@ -126,24 +133,26 @@ export default {
     @extend .flex
   .manga-card__title
     font-size 1.5rem
+    color dark
     cursor pointer
     text-align center
     display inline-block
     margin 0
 
   .manga-card__information
+    p
+      margin 0
     @extend .flex
     justify-content space-between
     flex-direction column
     width 100%
     height .8 * @height
     .manga-card__information__chapters,
-    .manga-card__information__description
+    .manga-card__information__updated-at
       font-weight 200
-    .manga-card__information__description
-      font-size .85rem
+    .manga-card__information__updated-at
+      font-size 1rem
       max-height 5rem
-      text-overflow ellipsis
       padding 0 .5rem
 
     .manga-card__information__actions
@@ -195,12 +204,42 @@ export default {
       opacity .8
       background-color dark
       color clear
+    .manga-card__title
+      color clear
 
     .manga-card__information__actions
       li
         transform translate3d(0,0,0)
 
+  @keyframes rotation
+    from
+      transform rotate(0deg)
+    to
+      transform rotate(360deg)
 
+  .manga-card__refresh-button
+    vertical-align middle
+    img
+      width 16px
+    outline 0
+    position relative
+    color clear
+    background none
+    border none
+    height 100%
+    transform rotate(0)
+    transition transform .3s
+
+    &[disabled]
+      color darken(clear, 20%)
+
+    &:hover
+      &:not([disabled])
+        cursor pointer
+      transform scale(1.2)
+    &.active
+      animation rotation 1s infinite
+      animation-timing-function linear
 
 </style>
 
