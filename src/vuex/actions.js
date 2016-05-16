@@ -8,3 +8,7 @@ export function fetchMangaList ({state, dispatch}, request) {
     dispatch('ERROR', err)
   })
 }
+
+export function updateManga ({ dispatch }, manga) {
+  dispatch('UPDATE_MANGA', manga)
+}

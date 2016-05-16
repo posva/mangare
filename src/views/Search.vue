@@ -50,6 +50,12 @@ export default {
       searchQuery: ''
     }
   },
+  watch: {
+    // Keep up with router updates
+    '$route.query.query': function (query) {
+      this.searchQuery = query || ''
+    }
+  },
   computed: {
     searchResults () {
       let results = fuzzy(this.searchQuery, this.mangaList, fuzzyOptions)

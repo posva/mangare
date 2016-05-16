@@ -9,8 +9,16 @@
 
 <script>
 import Chapter from '../components/Chapter'
+import {
+  updateManga
+} from '../vuex/actions'
 
 export default {
+  vuex: {
+    actions: {
+      updateManga
+    }
+  },
   data () {
     return {
       manga: {
@@ -26,6 +34,7 @@ export default {
       this.$http.get(`/api/mangas/${this.$route.params.mangaId}`)
       .then((response) => {
         this.manga = response.data
+        this.updateManga(this.manga)
         transition.next()
       }, (response) => {
         console.error('Cannot retrieve manga: ', response)
