@@ -69,10 +69,14 @@ let mangaReader = {
         if (mangaDescriptor.name !== manga.name) {
           console.log(`Warning: Manga name missmatch: "${manga.name}" !=== "${mangaDescriptor.name}"`)
         }
-        manga.image = reMangaImage.exec(data)[1]
-        manga.alternate = reAlternateName.exec(data)
-        manga.description = reMangaDescription.exec(data)[1]
-        manga.alternate = manga.alternate && manga.alternate[1]
+
+        let tmp
+        tmp = reMangaImage.exec(data)
+        manga.image = tmp && tmp[1]
+        tmp = reMangaDescription.exec(data)
+        manga.description = tmp && tmp[1]
+        tmp = reAlternateName.exec(data)
+        manga.alternate = tmp && tmp[1]
         manga.chapters = []
         data = data.substring(data.indexOf('id="chapterlist"'))
         let match = reChapters.exec(data)
