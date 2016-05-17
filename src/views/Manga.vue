@@ -10,13 +10,15 @@
 <script>
 import Chapter from '../components/Chapter'
 import {
-  updateManga
+  updateManga,
+  fetchManga
 } from '../vuex/actions'
 
 export default {
   vuex: {
     actions: {
-      updateManga
+      updateManga,
+      fetchManga
     }
   },
   data () {
@@ -31,8 +33,9 @@ export default {
   },
   route: {
     activate (transition) {
-      this.$http.get(`/api/mangas/${this.$route.params.mangaId}`)
-      .then((response) => {
+      let p = this.$http.get(`/api/mangas/${this.$route.params.mangaId}`)
+      // this.fetchManga(p)
+      p.then((response) => {
         this.manga = response.data
         this.updateManga(this.manga)
         transition.next()

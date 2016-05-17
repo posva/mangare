@@ -2,12 +2,12 @@
   <div class="_flex">
     <search-bar :value.sync="searchQuery" @change="updateQuery">
     </search-bar>
-    <div v-show="searchQuery" class="search-resutls">
+    <div v-if="searchQuery" class="search-resutls">
       <manga-card v-for="manga in searchResults"
         :manga="manga"
       ></manga-card>
     </div>
-    <div v-show="!searchQuery" class="search-message">
+    <div v-else class="search-message">
       <img src="../assets/img/gon.png">
       <p>What do you want to read today?</p>
     </div>

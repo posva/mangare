@@ -11,7 +11,7 @@
       <p class="manga-card__information__chapters">{{ chapterCount }} Chapters</p>
       <div class="manga-card__information__updated-at">
         <span>Updated {{ manga.updatedAt | moment 'from' }}</span>
-        <button class="manga-card__refresh-button">
+        <button @click="refreshManga" class="manga-card__refresh-button">
           <img src="../assets/img/refresh-icon.png">
         </button>
       </div>
@@ -32,7 +32,16 @@
 </template>
 
 <script>
+import {
+  fetchManga
+} from '../vuex/actions'
+
 export default {
+  vuex: {
+    actions: {
+      fetchManga
+    }
+  },
   props: {
     manga: Object
   },
@@ -42,7 +51,9 @@ export default {
         ? this.manga.chapterCount : '?'
     },
     image () {
-      return this.manga.image || '//placeholdit.imgix.net/~text?txtsize=33&txt=%F0%9F%8D%99Mangare&w=221&h=350'
+      this.manga.updatedAt
+      return this.manga.image ||
+        '//placeholdit.imgix.net/~text?txtsize=33&txt=%F0%9F%8D%99Mangare&w=221&h=350'
     },
     route () {
       return {
@@ -54,6 +65,9 @@ export default {
     }
   },
   methods: {
+    refreshManga () {
+      this.fetchManga(this.$http.get(`/api/mangas/${this.manga._id}`))
+    },
     quickRead () {
     },
     quickDownload () {
@@ -62,6 +76,9 @@ export default {
   directives: {
     fit () {
       requestAnimationFrame(() => {
+        // exit if this element has been removed from the dom
+        // this may happen when the user type fast enough
+        if (!this.el.parentNode) return
         const maxHeight = this.el.parentNode.offsetHeight
         let height = this.el.offsetHeight
         let fontSize = parseInt(window.getComputedStyle(this.el).fontSize)
@@ -74,6 +91,17 @@ export default {
         }
       })
     }
+  },
+  ready () {
+    this.refreshMangaTimeout = -1
+      // in case a manga doesn't have an image
+    if (!this.manga.image &&
+      new Date() - new Date(this.manga.updatedAt) > 1000 * 69 * 60 * 24) {
+      this.refreshMangaTimeout = setTimeout(() => this.refreshManga(), 850)
+    }
+  },
+  destroyed () {
+    clearTimeout(this.refreshMangaTimeout)
   }
 }
 </script>
