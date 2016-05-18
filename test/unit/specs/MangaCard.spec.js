@@ -1,10 +1,12 @@
 import Vue from 'vue'
+import store from 'src/vuex/store'
 import MangaCard from 'src/components/MangaCard'
 
 describe('MangaCard.vue', () => {
   let vm, mangaCard
   before(() => {
     vm = new Vue({
+      store,
       data: {
         manga: {
           _id: 'id',
