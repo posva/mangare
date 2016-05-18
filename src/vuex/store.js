@@ -5,10 +5,20 @@ import _ from 'lodash'
 Vue.use(Vuex)
 
 export const state = {
-  mangaList: []
+  mangaList: [],
+  pendingRefreshRequests: 0,
+  refreshingMangas: {}
 }
 
 export const mutations = {
+  START_REFRESH_MANGA (state, id) {
+    ++state.pendingRefreshRequests
+    Vue.set(state.refreshingMangas, id, true)
+  },
+  END_REFRESH_MANGA (state, id) {
+    --state.pendingRefreshRequests
+    Vue.set(state.refreshingMangas, id, false)
+  },
   SET_MANGA_LIST (state, mangaList) {
     state.mangaList = mangaList
   },

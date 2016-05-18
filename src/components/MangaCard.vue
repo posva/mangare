@@ -11,7 +11,7 @@
       <p class="manga-card__information__chapters">{{ chapterCount }} Chapters</p>
       <div class="manga-card__information__updated-at">
         <span>Updated {{ manga.updatedAt | moment 'from' }}</span>
-        <button @click="refreshManga" class="manga-card__refresh-button">
+        <button :disabled="!canRefresh" @click="refreshManga" class="manga-card__refresh-button">
           <img src="../assets/img/refresh-icon.png">
         </button>
       </div>
@@ -28,6 +28,9 @@
       </ul>
     </div>
   </figcaption>
+  <div class="refreshing-banner" :class="progressClasses">
+    <span>Refreshing...</span>
+  </div>
 </figure>
 </template>
 
@@ -36,16 +39,40 @@ import {
   fetchManga
 } from '../vuex/actions'
 
+import {
+  refreshingMangas,
+  pendingRefreshRequests
+} from '../vuex/getters'
+
 export default {
   vuex: {
     actions: {
       fetchManga
+    },
+    getters: {
+      refreshingMangas,
+      pendingRefreshRequests
     }
   },
   props: {
     manga: Object
   },
   computed: {
+    isVisible () {
+      const rect = this.$el.getBoundingClientRect()
+      const viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight)
+      return !(rect.bottom < 0 || rect.top - viewHeight >= 0)
+    },
+    canRefresh () {
+      return !this.manga.image ||
+        new Date() - new Date(this.manga.updatedAt) > 1000 * 69 * 60 * 24
+    },
+    isRefreshing () {
+      return !!this.refreshingMangas[this.manga._id]
+    },
+    progressClasses () {
+      return { active: this.isRefreshing }
+    },
     chapterCount () {
       return typeof this.manga.chapterCount === 'number'
         ? this.manga.chapterCount : '?'
@@ -66,7 +93,7 @@ export default {
   },
   methods: {
     refreshManga () {
-      this.fetchManga(this.$http.get(`/api/mangas/${this.manga._id}`))
+      this.fetchManga(this.manga._id, this.$http.get(`/api/mangas/${this.manga._id}`))
     },
     quickRead () {
     },
@@ -78,7 +105,7 @@ export default {
       requestAnimationFrame(() => {
         // exit if this element has been removed from the dom
         // this may happen when the user type fast enough
-        if (!this.el.parentNode) return
+        if (!this.el || !this.el.parentNode) return
         const maxHeight = this.el.parentNode.offsetHeight
         let height = this.el.offsetHeight
         let fontSize = parseInt(window.getComputedStyle(this.el).fontSize)
@@ -97,7 +124,14 @@ export default {
       // in case a manga doesn't have an image
     if (!this.manga.image &&
       new Date() - new Date(this.manga.updatedAt) > 1000 * 69 * 60 * 24) {
-      this.refreshMangaTimeout = setTimeout(() => this.refreshManga(), 850)
+      const refreshMangaFn = () => {
+        if (this.pendingRefreshRequests < 3) {
+          this.refreshManga()
+        } else {
+          setTimeout(refreshMangaFn, 500)
+        }
+      }
+      this.refreshMangaTimeout = setTimeout(refreshMangaFn, 850)
     }
   },
   destroyed () {
@@ -123,6 +157,23 @@ export default {
   border solid 1px darken(clear, 20%)
   border-radius 2px
   font-weight 500
+
+  .refreshing-banner
+    position absolute
+    top 0
+    left 0
+    z-index 2
+    width 100%
+    background-color clear
+    padding .35rem
+    font-size .75rem
+    opacity 0
+    transform translate3d(0,-100%,0)
+    transition transform 0.3s,
+               opacity 0.6s
+    &.active
+      opacity 1
+      transform translate3d(0,0,0)
 
   .manga-card__hover
     backface-visibility hidden
@@ -239,12 +290,6 @@ export default {
       li
         transform translate3d(0,0,0)
 
-  @keyframes rotation
-    from
-      transform rotate(0deg)
-    to
-      transform rotate(360deg)
-
   .manga-card__refresh-button
     vertical-align middle
     img
@@ -255,8 +300,6 @@ export default {
     background none
     border none
     height 100%
-    transform rotate(0)
-    transition transform .3s
 
     &[disabled]
       color darken(clear, 20%)
@@ -264,10 +307,7 @@ export default {
     &:hover
       &:not([disabled])
         cursor pointer
-      transform scale(1.2)
-    &.active
-      animation rotation 1s infinite
-      animation-timing-function linear
+        transform scale(1.2)
 
 </style>
 
