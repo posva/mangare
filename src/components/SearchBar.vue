@@ -1,12 +1,12 @@
 <template>
   <div class="search-container" :class="searchContainerClass">
-    <input autocomplete="off" id="search-input" v-model="value" debounce="100"
+    <input :disabled="disabled" autocomplete="off" id="search-input" v-model="value" debounce="100"
       name="query" type="text" @change="$emit($event)"
       @focus="searchFocused = true"
       @blur="searchFocused = false"
     >
     <label for="search-input">
-      <span>Search</span>
+      <span>{{ label }}</span>
     </label>
   </div>
 </template>
@@ -14,6 +14,7 @@
 <script>
 export default {
   props: {
+    disabled: Boolean,
     value: {
       type: String,
       required: true,
@@ -26,9 +27,15 @@ export default {
     }
   },
   computed: {
+    label () {
+      return this.disabled
+        ? 'Collecting mangas...'
+        : 'Search'
+    },
     searchContainerClass () {
       return {
-        filled: this.value || this.searchFocused
+        filled: this.value || this.searchFocused,
+        disabled: this.disabled
       }
     }
   }
@@ -51,6 +58,9 @@ export default {
     font-size 1.5rem
   background-color darken(clear, 20%)
   border-radius 2rem
+
+  &.disabled
+    background-color lighten(@background-color, 20%)
 
   &.filled
     label::before

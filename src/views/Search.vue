@@ -1,15 +1,15 @@
 <template>
   <div class="_flex">
-    <search-bar :value.sync="searchQuery" @change="updateQuery">
+    <search-bar :disabled="!mangaList.length" :value.sync="searchQuery" @change="updateQuery">
     </search-bar>
-    <div v-if="searchQuery" class="search-resutls">
+    <div v-if="isReady" class="search-resutls">
       <manga-card v-for="manga in searchResults"
         :manga="manga"
       ></manga-card>
     </div>
     <div v-else class="search-message">
       <img src="../assets/img/gon.png">
-      <p>What do you want to read today?</p>
+      <p>{{ message }}</p>
     </div>
   </div>
 </template>
@@ -57,6 +57,14 @@ export default {
     }
   },
   computed: {
+    message () {
+      return this.mangaList.length
+        ? 'What do you want to read today?'
+        : 'Let me organise the mangas for you'
+    },
+    isReady () {
+      return this.mangaList.length && this.searchQuery
+    },
     searchResults () {
       let results = fuzzy(this.searchQuery, this.mangaList, fuzzyOptions)
       return _.map(_.take(results, 20)
