@@ -104,6 +104,9 @@ module.exports = {
       'chapters._id': true
     }, (err, manga) => {
       if (err) return res.send(err)
+      if (!manga) {
+        return res.status(404).send('Manga not found')
+      }
 
       const needsUpdate = manga.image == null ||
         (new Date() - new Date(manga.updatedAt)) > DAY
