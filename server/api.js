@@ -43,7 +43,7 @@ module.exports = {
       updatedAt: true,
       chapterCount: true
     }, (err, mangas) => {
-      if (err) return res.send(err)
+      if (err) return res.status(500).send(err)
       res.send(mangas)
     })
   },
@@ -56,9 +56,7 @@ module.exports = {
         }
       }
     }, (err, manga) => {
-      if (err) {
-        return res.status(500).send(err)
-      }
+      if (err) return res.status(500).send(err)
       if (!manga) {
         return res.status(404).send('Manga not found')
       }
@@ -103,7 +101,10 @@ module.exports = {
       'chapters.uri': true,
       'chapters._id': true
     }, (err, manga) => {
-      if (err) return res.send(err)
+      if (err) return res.status(500).send(err)
+      if (!manga) {
+        return res.status(404).send('Manga not found')
+      }
 
       const needsUpdate = manga.image == null ||
         (new Date() - new Date(manga.updatedAt)) > DAY
@@ -124,7 +125,7 @@ module.exports = {
           }
         }).catch((err) => {
           console.log(err)
-          res.send(err)
+          res.status(500).send(err)
         })
       } else {
         res.send(mangaDetail(manga))
@@ -140,9 +141,7 @@ module.exports = {
     const image = query.replace(/^(https?:)?\/\//, '')
     const url = `https://images.weserv.nl?url=${image}&encoding=base64`
     request.get(url, (err, response, data) => {
-      if (err) {
-        return res.status(500).send(err)
-      }
+      if (err) return res.status(500).send(err)
       if (response.statusCode !== 200) {
         return res.status(response.statusCode).send('Error')
       }
