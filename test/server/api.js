@@ -175,6 +175,7 @@ describe('API', () => {
           should(chapter).be.ok()
           should(chapter._id).be.ok()
           should(chapter.updatedAt).be.ok()
+          should(chapter.date).be.ok()
           chapter.name.should.be.ok()
           chapter.uri.should.be.ok()
           chapter.pages.length.should.be.eql(53)

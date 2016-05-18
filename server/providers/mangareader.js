@@ -7,7 +7,7 @@ const reListElements = new RegExp('<li><a href="(/[^"]+)"> ?([^<]+)</a>(<span cl
 const reName = /class="aname">([^<]+)/
 const reAlternateName = /Alternate Name[^<]*<[^>]*>\n?<td>([^<]+)/i
 // const reNumberOfChapters = /class="chico_manga".*\n?<a[^>]*>.*([0-9]+)<.a/i
-const reChapters = /class="chico_manga".*\n?<a +href="([^"]+)[^>]*>[^<]+<.a> : ([^<]+)?/ig
+const reChapters = /class="chico_manga".*\n?<a +href="([^"]+)[^>]*>[^<]+<.a> : ([^<]+)?<\/td>[ \n]*<td>([^<]*)/ig
 const reChapterPage = /id="img"[^>]*src="([^"]+)/i
 // const reNextPage = /<a[^>]*href="([^"]+)"[^>]*>next/i
 const reChapterAllPages = /id="selectpage".*\n(?:.*<option.*\n)*/i
@@ -93,7 +93,8 @@ let mangaReader = {
           manga.chapters.push({
             index: index,
             uri: match[1],
-            name: (match[2] && match[2] + ' (' + index + ')') || manga.name + ' ' + index
+            name: (match[2] && match[2] + ' (' + index + ')') || manga.name + ' ' + index,
+            date: new Date(match[3]) || null
           })
           match = reChapters.exec(data)
           ++index
