@@ -3,6 +3,8 @@ const fallback = require('express-history-api-fallback')
 const mongoose = require('mongoose')
 
 const api = require('./api')
+const dbLogger = require('./logger')('MongoDB')
+const logger = require('./logger')()
 
 process.env.PORT = process.env.PORT || 8080
 const app = express()
@@ -28,13 +30,13 @@ process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/mangar
 mongoose.connect(process.env.MONGODB_URI)
 const db = mongoose.connection
 
-db.on('error', console.error.bind(console, 'connection error:'))
+db.on('error', dbLogger.error.bind(dbLogger))
 
 db.once('open', () => {
-  console.log(`MongoDB started on ${process.env.MONGODB_URI}`)
+  dbLogger.info(`MongoDB started on ${process.env.MONGODB_URI}`)
 })
 
 module.exports = app.listen(process.env.PORT, () => {
-  console.log(`Listening on ${process.env.PORT}`)
+  logger.info(`Listening on ${process.env.PORT}`)
 })
 

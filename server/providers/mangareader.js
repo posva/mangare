@@ -1,5 +1,6 @@
 'use strict'
 const request = require('request')
+const logger = require('../logger')('MangaReader')
 
 const host = 'http://www.mangareader.net'
 const reListElements = new RegExp('<li><a href="(/[^"]+)"> ?([^<]+)</a>(<span class)?', 'g')
@@ -26,12 +27,15 @@ let mangaReader = {
     return `${host}${manga.uri}`
   },
   getList () {
+    logger.info('Retrieving Manga List')
     return new Promise((resolve, reject) => {
       request.get(this.getListURL(), (err, response, data) => {
         let p1, p2, text
         if (err) {
+          logger.error(err)
           return reject(err)
         } else if (response.statusCode !== 200) {
+          logger.error(`Wrong status code ${response.status}`)
           return reject('wrong status')
         }
         p1 = data.indexOf('class="content_bloc2"')
@@ -52,22 +56,26 @@ let mangaReader = {
           }
           match = reListElements.exec(text)
         }
+        logger.info('Retrieved Manga List')
         resolve(list)
       })
     })
   },
   getManga (mangaDescriptor) {
+    logger.info(`Retrieving Manga ${mangaDescriptor.uri}`)
     return new Promise((resolve, reject) => {
       request.get(this.getMangaURL(mangaDescriptor), (err, response, data) => {
         if (err) {
+          logger.error(err)
           return reject(err)
         } else if (response.statusCode !== 200) {
+          logger.error(`Wrong status code ${response.status}`)
           return reject('wrong status')
         }
         let manga = {}
         manga.name = reName.exec(data)[1].trim()
         if (mangaDescriptor.name !== manga.name) {
-          console.log(`Warning: Manga name missmatch: "${manga.name}" !=== "${mangaDescriptor.name}"`)
+          logger.warn(`Manga name missmatch: "${manga.name}" !=== "${mangaDescriptor.name}"`)
         }
 
         let tmp
@@ -90,16 +98,20 @@ let mangaReader = {
           match = reChapters.exec(data)
           ++index
         }
+        logger.info(`Retrieved Manga ${mangaDescriptor.uri}`)
         resolve(manga)
       })
     })
   },
   getPages (chapterDescriptor) {
+    logger.info(`Retrieving chapter ${chapterDescriptor.uri}`)
     return new Promise((resolve, reject) => {
       request.get(this.getChapterURL(chapterDescriptor), (err, response, data) => {
         if (err) {
+          logger.error(err)
           return reject(err)
         } else if (response.statusCode !== 200) {
+          logger.error(`Wrong status code ${response.status}`)
           return reject('wrong status')
         }
         let pages = []
@@ -127,6 +139,7 @@ let mangaReader = {
             imagesPromises.push(new Promise((resolve, reject) => {
               request.get(`${host}${page.uri}`, (err, response, data) => {
                 if (err) {
+                  logger.error(err)
                   pages[index].image = null
                 } else {
                   pages[index].image = reChapterPage.exec(data)[1]
@@ -137,7 +150,10 @@ let mangaReader = {
           }
         })
         // Wait for all request to end
-        Promise.all(imagesPromises).then(() => resolve(pages))
+        Promise.all(imagesPromises).then(() => {
+          logger.info(`Retrieved chapter ${chapterDescriptor.uri}`)
+          resolve(pages)
+        })
       })
     })
   }
