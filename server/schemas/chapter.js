@@ -5,6 +5,7 @@ const pageSchema = require('./page')
 let chapterSchema = mongoose.Schema({
   name: String,
   index: Number,
+  pageCount: Number,
   date: Date,
   uri: {
     type: String,

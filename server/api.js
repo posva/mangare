@@ -32,7 +32,9 @@ function mangaDetail (manga) {
     updatedAt: manga.updatedAt,
     completed: manga.completed,
     chapterCount: manga.chapterCount,
-    chapters: _.map(manga.chapters, (chapter) => _.pick(chapter, ['uri', 'name', '_id']))
+    chapters: _.map(manga.chapters, (chapter) => _.pick(chapter, [
+      'uri', 'name', '_id', 'date', 'updatedAt', 'pageCount'
+    ]))
   }
 }
 
@@ -124,6 +126,9 @@ module.exports = {
       uri: true,
       'chapters.name': true,
       'chapters.uri': true,
+      'chapters.date': true,
+      'chapters.updatedAt': true,
+      'chapters.pageCount': true,
       'chapters._id': true
     }, (err, manga) => {
       if (err) {
