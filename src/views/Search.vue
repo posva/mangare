@@ -88,7 +88,7 @@ export default {
   created () {
     this.searchQuery = this.$route.query.query || ''
     if (!this.mangaList.length) {
-      this.fetchMangaList(this.$http.get('/api/mangas'))
+      this.fetchMangaList()
     }
   },
   components: {

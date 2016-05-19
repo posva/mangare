@@ -1,7 +1,7 @@
 <template>
   <div class="chapter">
     <h3>
-    <a href="#" @click.prevent="showPages">{{ chapter.name }}</a>
+      <a href="#" @click.prevent="showPages">{{ chapter.name }}</a>
     </h3>
     <div v-show="open" class="chapter__pages">
       <p v-show="loading">Loading...</p>
