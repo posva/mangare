@@ -1,11 +1,13 @@
+import fetchival from 'fetchival'
+import _ from 'lodash'
+const mangas = fetchival('/api/mangas')
+
 export function fetchMangaList ({state, dispatch}, request) {
-  request.then((response) => {
-    dispatch('SET_MANGA_LIST', response.data)
-  }, (response) => {
-    console.error('Cannot retrieve manga: ', response)
-    dispatch('ERROR_REQUEST', response)
+  return mangas.get()
+  .then((mangaList) => {
+    dispatch('SET_MANGA_LIST', mangaList)
   }).catch((err) => {
-    dispatch('ERROR', err)
+    dispatch('ERROR_REQUEST', err)
   })
 }
 
@@ -13,20 +15,28 @@ export function updateManga ({ dispatch }, manga) {
   dispatch('UPDATE_MANGA', manga)
 }
 
-export function fetchManga ({ dispatch }, id, request) {
+export function viewManga ({ dispatch, state }, id) {
+  dispatch('SET_MANGA', _.find(state.mangaList, { _id: id }))
   dispatch('START_REFRESH_MANGA', id)
-  request.then((response) => {
-    const manga = response.data
-    dispatch('END_REFRESH_MANGA', id)
+  return mangas(id).get()
+  .then((manga) => {
+    dispatch('SET_MANGA', manga)
     dispatch('UPDATE_MANGA', manga)
-    // this.updateManga(this.manga)
-    // transition.next()
-  }, (response) => {
-    console.error('Cannot retrieve manga: ', response)
-    dispatch('ERROR_REQUEST', response)
     dispatch('END_REFRESH_MANGA', id)
   }).catch((err) => {
     dispatch('END_REFRESH_MANGA', id)
-    dispatch('ERROR', err)
+    dispatch('ERROR_REQUEST', err)
+  })
+}
+
+export function fetchManga ({ dispatch }, id) {
+  dispatch('START_REFRESH_MANGA', id)
+  return mangas(id).get()
+  .then((manga) => {
+    dispatch('UPDATE_MANGA', manga)
+    dispatch('END_REFRESH_MANGA', id)
+  }).catch((err) => {
+    dispatch('END_REFRESH_MANGA', id)
+    dispatch('ERROR_REQUEST', err)
   })
 }

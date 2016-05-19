@@ -118,6 +118,7 @@ module.exports = {
       name: true,
       description: true,
       completed: true,
+      chapterCount: true,
       image: true,
       updatedAt: true,
       uri: true,

@@ -6,6 +6,22 @@ Vue.use(Vuex)
 
 export const state = {
   mangaList: [],
+  manga: {
+    _id: null,
+    name: null,
+    description: null,
+    image: null,
+    updatedAt: null,
+    uri: null,
+    chapterCount: 0,
+    chapters: [{
+      date: null,
+      _id: null,
+      name: null,
+      uri: null
+    }],
+    completed: false
+  },
   pendingRefreshRequests: 0,
   refreshingMangas: {}
 }
@@ -19,6 +35,9 @@ export const mutations = {
     --state.pendingRefreshRequests
     Vue.set(state.refreshingMangas, id, false)
   },
+  SET_MANGA (state, manga) {
+    if (manga) state.manga = manga
+  },
   SET_MANGA_LIST (state, mangaList) {
     state.mangaList = mangaList
   },
@@ -30,6 +49,12 @@ export const mutations = {
         manga[key] = mangaData[key]
       }
     })
+  },
+  ERROR_REQUEST (state, err) {
+    console.error(err)
+  },
+  ERROR (state, err) {
+    console.error(err)
   }
 }
 

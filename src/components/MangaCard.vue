@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     refreshManga () {
-      this.fetchManga(this.manga._id, this.$http.get(`/api/mangas/${this.manga._id}`))
+      this.fetchManga(this.manga._id)
     },
     quickRead () {
     },

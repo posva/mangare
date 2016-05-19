@@ -7,7 +7,8 @@ module.exports = {
     'html'
   ],
   globals: {
-    requestAnimationFrame: true
+    requestAnimationFrame: true,
+    fetch: true
   },
   // add your custom rules here
   'rules': {

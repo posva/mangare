@@ -9,3 +9,7 @@ export function refreshingMangas (state) {
 export function pendingRefreshRequests (state) {
   return state.pendingRefreshRequests
 }
+
+export function manga (state) {
+  return state.manga
+}
