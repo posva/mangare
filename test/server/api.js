@@ -104,6 +104,13 @@ describe('API', () => {
         should(mangaDetail.description).be.ok()
         mangaDetail.should.not.have.property('__v')
         mangaDetail.chapters.length.should.be.eql(700)
+        const chapter = mangaDetail.chapters[0]
+        chapter.should.have.property('uri')
+        chapter.should.have.property('name')
+        chapter.should.have.property('_id')
+        chapter.should.have.property('date')
+        chapter.should.have.property('updatedAt')
+        chapter.should.have.property('pageCount', 0)
 
         api.manga({params: {id: doc._id}}, {send (mangaDetail) {
           mangareader.getManga.callCount.should.be.eql(1)
@@ -216,7 +223,6 @@ describe('API', () => {
     mangareader.getManga.callCount.should.be.eql(0)
 
     Manga.findOne({uri: mangaFromList.uri}, (err, doc) => {
-      debugger
       if (err) return done(err)
       mangareader.getManga.callCount.should.be.eql(0)
 
