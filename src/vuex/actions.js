@@ -2,7 +2,7 @@ import fetchival from 'fetchival'
 import _ from 'lodash'
 const mangas = fetchival('/api/mangas')
 
-export function fetchMangaList ({state, dispatch}, request) {
+export function fetchMangaList ({ dispatch }) {
   return mangas.get()
   .then((mangaList) => {
     dispatch('SET_MANGA_LIST', mangaList)
