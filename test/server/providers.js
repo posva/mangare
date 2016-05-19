@@ -65,6 +65,7 @@ describe('Providers', () => {
       manga.chapters.forEach(chapter => {
         chapter.should.have.property('index')
         chapter.should.have.property('uri')
+        chapter.should.have.property('date')
         chapter.should.have.property('name')
         chapter.name.should.match(/[0-9]+/)
       })

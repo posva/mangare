@@ -14,6 +14,7 @@ function chapterDetail (chapter) {
   return {
     _id: chapter._id,
     name: chapter.name,
+    date: chapter.date,
     uri: chapter.uri,
     updatedAt: chapter.updatedAt,
     pages: _.map(chapter.pages, (page) => page.image)

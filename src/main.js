@@ -7,6 +7,7 @@ import configRouter from './config-router'
 import store from './vuex/store'
 import { sync } from 'vuex-router-sync'
 
+require('../lib/ga')
 require('normalize.css')
 
 import App from './App'
