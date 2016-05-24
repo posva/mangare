@@ -188,6 +188,7 @@ describe('API', () => {
           should(chapter.date).be.ok()
           chapter.name.should.be.ok()
           chapter.uri.should.be.ok()
+          chapter.pageCount.should.equal(53)
           chapter.pages.length.should.be.eql(53)
 
           api.mangaChapter(req, {send (chapter) {
@@ -197,6 +198,7 @@ describe('API', () => {
             should(chapter._id).be.ok()
             chapter.name.should.be.ok()
             chapter.uri.should.be.ok()
+            chapter.pageCount.should.equal(53)
             chapter.pages.length.should.be.eql(53)
             const page = chapter.pages[0]
             page.should.be.a.String
