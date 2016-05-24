@@ -37,9 +37,17 @@ export default {
     }
   },
   computed: {
+    banner () {
+      if (this.manga && this.manga.image &&
+        this.manga.image.match('cloudinary') && window.innerWidth < 700) {
+        return this.manga.image.replace('upload/', 'upload/c_scale,e_blur:1188,w_700/')
+      } else {
+        return this.manga.image
+      }
+    },
     bannerStyle () {
       return {
-        'background-image': 'url(' + this.manga.image + ')',
+        'background-image': 'url(' + this.banner + ')',
         transform: `translate3d(0, ${this.imageOffset}px, 0)`
       }
     }
@@ -51,14 +59,8 @@ export default {
   },
   ready () {
     this.viewManga(this.$route.params.mangaId)
-    this.raf = null
     this.onScroll = () => {
-      if (this.raf) return
-      this.raf = true
-      window.requestAnimationFrame(() => {
-        this.imageOffset = window.scrollY * 0.7 - 45
-        this.raf = false
-      })
+      this.imageOffset = window.scrollY * 0.7 - 45
     }
 
     window.addEventListener('scroll', this.onScroll, false)
@@ -112,5 +114,8 @@ export default {
     height @height + 4rem
     margin: -0.6rem
     background-size cover
-    filter blur(.6rem)
+    backface-visibility hidden
+    perspective 1000
+    @media (min-width 700px)
+      filter blur(.6rem)
 </style>
