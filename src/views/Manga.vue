@@ -51,11 +51,17 @@ export default {
   },
   ready () {
     this.viewManga(this.$route.params.mangaId)
+    this.raf = null
     this.onScroll = () => {
-      this.imageOffset = window.scrollY * 0.6 - 45
+      if (this.raf) return
+      this.raf = true
+      window.requestAnimationFrame(() => {
+        this.imageOffset = window.scrollY * 0.6 - 45
+        this.raf = false
+      })
     }
 
-    window.addEventListener('scroll', this.onScroll)
+    window.addEventListener('scroll', this.onScroll, false)
   },
   destroy () {
     window.removeEventListener('scroll', this.onScroll)
