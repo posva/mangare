@@ -63,7 +63,6 @@ body
   color dark
 #container
   width 100%
-  padding 0.75rem
   a
     text-decoration none
 
@@ -73,6 +72,7 @@ body
   width 100%
   background-color lighten(dark, 30%)
   color clear
+  z-index 10
   a
     color @color
     text-decoration none

@@ -17,7 +17,8 @@ function chapterDetail (chapter) {
     date: chapter.date,
     uri: chapter.uri,
     updatedAt: chapter.updatedAt,
-    pages: _.map(chapter.pages, (page) => page.image)
+    pages: _.map(chapter.pages, (page) => page.image),
+    pageCount: chapter.pageCount
   }
 }
 
@@ -97,10 +98,12 @@ module.exports = {
             'chapters._id': chapter._id
           }, {
             $set: {
-              'chapters.$.pages': pages
+              'chapters.$.pages': pages,
+              'chapters.$.pageCount': pages.length
             }
           }, () => {
             logger.info(`Updated pages for ${req.params.chapterId} in ${req.params.id}`)
+            chapter.pageCount = pages.length
             res.send(chapterDetail(chapter))
           })
         }).catch((err) => {
