@@ -40,7 +40,7 @@ export default {
     bannerStyle () {
       return {
         'background-image': 'url(' + this.manga.image + ')',
-        'background-position-y': this.imageOffset + 'px'
+        transform: `translate3d(0, ${this.imageOffset}px, 0)`
       }
     }
   },
@@ -56,7 +56,7 @@ export default {
       if (this.raf) return
       this.raf = true
       window.requestAnimationFrame(() => {
-        this.imageOffset = window.scrollY * 0.6 - 45
+        this.imageOffset = window.scrollY * 0.7 - 45
         this.raf = false
       })
     }
@@ -109,7 +109,7 @@ export default {
   .manga__banner__background
     position relative
     top 0
-    height 110%
+    height @height + 4rem
     margin: -0.6rem
     background-size cover
     filter blur(.6rem)
