@@ -117,7 +117,12 @@ let mangaReader = {
         }
         let pages = []
 
-        let pagesText = reChapterAllPages.exec(data)[0]
+        let pagesText = reChapterAllPages.exec(data)
+        if (!pagesText || !pagesText.length) {
+          logger.error('Cannot find get pages')
+          return reject(err)
+        }
+        pagesText = pagesText[0]
         let match = reChapterSinglePage.exec(pagesText)
         // we already got first page
         pages.push({

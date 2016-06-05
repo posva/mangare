@@ -23,7 +23,8 @@ export const state = {
     completed: false
   },
   pendingRefreshRequests: 0,
-  refreshingMangas: {}
+  refreshingMangas: {},
+  downloads: {}
 }
 
 export const mutations = {
@@ -55,6 +56,9 @@ export const mutations = {
   },
   ERROR (state, err) {
     console.error(err)
+  },
+  DOWNLOAD_SET_PROGRESS (state, { id, progress }) {
+    Vue.set(state.downloads, id, progress)
   }
 }
 

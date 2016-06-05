@@ -6,14 +6,21 @@
       <div class="manga__banner__filter">
       </div>
       <div class="manga__banner__title">
-        <h2>{{ manga.name }}</h2>
+        <h2>{{ title }}</h2>
+        <p>{{ chapterCount }}</p>
       </div>
     </div>
-    <div class="manga__content">
-      <img v-if="manga.image" :src="manga.image">
-      <p>{{ manga.description }}</p>
-      <p>{{ manga.chapterCount }} chapters</p>
-      <chapter v-for="chapter in manga.chapters" :chapter="chapter"></chapter>
+    <div v-show="isReady" class="manga__content-container">
+      <div class="manga__content">
+        <img class="manga__content__image" v-if="manga.image" :src="manga.image">
+        <p>{{ manga.description }}</p>
+      </div>
+      <div class="manga__chapters">
+        <chapter v-for="chapter in manga.chapters" :chapter="chapter"></chapter>
+      </div>
+    </div>
+    <div v-show="!isReady" class="manga__content-loader">
+      <p>...</p>
     </div>
   </div>
 </template>
@@ -37,6 +44,15 @@ export default {
     }
   },
   computed: {
+    title () {
+      return this.isReady ? this.manga.name : 'Opening books...'
+    },
+    chapterCount () {
+      return this.isReady ? `${this.manga.chapterCount} chapters` : ''
+    },
+    isReady () {
+      return this.manga && this.manga.image
+    },
     banner () {
       if (this.manga && this.manga.image &&
         this.manga.image.match('cloudinary') && window.innerWidth < 700) {
@@ -83,6 +99,19 @@ export default {
 
 .manga__content
   padding 1rem
+  @extend .flex
+  align-items flex-end
+  justify-content space-around
+
+  p
+    flex-grow 1
+    padding 0 1rem
+
+.manga__content__image
+  width = 220px
+  max-width width
+  @media (max-width 700px)
+    max-width width * 0.4
 
 .manga__banner
   height  14rem
@@ -96,10 +125,16 @@ export default {
     width 100%
     height @height
     @extend .flex
-  h2
-    font-size 2rem
-    text-align center
+    flex-direction column
     color clear
+    h2
+      font-size 2rem
+      text-align center
+      letter-spacing .1rem
+    p
+      margin 0
+      font-weight 200
+      letter-spacing .15rem
 
   .manga__banner__filter
     position absolute

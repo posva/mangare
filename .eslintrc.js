@@ -8,7 +8,8 @@ module.exports = {
   ],
   globals: {
     requestAnimationFrame: true,
-    fetch: true
+    fetch: true,
+    Image: true
   },
   // add your custom rules here
   'rules': {

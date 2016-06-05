@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from 'src/vuex/store'
 import ProgressButton from 'src/components/ProgressButton'
 import { timeout } from 'src/utils'
 
@@ -6,12 +7,10 @@ describe('ProgressButton.vue', () => {
   let vm, progress
   before(() => {
     vm = new Vue({
-      data: {
-        progress: 0
-      },
+      store,
       el: 'body',
       replace: false,
-      template: '<div><progress-button :progress.sync="progress" v-ref:progress></progress-button></div>',
+      template: '<div><progress-button id="0" v-ref:progress></progress-button></div>',
       components: { ProgressButton }
     })
     progress = vm.$refs.progress
