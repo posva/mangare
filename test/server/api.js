@@ -98,7 +98,6 @@ describe('API', () => {
         mangareader.getManga.callCount.should.be.eql(1)
         should(mangaDetail).be.ok()
         mangaDetail.image.should.be.ok()
-        console.log(mangaDetail.chapterCount)
         mangaDetail.should.have.property('chapterCount', 700)
         should(mangaDetail.updatedAt).be.ok()
         should(mangaDetail.description).be.ok()

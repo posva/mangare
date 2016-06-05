@@ -13,3 +13,7 @@ export function pendingRefreshRequests (state) {
 export function manga (state) {
   return state.manga
 }
+
+export function downloads (state) {
+  return state.downloads
+}

@@ -9,15 +9,32 @@
 </template>
 
 <script>
+import {
+  resetDownloadProgress
+} from '../vuex/actions'
+import {
+  downloads
+} from '../vuex/getters'
 const animsDelay = 1300
 
 import {timeout} from '../utils'
 
 export default {
+  vuex: {
+    getters: {
+      downloads
+    },
+    actions: {
+      resetDownloadProgress
+    }
+  },
   props: {
-    progress: Number
+    id: String
   },
   computed: {
+    progress () {
+      return this.downloads && this.id ? (this.downloads[this.id] || 0) : 0
+    },
     isDisabled () {
       return this.state !== ''
     },
@@ -26,7 +43,7 @@ export default {
     },
     style () {
       return {
-        width: 100 * this.progress + '%',
+        width: `${100 * this.progress}%`,
         opacity: this.state === 'state-loading' ? 1 : 0
       }
     }
@@ -53,7 +70,7 @@ export default {
   methods: {
     start () {
       this.innerClass = 'notransition'
-      this.progress = 0
+      this.resetDownloadProgress(this.id)
       this.state = 'state-loading'
       this.$nextTick(() => this.innerClass = '')
     },
@@ -70,7 +87,7 @@ export default {
         this.state = state
         return timeout(500)
       }).then(() => {
-        this.progress = 0
+        this.resetDownloadProgress(this.id)
         this.innerClass = 'notransition'
         return timeout(animsDelay)
       }).then(() => {
