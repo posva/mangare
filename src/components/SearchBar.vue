@@ -29,7 +29,7 @@ export default {
   computed: {
     label () {
       return this.disabled
-        ? 'Collecting mangas...'
+        ? 'Loading...'
         : 'Search'
     },
     searchContainerClass () {

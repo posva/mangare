@@ -1,5 +1,5 @@
 <template>
-  <button :disabled="isDisabled" :class="state" class="progress-button" data-style="shrink" data-horizontal>
+  <button :disabled="isDisabled" :class="state" :style="buttonStyle" class="progress-button" data-style="shrink" data-horizontal>
     <span class="content">
       <slot></slot>
     </span>
@@ -7,10 +7,22 @@
       <span class="progress-inner" :class="innerClass" :style="style">
       </span>
     </span>
+    <div v-show="!isDisabled" :class="moreClasses" @click.stop="toggleMenu"
+         v-clickaway="showMenu = false"
+         class="progress-button__more">
+      <div class="arrow-down">
+      </div>
+      <div class="progress-button__more__content">
+        <div @click.stop="showMenu = false" class="progress-button__more__content__item">Download epub</div>
+        <div class="progress-button__more__content__item">Read Online</div>
+        <div class="progress-button__more__content__item">Refresh Data</div>
+      </div>
+    </div>
   </button>
 </template>
 
 <script>
+import { directive as Clickaway } from 'vue-clickaway'
 import {
   resetDownloadProgress
 } from '../vuex/actions'
@@ -30,6 +42,7 @@ export default {
       resetDownloadProgress
     }
   },
+  directives: { Clickaway },
   props: {
     disabled: {
       type: [String, Boolean],
@@ -48,6 +61,16 @@ export default {
     isFinished () {
       return 1 - this.progress < 0.0001
     },
+    moreClasses () {
+      return {
+        active: this.showMenu
+      }
+    },
+    buttonStyle () {
+      let style = {}
+      if (this.showMenu) style.overflow = 'initial'
+      return style
+    },
     style () {
       return {
         width: `${100 * this.progress}%`,
@@ -58,7 +81,8 @@ export default {
   data () {
     return {
       state: '',
-      innerClass: ''
+      innerClass: '',
+      showMenu: false
     }
   },
   watch: {
@@ -82,6 +106,9 @@ export default {
     }
   },
   methods: {
+    toggleMenu () {
+      this.showMenu = !this.showMenu
+    },
     start (reset = true) {
       this.innerClass = 'notransition'
       if (reset) this.resetDownloadProgress(this.id)
@@ -129,7 +156,7 @@ errorColor = #FF5555
   cursor pointer
   position relative
   display inline-block
-  padding 0 60px
+  padding 0 calc(60px + 1rem) 0 60px
   outline none
   border none
   background primary
@@ -211,4 +238,62 @@ errorColor = #FF5555
 .progress-button[data-style="shrink"][data-horizontal].state-success .content,
 .progress-button[data-style="shrink"][data-horizontal].state-error .content
   transform translateY(-100%)
+
+.progress-button__more {
+  position absolute
+  background-color primary
+  border-left 1px solid lighten(@background-color, 10%)
+  top 0
+  size = 1rem
+  right 0
+  padding 1.75 * size 1.5 * size 1.75 * size 0.5 * size
+  width size
+  &:hover {
+    background-color darken(@background-color, 10%)
+  }
+  .progress-button__more__content {
+    position absolute
+    text-align right
+    top 64px
+    min-width 15rem
+    height 0
+    /* max-height 15rem */
+    background-color @background-color
+    right 0
+    overflow-y auto
+    z-index 5
+    border-left 1px solid darken(@background-color, 10%)
+    border-right 1px solid darken(@background-color, 10%)
+    border-bottom 1px solid darken(@background-color, 10%)
+    transition height .3s
+
+    .progress-button__more__content__item {
+      font-size .8rem
+      border-top 1px solid darken(@background-color, 10%)
+      padding-right 1rem
+      transition padding-right .3s, background-color .2s
+      &:hover {
+        background-color darken(@background-color, 10%)
+        padding-right @padding-right + 1rem
+      }
+    }
+  }
+  &.active {
+    .arrow-down {
+      transform rotateZ(180deg)
+    }
+    .progress-button__more__content {
+      height 156px
+    }
+  }
+  .arrow-down {
+    width 0
+    height 0
+    border-left 0.5 * size solid transparent
+    border-right 0.5 * size solid transparent
+    border-top 0.5 * size solid dark
+    transition transform .3s, background-color .2s
+  }
+}
+
 </style>
