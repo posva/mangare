@@ -8,7 +8,7 @@
       ></manga-card>
     </div>
     <div v-else class="search-message">
-      <img src="../assets/img/gon.png">
+      <img v-show="mangaList.length" src="../assets/img/gon.png">
       <p>{{ message }}</p>
     </div>
   </div>
@@ -60,7 +60,7 @@ export default {
     message () {
       return this.mangaList.length
         ? 'What do you want to read today?'
-        : 'Let me organise the mangas for you'
+        : 'Building the library...'
     },
     isReady () {
       return this.mangaList.length && this.searchQuery
