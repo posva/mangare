@@ -19,6 +19,10 @@ export function updateManga ({ dispatch }, manga) {
   dispatch('UPDATE_MANGA', manga)
 }
 
+export function updateChapter ({ dispatch }, mangaId, chapter) {
+  dispatch('UPDATE_CHAPTER', mangaId, chapter)
+}
+
 export function viewManga ({ dispatch, state }, id) {
   dispatch('SET_MANGA', _.find(state.mangaList, { _id: id }))
   dispatch('START_REFRESH_MANGA', id)
@@ -45,6 +49,19 @@ export function fetchManga ({ dispatch }, id) {
   })
 }
 
+export function fetchChapter ({ dispatch }, mangaId, id) {
+  const chapters = fetchival(`/api/mangas/${mangaId}/chapters/${id}`)
+  // dispatch('START_REFRESH_MANGA', id)
+  return chapters.get()
+    .then((chapter) => {
+      dispatch('UPDATE_CHAPTER', mangaId, chapter)
+      // dispatch('END_REFRESH_MANGA', id)
+    }).catch((err) => {
+      // dispatch('END_REFRESH_MANGA', id)
+      dispatch('ERROR_REQUEST', err)
+    })
+}
+
 export function resetDownloadProgress ({ dispatch }, id) {
   dispatch('DOWNLOAD_SET_PROGRESS', { id, progress: 0 })
 }
@@ -57,7 +74,7 @@ export function setDownloadProgress ({ dispatch }, id, progress) {
   })
 }
 
-export function downloadChapter ({ dispatch }, id, pages, downloadButton) {
+export function downloadChapter ({ dispatch }, { _id, pages, name }, downloadButton) {
   let imagesPromises = []
   let images = []
   downloadButton.start()
@@ -76,7 +93,7 @@ export function downloadChapter ({ dispatch }, id, pages, downloadButton) {
           const img = new Image()
           img.onload = () => {
             image.format = img.width > img.height ? ['a3', 'l'] : ['a4', 'p']
-            setDownloadProgress({ dispatch }, id, ++counter / total)
+            setDownloadProgress({ dispatch }, _id, ++counter / total)
             resolve()
           }
           img.src = image.data
@@ -98,13 +115,13 @@ export function downloadChapter ({ dispatch }, id, pages, downloadButton) {
         }
         pdf.addImage(image.data, 0, 0, image.format[1] === 'l' ? 420 : 210, 297)
 
-        setDownloadProgress({ dispatch }, id, ++counter / total)
+        setDownloadProgress({ dispatch }, _id, ++counter / total)
         // using nextTick doesn't work
         return timeout(0)
       })
     })
     p.then(() => {
-      pdf.save(this.chapter.name + '.pdf')
+      pdf.save(name + '.pdf')
     }).catch((err) => {
       dispatch('ERROR', err)
       downloadButton.fail()

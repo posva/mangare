@@ -16,7 +16,7 @@
         <p>{{ manga.description }}</p>
       </div>
       <div class="manga__chapters">
-        <chapter v-for="chapter in manga.chapters" :chapter="chapter"></chapter>
+        <chapters :chapters="manga.chapters"></chapters>
       </div>
     </div>
     <div v-show="!isReady" class="manga__content-loader">
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import Chapter from '../components/Chapter'
+import Chapters from '../components/Chapters'
 import {
   manga
 } from '../vuex/getters'
@@ -85,7 +85,7 @@ export default {
     window.removeEventListener('scroll', this.onScroll)
   },
   components: {
-    Chapter
+    Chapters
   }
 }
 </script>
@@ -97,8 +97,11 @@ export default {
 .manga
   width 100%
 
+.manga__content-container
+  padding 2rem 0
+
 .manga__content
-  padding 1rem
+  padding 0 1rem
   @extend .flex
   align-items flex-end
   justify-content space-around
@@ -153,4 +156,9 @@ export default {
     perspective 1000
     @media (min-width 700px)
       filter blur(.6rem)
+
+.manga__chapters {
+  padding 0 1rem
+  overflow-x auto
+}
 </style>
