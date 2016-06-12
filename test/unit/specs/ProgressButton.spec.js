@@ -9,15 +9,22 @@ describe('ProgressButton.vue', () => {
     vm = new Vue({
       store,
       el: 'body',
+      data: {
+        text: 'Download'
+      },
       replace: false,
-      template: '<div><progress-button id="0" v-ref:progress></progress-button></div>',
+      template: '<div><progress-button id="0" v-ref:progress>{{text}}</progress-button></div>',
       components: { ProgressButton }
     })
     progress = vm.$refs.progress
   })
 
-  it('display Download by default', () => {
+  it('display text', (done) => {
     progress.$el.should.contain.text('Download')
+    vm.text = 'Loading'
+    vm.$tick().then(() => {
+      progress.$el.should.contain.text('Loading')
+    }).then(done, done)
   })
 
   it('switches states when starting a download', (done) => {
