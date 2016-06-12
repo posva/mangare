@@ -37,18 +37,26 @@ export const mutations = {
     Vue.set(state.refreshingMangas, id, false)
   },
   SET_MANGA (state, manga) {
-    if (manga) state.manga = manga
+    if (manga) Vue.set(state, 'manga', manga)
   },
   SET_MANGA_LIST (state, mangaList) {
     state.mangaList = mangaList
   },
   UPDATE_MANGA (state, mangaData) {
+    if (!state.mangaList.length) return
     let manga = _.find(state.mangaList, { _id: mangaData._id })
     ;['image', 'name', 'description', 'updatedAt', 'completed', 'uri', 'chapterCount']
     .forEach((key) => {
       if (mangaData[key] !== undefined) {
         manga[key] = mangaData[key]
       }
+    })
+  },
+  UPDATE_CHAPTER (state, mangaId, chapterData) {
+    if (state.manga._id !== mangaId) return
+    let chapter = _.find(state.manga.chapters, { _id: chapterData._id })
+    ;['pageCount', 'pages'].forEach((key) => {
+      chapter[key] = chapterData[key]
     })
   },
   ERROR_REQUEST (state, err) {

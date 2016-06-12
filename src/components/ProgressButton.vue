@@ -1,6 +1,8 @@
 <template>
   <button :disabled="isDisabled" :class="state" class="progress-button" data-style="shrink" data-horizontal>
-    <span class="content">Download</span>
+    <span class="content">
+      <slot></slot>
+    </span>
     <span class="progress">
       <span class="progress-inner" :class="innerClass" :style="style">
       </span>
@@ -29,6 +31,10 @@ export default {
     }
   },
   props: {
+    disabled: {
+      type: [String, Boolean],
+      default: false
+    },
     id: String
   },
   computed: {
@@ -36,7 +42,8 @@ export default {
       return this.downloads && this.id ? (this.downloads[this.id] || 0) : 0
     },
     isDisabled () {
-      return this.state !== ''
+      this.disabled
+      return this.state !== '' || this.disabled
     },
     isFinished () {
       return 1 - this.progress < 0.0001
@@ -62,15 +69,22 @@ export default {
       if (progress >= 0.5) {
         this.innerClass = 'notransition'
       }
+
       if (this.isFinished) {
         this.finish()
       }
     }
   },
+  ready () {
+    if (this.progress > 0 && this.progress < 1) {
+      console.log(this.id, 'IN READY')
+      this.$nextTick(() => this.state = 'state-loading')
+    }
+  },
   methods: {
-    start () {
+    start (reset = true) {
       this.innerClass = 'notransition'
-      this.resetDownloadProgress(this.id)
+      if (reset) this.resetDownloadProgress(this.id)
       this.state = 'state-loading'
       this.$nextTick(() => this.innerClass = '')
     },
