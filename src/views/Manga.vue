@@ -9,12 +9,12 @@
         <h2>{{ title }}</h2>
         <p>{{ chapterCount }}</p>
       </div>
+      <div v-if="isReady" class="manga__banner__description">
+        <img class="manga__banner__description__image" v-if="manga.image" :src="manga.image">
+        <p class="manga__banner__description__text">{{ manga.description }}</p>
+      </div>
     </div>
     <div v-show="isReady" class="manga__content-container">
-      <div class="manga__content">
-        <img class="manga__content__image" v-if="manga.image" :src="manga.image">
-        <p>{{ manga.description }}</p>
-      </div>
       <div class="manga__chapters">
         <chapters :chapters="manga.chapters"></chapters>
       </div>
@@ -100,7 +100,7 @@ export default {
 .manga__content-container
   padding 2rem 0
 
-.manga__content
+.manga__banner__description
   padding 0 1rem
   @extend .flex
   align-items flex-end
@@ -110,7 +110,7 @@ export default {
     flex-grow 1
     padding 0 1rem
 
-.manga__content__image
+.manga__banner__description__image
   width = 220px
   max-width width
   @media (max-width 700px)

@@ -48,7 +48,7 @@ export const mutations = {
     ;['image', 'name', 'description', 'updatedAt', 'completed', 'uri', 'chapterCount']
     .forEach((key) => {
       if (mangaData[key] !== undefined) {
-        manga[key] = mangaData[key]
+        Vue.set(manga, key, mangaData[key])
       }
     })
   },
@@ -56,7 +56,7 @@ export const mutations = {
     if (state.manga._id !== mangaId) return
     let chapter = _.find(state.manga.chapters, { _id: chapterData._id })
     ;['pageCount', 'pages'].forEach((key) => {
-      chapter[key] = chapterData[key]
+      Vue.set(chapter, key, chapterData[key])
     })
   },
   ERROR_REQUEST (state, err) {
