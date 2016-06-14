@@ -1,5 +1,5 @@
 <template>
-  <button :disabled="isDisabled" :class="state" :style="buttonStyle" class="progress-button" data-style="shrink" data-horizontal>
+  <button :disabled="isDisabled" @click="click" :class="state" :style="buttonStyle" class="progress-button" data-style="shrink" data-horizontal>
     <span class="content">
       <slot></slot>
     </span>
@@ -7,7 +7,7 @@
       <span class="progress-inner" :class="innerClass" :style="style">
       </span>
     </span>
-    <div v-show="!isDisabled" :class="moreClasses" @click.stop="toggleMenu"
+    <div v-show="!isDisabled" :class="moreClasses" @click="toggleMenu"
          v-clickaway="showMenu = false"
          class="progress-button__more">
       <div class="arrow-down">
@@ -68,7 +68,7 @@ export default {
     },
     buttonStyle () {
       let style = {}
-      if (this.showMenu) style.overflow = 'initial'
+      if (!this.state) style.overflow = 'initial'
       return style
     },
     style () {
@@ -106,7 +106,11 @@ export default {
     }
   },
   methods: {
-    toggleMenu () {
+    click (event) {
+      if (!event.$ignore) this.$emit('download', event)
+    },
+    toggleMenu (event) {
+      event.$ignore = true
       this.showMenu = !this.showMenu
     },
     start (reset = true) {
@@ -143,6 +147,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
 @import '../assets/style/palette'
+@import '../assets/style/shadow'
 buttonBackColor = #954170
 
 success = darken(success, 20%)
@@ -260,12 +265,12 @@ errorColor = #FF5555
     /* max-height 15rem */
     background-color @background-color
     right 0
-    overflow-y auto
+    overflow-y hidden
     z-index 5
     border-left 1px solid darken(@background-color, 10%)
     border-right 1px solid darken(@background-color, 10%)
     border-bottom 1px solid darken(@background-color, 10%)
-    transition height .3s
+    transition height .3s, box-shadow .3s
 
     .progress-button__more__content__item {
       font-size .8rem
@@ -284,6 +289,7 @@ errorColor = #FF5555
     }
     .progress-button__more__content {
       height 156px
+      @extend .shadow-3dp
     }
   }
   .arrow-down {

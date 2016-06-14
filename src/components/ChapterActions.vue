@@ -1,5 +1,5 @@
 <template>
-  <progress-button v-ref:progress @click="download" :disabled="loading" :id="chapter._id">{{ loading ? 'Loading...' : 'Download' }}</progress-button>
+  <progress-button v-ref:progress @download="download" :disabled="loading" :id="chapter._id">{{ loading ? 'Loading...' : 'Download' }}</progress-button>
 </template>
 
 <script>
