@@ -1,55 +1,63 @@
 <template>
-  <table class="chapters">
-    <thead>
-      <tr class="chapters__header">
-        <th>Chapter</th>
-        <th>Title</th>
-        <th>Page count</th>
-        <th>Published</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <template v-for="(cIndex, chapter) in chapters" track-by="$index">
-        <tr class="chapters__row">
-          <td class="chapter__row__index">{{ $index + 1 }}</td>
-          <td class="chapter__row__title">
-            <a @click.prevent="togglePreview($index)" href="#">{{ chapter.name }}</a>
-          </td>
-          <td class="chapter__row__page-count">{{ chapter.pageCount ? chapter.pageCount : '?' }}</td>
-          <td class="chapter__row__published" :title="formattedDate(chapter.date)">{{ chapter.date | moment 'from' }}</td>
-          <td class="chapter__row__actions">
-            <chapter-actions :chapter="chapter"></chapter-actions>
-          </td>
+  <div>
+    <table class="chapters">
+      <thead>
+        <tr class="chapters__header">
+          <th>Chapter</th>
+          <th>Title</th>
+          <th>Page count</th>
+          <th>Published</th>
+          <th>Actions</th>
         </tr>
-        <tr class="chapter__preview-tr no-highlight">
-          <td colspan="5">
-            <div class="chapter__preview"
-                 transition="height"
-                 :data-image="$index"
-                 v-show="isPreviewVisible($index)">
-              <div class="chapter__preview-inner">
-                <div class="chapter__preview__page-image"
-                     track-by="$index"
-                     v-for="page in chapter.pages">
-                  <img :src="page" @load="resizeImageContainer(cIndex)" >
-              </div>
+      </thead>
+      <tbody>
+        <template v-for="(cIndex, chapter) in chapters" track-by="$index">
+          <tr class="chapters__row">
+            <td class="chapter__row__index">{{ $index + 1 }}</td>
+            <td class="chapter__row__title">
+              <a @click.prevent="togglePreview($index)" href="#">{{ chapter.name }}</a>
+            </td>
+            <td class="chapter__row__page-count">{{ chapter.pageCount ? chapter.pageCount : '?' }}</td>
+            <td class="chapter__row__published" :title="formattedDate(chapter.date)">{{ chapter.date | moment 'from' }}</td>
+            <td class="chapter__row__actions">
+              <chapter-actions :chapter="chapter"></chapter-actions>
+            </td>
+          </tr>
+          <tr class="chapter__preview-tr no-highlight">
+            <td colspan="5">
+              <div class="chapter__preview"
+                   transition="height"
+                   :data-image="$index"
+                   v-show="isPreviewVisible($index)">
+                <div class="chapter__preview-inner">
+                  <div class="chapter__preview__page-image"
+                       track-by="$index"
+                       v-for="page in chapter.pages">
+                    <img :src="page" @click="openPage($index)" >
+                  </div>
                 </div>
-            </div>
-            <div transition="height-toggle"
-                 v-show="isLoading($index)">
-              <h3>Loading...</h3>
-            </div>
-          </td>
-        </tr>
-      </template>
-    </tbody>
-  </table>
+              </div>
+              <div transition="height-toggle"
+                   v-show="isLoading($index)">
+                <h3>Loading...</h3>
+              </div>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    <page-preview v-transfer-dom
+                  v-ref:page-preview
+                  :pages="currentPages"
+    >
+    </page-preview>
+  </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import ChapterActions from './ChapterActions'
+import PagePreview from '../components/PagePreview'
 import {
   fetchChapter
 } from '../vuex/actions'
@@ -62,6 +70,14 @@ export default {
   },
   props: {
     chapters: Array
+  },
+  computed: {
+    currentPages () {
+      this.chapters
+      return this.currentPreview > -1
+           ? this.chapters[this.currentPreview].pages
+           : []
+    }
   },
   data () {
     return {
@@ -76,9 +92,9 @@ export default {
     isPreviewVisible (index) {
       return this.currentPreview === index
     },
-    resizeImageContainer (index) {
-      const el = this.$el.querySelector(`[data-image="${index}"]`)
-      el && el.resizeCallback && el.resizeCallback()
+    openPage (index) {
+      this.$refs.pagePreview.currentPage = index
+      this.$refs.pagePreview.display = true
     },
     togglePreview (index) {
       const current = this.currentPreview
@@ -88,13 +104,11 @@ export default {
             .then(() => {
               if (this.currentPreview === current) {
                 this.currentPreview = this.currentPreview === index ? -1 : index
-                this.resizeImageContainer()
               }
               this.loading[index] = false
             })
       } else {
         this.currentPreview = this.currentPreview === index ? -1 : index
-        this.resizeImageContainer()
       }
     },
     formattedDate (date) {
@@ -102,7 +116,8 @@ export default {
     }
   },
   components: {
-    ChapterActions
+    ChapterActions,
+    PagePreview
   }
 }
 </script>
@@ -194,6 +209,9 @@ previewMargin = 2px
   margin previewMargin
   img {
     max-height previewMaxHeight
+    &:hover {
+      cursor zoom-in
+    }
   }
 }
 </style>

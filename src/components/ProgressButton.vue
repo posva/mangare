@@ -257,6 +257,7 @@ errorColor = #FF5555
     background-color darken(@background-color, 10%)
   }
   .progress-button__more__content {
+    transform translate3d(0, 0, 0)
     position absolute
     text-align right
     top 64px
