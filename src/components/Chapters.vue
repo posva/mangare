@@ -25,12 +25,16 @@
         <tr class="chapter__preview-tr no-highlight">
           <td colspan="5">
             <div class="chapter__preview"
-                 transition="height-toggle"
+                 transition="height"
                  :data-image="$index"
                  v-show="isPreviewVisible($index)">
-              <img class="chapter__preview__page-image" @load="resizeImageContainer(cIndex)"
-                   track-by="$index"
-                   v-for="page in chapter.pages" :src="page">
+              <div class="chapter__preview-inner">
+                <div class="chapter__preview__page-image"
+                     track-by="$index"
+                     v-for="page in chapter.pages">
+                  <img :src="page" @load="resizeImageContainer(cIndex)" >
+              </div>
+                </div>
             </div>
             <div transition="height-toggle"
                  v-show="isLoading($index)">
@@ -110,12 +114,12 @@ previewMaxHeight = 140px
 previewBorder = 2px
 previewMargin = 2px
 
-.height-toggle-transition {
+.height-transition {
   transition all .3s ease
   overflow hidden
 }
 
-.height-toggle-enter, .height-toggle-leave {
+.height-enter, .height-leave {
   height 0 !important
 }
 
@@ -137,9 +141,15 @@ previewMargin = 2px
     }
   }
 
-  .chapter__preview:not(.height-toggle-enter) {
+  .chapter__preview {
+    height previewMaxHeight + 2 * previewBorder + 2 * previewMargin + 32px
+  }
+  .chapter__preview-inner {
+    padding 16px 0
     display flex
-    flex-wrap wrap
+    width calc(100vw - 32px - 16px)
+    overflow-x auto
+    flex-wrap nowrap
     align-items flex-start
     justify-content flex-start
   }
@@ -180,8 +190,10 @@ previewMargin = 2px
 }
 
 .chapter__preview__page-image {
-  max-height previewMaxHeight
   border previewBorder solid black
   margin previewMargin
+  img {
+    max-height previewMaxHeight
+  }
 }
 </style>
