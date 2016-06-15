@@ -1,10 +1,17 @@
 <template>
-  <div class="page-preview" :style="style" @click="display = false">
-    <img :src="currentPageImage">
+  <div class="page-preview" :style="style"
+  >
+    <img @click="display = false"
+        :src="currentPageImage">
   </div>
 </template>
 
 <script>
+const LEFT_KEY = 37
+/* const UP_KEY = 38*/
+const RIGHT_KEY = 39
+/* const DOWN_KEY = 39*/
+
 export default {
   props: {
     pages: Array
@@ -25,7 +32,31 @@ export default {
       currentPage: 0
     }
   },
-  methods () {
+  methods: {
+    nextPage () {
+      this.currentPage = Math.min(this.currentPage + 1, this.pages.length - 1)
+    },
+    previousPage () {
+      this.currentPage = Math.max(this.currentPage - 1, 0)
+    },
+    handleKey (event) {
+      switch (event.keyCode) {
+        case LEFT_KEY:
+          this.previousPage()
+          break
+        case RIGHT_KEY:
+          this.nextPage()
+          break
+        default:
+          break
+      }
+    }
+  },
+  ready () {
+    document.addEventListener('keyup', this.handleKey.bind(this))
+  },
+  destroyed () {
+    document.removeEventListener('keyup', this.handleKey)
   }
 }
 </script>
@@ -49,6 +80,7 @@ export default {
 
   img {
     max-height 100%
+    max-width @max-height
     margin auto
 
     &:hover {
