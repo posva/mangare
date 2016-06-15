@@ -3,6 +3,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueMoment from 'vue-moment'
 import VueProgressbar from 'vue-progressbar'
+import VueTransferDom from 'vue-transfer-dom'
 import configRouter from './config-router'
 import store from './vuex/store'
 import { sync } from 'vuex-router-sync'
@@ -15,6 +16,7 @@ import App from './App'
 
 Vue.use(VueRouter)
 Vue.use(VueProgressbar)
+Vue.use(VueTransferDom)
 Vue.use(VueMoment)
 Vue.transition('height-toggle', heightToggle)
 
