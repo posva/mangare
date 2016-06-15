@@ -1,3 +1,4 @@
+import 'whatwg-fetch'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueMoment from 'vue-moment'
@@ -7,8 +8,8 @@ import store from './vuex/store'
 import { sync } from 'vuex-router-sync'
 import { heightToggle } from './transitions'
 
-require('../lib/ga')
-require('normalize.css')
+import '../lib/ga'
+import 'normalize.css'
 
 import App from './App'
 
