@@ -101,13 +101,16 @@ export default {
       const current = this.currentPreview
       if (!this.chapters[index].pages) {
         Vue.set(this.loading, index, true)
+        this.$progress.start(3000)
         this.fetchChapter(this.$route.params.mangaId, this.chapters[index]._id)
             .then(() => {
+              this.$progress.finish()
               if (this.currentPreview === current) {
                 this.currentPreview = this.currentPreview === index ? -1 : index
               }
               this.loading[index] = false
             })
+        .catch(() => this.$progress.failed())
       } else {
         this.currentPreview = this.currentPreview === index ? -1 : index
       }

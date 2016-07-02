@@ -73,8 +73,13 @@ export default {
       imageOffset: 0
     }
   },
-  ready () {
+  created () {
+    this.$progress.start()
     this.viewManga(this.$route.params.mangaId)
+        .then(() => this.$progress.finish())
+        .catch(() => this.$progress.failed())
+  },
+  ready () {
     this.onScroll = () => {
       this.imageOffset = window.scrollY * 0.7 - 45
     }
