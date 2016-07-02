@@ -15,7 +15,8 @@
           <tr class="chapters__row">
             <td class="chapter__row__index">{{ $index + 1 }}</td>
             <td class="chapter__row__title">
-              <a @click.prevent="togglePreview($index)" href="#">{{ chapter.name }}</a>
+              <a @click.prevent="togglePreview(cIndex)" href="#">{{ chapter.name }}</a>
+              <spinner v-show="isLoading(cIndex)"></spinner>
             </td>
             <td class="chapter__row__page-count">{{ chapter.pageCount ? chapter.pageCount : '?' }}</td>
             <td class="chapter__row__published" :title="formattedDate(chapter.date)">{{ chapter.date | moment 'from' }}</td>
@@ -28,7 +29,7 @@
               <div class="chapter__preview"
                    transition="height"
                    :data-image="$index"
-                   v-show="isPreviewVisible($index)">
+                   v-show="isPreviewVisible(cIndex)">
                 <div class="chapter__preview-inner">
                   <div class="chapter__preview__page-image"
                        track-by="$index"
@@ -38,7 +39,7 @@
                 </div>
               </div>
               <div transition="height-toggle"
-                   v-show="isLoading($index)">
+                   v-show="isLoading(cIndex)">
                 <h3>Loading...</h3>
               </div>
             </td>
@@ -100,13 +101,16 @@ export default {
       const current = this.currentPreview
       if (!this.chapters[index].pages) {
         Vue.set(this.loading, index, true)
+        this.$progress.start(3000)
         this.fetchChapter(this.$route.params.mangaId, this.chapters[index]._id)
             .then(() => {
+              this.$progress.finish()
               if (this.currentPreview === current) {
                 this.currentPreview = this.currentPreview === index ? -1 : index
               }
               this.loading[index] = false
             })
+        .catch(() => this.$progress.failed())
       } else {
         this.currentPreview = this.currentPreview === index ? -1 : index
       }

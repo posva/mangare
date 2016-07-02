@@ -88,7 +88,10 @@ export default {
   created () {
     this.searchQuery = this.$route.query.query || ''
     if (!this.mangaList.length) {
+      this.$progress.start()
       this.fetchMangaList()
+          .then(() => this.$progress.finish())
+          .catch(() => this.$progress.failed())
     }
   },
   components: {

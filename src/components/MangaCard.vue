@@ -93,7 +93,10 @@ export default {
   },
   methods: {
     refreshManga () {
+      this.$progress.start()
       this.fetchManga(this.manga._id)
+          .then(() => this.$progress.finish())
+          .catch(() => this.$progress.failed())
     },
     quickRead () {
     },

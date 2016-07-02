@@ -49,45 +49,60 @@ export default {
 @import './assets/style/flex'
 @import url(//fonts.googleapis.com/css?family=Lato:100,300,400,700)
 
-*
+* {
   box-sizing border-box
+}
 
-body
+body {
   background-color clear
+}
 
-#mangare
+#mangare {
   @extend .flex
   justify-content space-between
   flex-direction column
   font-family Lato, Source Sans Pro, Helvetica, sans-serif
   color dark
-#container
-  width 100%
-  a
-    text-decoration none
+}
 
-#nav
+#container {
+  width 100%
+  a {
+    text-decoration none
+  }
+}
+
+#nav {
   @extend .flex
   padding 0.5rem
   width 100%
   background-color lighten(dark, 30%)
   color clear
   z-index 10
-  a
+
+  a {
     color @color
     text-decoration none
-  h1
+  }
+
+  h1 {
     display inline-flex
     font-weight 300
     letter-spacing 2px
     margin 0
     font-size 2rem
-    .logo
+
+    .logo {
       margin-right .75rem
       height: @font-size
-    @media (max-width 700px)
-      font-size 1.5rem
-      .logo
-        height @font-size
+    }
 
+    @media (max-width 700px) {
+      font-size 1.5rem
+      .logo {
+        height @font-size
+      }
+    }
+  }
+}
 </style>
