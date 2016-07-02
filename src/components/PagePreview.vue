@@ -1,5 +1,7 @@
 <template>
   <div class="page-preview" :style="style"
+       v-touch:swipeleft="nextPage"
+       v-touch:swiperight="previousPage"
   >
     <img @click="display = false"
         :src="currentPageImage">
