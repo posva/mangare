@@ -2,13 +2,17 @@
   <div class="page-preview" :style="style"
        v-touch:swipeleft="nextPage"
        v-touch:swiperight="previousPage"
+       @click="handleClick"
+       v-el:container
   >
-    <img @click="display = false"
+    <img @click="nextPage"
+         title="Next Page"
         :src="currentPageImage">
   </div>
 </template>
 
 <script>
+const ESC_KEY = 27
 const LEFT_KEY = 37
 /* const UP_KEY = 38*/
 const RIGHT_KEY = 39
@@ -25,7 +29,8 @@ export default {
       }
     },
     currentPageImage () {
-      return this.pages[this.currentPage] || ''
+      this.currentPage
+      return this.pages && this.pages[this.currentPage] || ''
     }
   },
   data () {
@@ -35,6 +40,11 @@ export default {
     }
   },
   methods: {
+    handleClick (event) {
+      if (event.target === this.$els.container) {
+        this.display = false
+      }
+    },
     nextPage () {
       this.currentPage = Math.min(this.currentPage + 1, this.pages.length - 1)
     },
@@ -48,6 +58,9 @@ export default {
           break
         case RIGHT_KEY:
           this.nextPage()
+          break
+        case ESC_KEY:
+          this.display = false
           break
         default:
           break
@@ -80,13 +93,17 @@ export default {
   transition opacity .3s
   background-color clear
 
+  &:hover {
+    cursor zoom-out
+  }
+
   img {
     max-height 100%
     max-width @max-height
     margin auto
 
     &:hover {
-      cursor zoom-out
+      cursor pointer
     }
   }
 }
