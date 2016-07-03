@@ -16,7 +16,6 @@
             <td class="chapter__row__index">{{ $index + 1 }}</td>
             <td class="chapter__row__title">
               <a @click.prevent="togglePreview(cIndex)" href="#">{{ chapter.name }}</a>
-              <spinner v-show="isLoading(cIndex)"></spinner>
             </td>
             <td class="chapter__row__page-count">{{ chapter.pageCount ? chapter.pageCount : '?' }}</td>
             <td class="chapter__row__published" :title="formattedDate(chapter.date)">{{ chapter.date | moment 'from' }}</td>
@@ -30,17 +29,20 @@
                    transition="height"
                    :data-image="$index"
                    v-show="isPreviewVisible(cIndex)">
-                <div class="chapter__preview-inner">
+                <div v-show="!isLoading(cIndex)"
+                     class="chapter__preview-inner">
                   <div class="chapter__preview__page-image"
                        track-by="$index"
                        v-for="page in chapter.pages">
                     <img :src="page" @click="openPage($index)" >
                   </div>
                 </div>
-              </div>
-              <div transition="height-toggle"
-                   v-show="isLoading(cIndex)">
-                <h3>Loading...</h3>
+                <div v-show="isLoading(cIndex)"
+                     class="spinner-container">
+                  <div class="spinner-div">
+                    <spinner></spinner>
+                  </div>
+                </div>
               </div>
             </td>
           </tr>
@@ -58,7 +60,8 @@
 <script>
 import Vue from 'vue'
 import ChapterActions from './ChapterActions'
-import PagePreview from '../components/PagePreview'
+import Spinner from './Spinner'
+import PagePreview from './PagePreview'
 import {
   fetchChapter
 } from '../vuex/actions'
@@ -99,20 +102,15 @@ export default {
     },
     togglePreview (index) {
       const current = this.currentPreview
+      if (this.currentPreview === current) {
+        this.currentPreview = this.currentPreview === index ? -1 : index
+      }
       if (!this.chapters[index].pages) {
         Vue.set(this.loading, index, true)
-        this.$progress.start(3000)
         this.fetchChapter(this.$route.params.mangaId, this.chapters[index]._id)
             .then(() => {
-              this.$progress.finish()
-              if (this.currentPreview === current) {
-                this.currentPreview = this.currentPreview === index ? -1 : index
-              }
               this.loading[index] = false
             })
-        .catch(() => this.$progress.failed())
-      } else {
-        this.currentPreview = this.currentPreview === index ? -1 : index
       }
     },
     formattedDate (date) {
@@ -121,7 +119,8 @@ export default {
   },
   components: {
     ChapterActions,
-    PagePreview
+    PagePreview,
+    Spinner
   }
 }
 </script>
@@ -217,5 +216,20 @@ previewMargin = 2px
       cursor zoom-in
     }
   }
+}
+
+.spinner-container {
+  height 100%
+  display flex
+  align-items center
+  justify-content center
+  @media (max-width 700px) {
+    justify-content flex-start
+    padding-left 3rem
+  }
+}
+
+.spinner-div {
+
 }
 </style>

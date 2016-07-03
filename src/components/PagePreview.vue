@@ -25,7 +25,8 @@ export default {
       }
     },
     currentPageImage () {
-      return this.pages[this.currentPage] || ''
+      this.currentPage
+      return this.pages && this.pages[this.currentPage] || ''
     }
   },
   data () {

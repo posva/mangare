@@ -30,7 +30,7 @@ export default {
           canSuccess: true,
           color: 'rgb(32, 161, 255)',
           failedColor: 'red',
-          height: '2px'
+          height: '4px'
         }
       }
     }
