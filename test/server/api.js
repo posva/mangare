@@ -151,6 +151,46 @@ describe('API', () => {
     })
   })
 
+  it('let chapters array intact', (done) => {
+    nock(mangareader.host)
+    .get(mangaFromList.uri)
+    .replyWithFile(200, path.join(__dirname, './fixtures/mangareader/naruto.html'))
+    nock(mangareader.host)
+      .get(mangaFromList.uri)
+      .replyWithFile(200, path.join(__dirname, './fixtures/mangareader/naruto.html'))
+
+    let manga = new Manga(mangaFromList)
+    manga.save((err, doc) => {
+      if (err) return done(err)
+
+      api.manga({params: {id: doc._id}}, {send (mangaDetail) {
+        mangaDetail.chapters.should.not.be.empty()
+        mangaDetail.chapters[0].should.have.property('pageCount', 0)
+        const chapter = mangaDetail.chapters[0]
+
+        // change pageCount (simulate an updates)
+        // and force update
+        Manga.update({
+          _id: doc._id,
+          'chapters._id': chapter._id
+        }, {
+          $set: {
+            'chapters.$.pageCount': 50,
+            // simulate last update from 1 week ago
+            updatedAt: new Date() - 3600 * 24 * 7 * 1000
+          }
+        }, (err) => {
+          if (err) return done(err)
+
+          api.manga({params: {id: doc._id}}, {send (mangaDetail) {
+            mangaDetail.chapters[0].should.have.property('pageCount', 50)
+            manga.remove(done)
+          }})
+        })
+      }})
+    })
+  })
+
   it('populates chapters pages only on first access', (done) => {
     nock(mangareader.host)
     .get(mangaFromList.uri)

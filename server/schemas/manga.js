@@ -30,7 +30,7 @@ let mangaSchema = mongoose.Schema({
 
 mangaSchema.pre('save', function (next) {
   this.updatedAt = new Date()
-  this.chapterCount = this.chapters.length
+  this.chapterCount = this.chapters.length || this.chapterCount || 0
   next()
 })
 
