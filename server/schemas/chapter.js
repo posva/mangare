@@ -22,7 +22,7 @@ let chapterSchema = mongoose.Schema({
 
 chapterSchema.pre('save', function (next) {
   this.updatedAt = new Date()
-  this.pageCount = this.pages.length
+  this.pageCount = this.pages.length || this.pageCount || 0
   next()
 })
 

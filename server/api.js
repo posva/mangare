@@ -39,6 +39,11 @@ function mangaDetail (manga) {
   }
 }
 
+function updateManga (manga, mangaUpdate) {
+  _.merge(mangaUpdate.chapters, manga.chapters)
+  Object.assign(manga, mangaUpdate)
+}
+
 module.exports = {
   mangaList (req, res) {
     logger.info('Retrieving manga list')
@@ -127,12 +132,7 @@ module.exports = {
       image: true,
       updatedAt: true,
       uri: true,
-      'chapters.name': true,
-      'chapters.uri': true,
-      'chapters.date': true,
-      'chapters.updatedAt': true,
-      'chapters.pageCount': true,
-      'chapters._id': true
+      chapters: true
     }, (err, manga) => {
       if (err) {
         logger.error(err)
@@ -156,13 +156,13 @@ module.exports = {
             .then((url) => {
               logger.info(`Uploaded image for Manga ${req.params.id} to cloudinary`)
               mangaData.image = url
-              Object.assign(manga, mangaData)
+              updateManga(manga, mangaData)
               logger.info(`Updating Manga ${req.params.id}`)
               manga.save(() => res.send(mangaDetail(manga)))
             })
           } else {
             logger.info(`Updating Manga ${req.params.id}`)
-            Object.assign(manga, mangaData)
+            updateManga(manga, mangaData)
             manga.save(() => res.send(mangaDetail(manga)))
           }
         }).catch((err) => {
