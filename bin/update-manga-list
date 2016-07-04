@@ -2,6 +2,7 @@
 const mongoose = require('mongoose')
 const tasks = require('../server/tasks')
 
+process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/mangare'
 mongoose.connect(process.env.MONGODB_URI)
 const db = mongoose.connection
 
