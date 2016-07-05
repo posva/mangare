@@ -1,4 +1,5 @@
 const express = require('express')
+const compression = require('compression')
 const fallback = require('express-history-api-fallback')
 const mongoose = require('mongoose')
 
@@ -8,6 +9,7 @@ const logger = require('./logger')()
 
 process.env.PORT = process.env.PORT || 8080
 const app = express()
+app.use(compression())
 
 app.get('/api/mangas', api.mangaList)
 app.get('/api/mangas/:id/chapters/:chapterId', api.mangaChapter)
