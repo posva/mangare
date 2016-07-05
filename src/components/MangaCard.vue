@@ -126,7 +126,9 @@ export default {
     this.refreshMangaTimeout = -1
       // in case a manga doesn't have an image
     if (!this.manga.image &&
-      new Date() - new Date(this.manga.updatedAt) > 1000 * 69 * 60 * 24) {
+        ((new Date() - new Date(this.manga.updatedAt) > 1000 * 69 * 60 * 24) ||
+         !this.manga.chapterCount)
+        ) {
       const refreshMangaFn = () => {
         if (this.pendingRefreshRequests < 3) {
           this.refreshManga()
