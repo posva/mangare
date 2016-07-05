@@ -2,12 +2,15 @@
   <div class="page-preview" :style="style"
        v-touch:swipeleft="nextPage"
        v-touch:swiperight="previousPage"
+       v-touch:pinchend="pinch"
+       v-touch-options:pinchend="{ threshold: 100 }"
        @click="handleClick"
        v-el:container
   >
     <img @click="nextPage"
          title="Next Page"
-        :src="currentPageImage">
+         :style="imageStyle"
+         :src="currentPageImage">
   </div>
 </template>
 
@@ -18,6 +21,8 @@ const LEFT_KEY = 37
 const RIGHT_KEY = 39
 /* const DOWN_KEY = 39*/
 
+const MIN_SCALE = 0.375
+
 export default {
   props: {
     pages: Array
@@ -25,7 +30,15 @@ export default {
   computed: {
     style () {
       return {
-        visibility: this.display ? 'initial' : 'hidden'
+        visibility: this.display ? 'initial' : 'hidden',
+        opacity: this.scaling
+                 ? 1 - Math.min(1, MIN_SCALE / this.scale)
+                 : 1
+      }
+    },
+    imageStyle () {
+      return {
+        transform: `scale(${this.scale})`
       }
     },
     currentPageImage () {
@@ -36,10 +49,21 @@ export default {
   data () {
     return {
       display: false,
-      currentPage: 0
+      currentPage: 0,
+      scaling: false,
+      scale: 1
     }
   },
   methods: {
+    pinch (event) {
+      if (event.scale < MIN_SCALE) this.display = false
+      this.scaling = false
+      this.scale = 1
+    },
+    pinchmove (event) {
+      this.scaling = true
+      this.scale = Math.min(1, event.scale)
+    },
     handleClick (event) {
       if (event.target === this.$els.container) {
         this.display = false
@@ -69,6 +93,8 @@ export default {
   },
   ready () {
     document.addEventListener('keyup', this.handleKey.bind(this))
+    this.$el.hammer.get('pinch').set({ enable: true })
+    this.$el.hammer.on('pinchmove', (event) => this.pinchmove(event))
   },
   destroyed () {
     document.removeEventListener('keyup', this.handleKey)
