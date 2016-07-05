@@ -29,6 +29,7 @@ describe('Models', () => {
 
   it('creates a document', (done) => {
     let manga = new Manga({
+      _id: 'naruto',
       name: 'Naruto',
       uri: '/naruto',
       completed: true
@@ -46,6 +47,7 @@ describe('Models', () => {
 
   it('throws on wrong chapter', (done) => {
     let manga = new Manga({
+      _id: 'one-piece',
       name: 'One Piece',
       uri: '/one-piece',
       completed: false,
@@ -59,6 +61,7 @@ describe('Models', () => {
 
   it('creates chapters', (done) => {
     let manga = new Manga({
+      _id: 'test',
       name: 'test',
       uri: '/test',
       completed: false,

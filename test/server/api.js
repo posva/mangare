@@ -11,6 +11,7 @@ const nock = require('nock')
 const mangareader = require('../../server/providers/mangareader')
 
 const mangaFromList = {
+  _id: 'naruto',
   name: 'Naruto',
   uri: '/naruto',
   completed: true
@@ -46,6 +47,7 @@ describe('API', () => {
 
   it('generates a manga list', (done) => {
     let mangaDesc = {
+      _id: 'naruto',
       name: 'Naruto',
       uri: '/mangalisttest',
       image: 'test',
