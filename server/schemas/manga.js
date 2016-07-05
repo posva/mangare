@@ -5,6 +5,7 @@ const _ = require('lodash')
 const chapterSchema = require('../schemas/chapter')
 
 let mangaSchema = mongoose.Schema({
+  _id: String,
   name: String,
   description: String,
   image: String,
@@ -43,15 +44,14 @@ mangaSchema.methods.updateChapters = function (chapters) {
 mangaSchema.statics.populateMangaList = function (mangaList) {
   return new Promise((resolve, reject) => {
     let start = process.hrtime()
-    this.find({}, {uri: true, _id: false}, (err, mangas) => {
+    this.find({}, {_id: true}, (err, mangas) => {
       if (err) {
         reject(err)
       }
-      let newMangas = _.differenceBy(mangaList, mangas, 'uri')
+      mangaList.forEach(manga => manga._id = _.kebabCase(manga.name))
+      let newMangas = _.differenceBy(mangaList, mangas, '_id')
       let now = new Date()
-      newMangas.forEach((manga) => {
-        manga.updatedAt = now
-      })
+      newMangas.forEach(manga => manga.updatedAt = now)
       if (newMangas.length) {
         this.collection.insert(newMangas, (err, data) => {
           if (err) {
