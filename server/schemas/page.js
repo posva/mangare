@@ -8,8 +8,6 @@ let pageSchema = mongoose.Schema({
     required: true
   },
   updatedAt: Date
-}, {
-  autoIndex: true
 })
 
 pageSchema.pre('save', function (next) {

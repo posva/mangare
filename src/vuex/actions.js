@@ -52,6 +52,7 @@ export function fetchManga ({ dispatch }, id) {
 export function fetchChapter ({ dispatch }, mangaId, id) {
   const chapters = fetchival(`/api/mangas/${mangaId}/chapters/${id}`)
   // dispatch('START_REFRESH_MANGA', id)
+  console.log('hello', mangaId, id)
   return chapters.get()
     .then((chapter) => {
       dispatch('UPDATE_CHAPTER', mangaId, chapter)
@@ -77,6 +78,7 @@ export function setDownloadProgress ({ dispatch }, id, progress) {
 export function downloadChapter ({ dispatch }, { _id, pages, name }, downloadButton) {
   let imagesPromises = []
   let images = []
+  const chapterId = `${name} ${_id}`
   downloadButton.start()
   let counter = 0
   const total = pages.length * 2
@@ -93,7 +95,7 @@ export function downloadChapter ({ dispatch }, { _id, pages, name }, downloadBut
           const img = new Image()
           img.onload = () => {
             image.format = img.width > img.height ? ['a3', 'l'] : ['a4', 'p']
-            setDownloadProgress({ dispatch }, _id, ++counter / total)
+            setDownloadProgress({ dispatch }, chapterId, ++counter / total)
             resolve()
           }
           img.src = image.data
@@ -115,7 +117,7 @@ export function downloadChapter ({ dispatch }, { _id, pages, name }, downloadBut
         }
         pdf.addImage(image.data, 0, 0, image.format[1] === 'l' ? 420 : 210, 297)
 
-        setDownloadProgress({ dispatch }, _id, ++counter / total)
+        setDownloadProgress({ dispatch }, chapterId, ++counter / total)
         // using nextTick doesn't work
         return timeout(0)
       })

@@ -12,7 +12,7 @@ const mangaFromList = {
   completed: true
 }
 const chapterFromList = {
-  index: 1,
+  _id: 1,
   uri: '/naruto/1',
   name: 'Uzumaki Naruto (1)'
 }
@@ -63,7 +63,7 @@ describe('Providers', () => {
       manga.should.have.property('image', 'http://s3.mangareader.net/cover/naruto/naruto-l0.jpg')
       manga.chapters.should.have.length(700)
       manga.chapters.forEach(chapter => {
-        chapter.should.have.property('index')
+        chapter.should.have.property('_id')
         chapter.should.have.property('uri')
         chapter.should.have.property('date')
         chapter.should.have.property('name')
