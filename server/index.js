@@ -29,7 +29,7 @@ if (process.env.NODE_ENV !== 'production' &&
 }
 
 process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/mangare'
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI, {config: { autoIndex: false }})
 const db = mongoose.connection
 
 db.on('error', dbLogger.error.bind(dbLogger))

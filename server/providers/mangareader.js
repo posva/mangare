@@ -91,7 +91,7 @@ let mangaReader = {
         let index = 1
         while (match) {
           manga.chapters.push({
-            index: index,
+            _id: index,
             uri: match[1],
             name: (match[2] && match[2] + ' (' + index + ')') || manga.name + ' ' + index,
             date: new Date(match[3]) || null

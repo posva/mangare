@@ -52,6 +52,7 @@ export default {
   },
   computed: {
     progress () {
+      this.id
       return this.downloads && this.id ? (this.downloads[this.id] || 0) : 0
     },
     isDisabled () {

@@ -3,8 +3,8 @@ const mongoose = require('mongoose')
 const pageSchema = require('./page')
 
 let chapterSchema = mongoose.Schema({
+  _id: Number,
   name: String,
-  index: Number,
   pageCount: Number,
   date: Date,
   uri: {
@@ -16,8 +16,6 @@ let chapterSchema = mongoose.Schema({
     type: [pageSchema],
     default: []
   }
-}, {
-  autoIndex: true
 })
 
 chapterSchema.pre('save', function (next) {

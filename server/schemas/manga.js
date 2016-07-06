@@ -25,8 +25,6 @@ let mangaSchema = mongoose.Schema({
     type: [chapterSchema],
     default: []
   }
-}, {
-  autoIndex: true
 })
 
 mangaSchema.pre('save', function (next) {

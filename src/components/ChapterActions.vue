@@ -1,5 +1,5 @@
 <template>
-  <progress-button v-ref:progress @download="download" :disabled="loading" :id="chapter._id">{{ loading ? 'Loading...' : 'Download' }}</progress-button>
+  <progress-button v-ref:progress @download="download" :disabled="loading" :id="chapterId">{{ loading ? 'Loading...' : 'Download' }}</progress-button>
 </template>
 
 <script>
@@ -27,6 +27,9 @@ export default {
     chapter: Object
   },
   computed: {
+    chapterId () {
+      return `${this.chapter.name} ${this.chapter._id}`
+    },
     chapters () {
       return fetchival(`/api/mangas/${this.$route.params.mangaId}/chapters/${this.chapter._id}`)
     }

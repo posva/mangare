@@ -17,7 +17,7 @@ const mangaFromList = {
   completed: true
 }
 const chapterFromList = {
-  index: 1,
+  _id: 1,
   uri: '/naruto/1',
   name: 'Uzumaki Naruto (1)'
 }
