@@ -224,8 +224,10 @@ previewMargin = 2px
   align-items center
   justify-content center
   @media (max-width 700px) {
-    justify-content flex-start
-    padding-left 3rem
+    max-width 100%
+  }
+  @media (max-width 400px) {
+    max-width 400px
   }
 }
 
