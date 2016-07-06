@@ -16,7 +16,16 @@
     </div>
     <div v-show="isReady" class="manga__content-container">
       <div class="manga__chapters">
-        <chapters :chapters="manga.chapters"></chapters>
+        <div v-show="isLoading"
+             class="spinner-container">
+          <div class="spinner-div">
+            <spinner></spinner>
+            <p>Retrieving chapters...</p>
+          </div>
+        </div>
+        <chapters v-show="!isLoading"
+                  :chapters="manga.chapters">
+        </chapters>
       </div>
     </div>
     <div v-show="!isReady" class="manga__content-loader">
@@ -27,8 +36,10 @@
 
 <script>
 import Chapters from '../components/Chapters'
+import Spinner from '../components/Spinner'
 import {
-  manga
+  manga,
+  refreshingMangas
 } from '../vuex/getters'
 import {
   viewManga
@@ -40,7 +51,8 @@ export default {
       viewManga
     },
     getters: {
-      manga
+      manga,
+      refreshingMangas
     }
   },
   computed: {
@@ -52,6 +64,10 @@ export default {
     },
     isReady () {
       return this.manga && this.manga.image
+    },
+    isLoading () {
+      this.refreshingMangas
+      return this.manga && this.refreshingMangas[this.manga._id]
     },
     banner () {
       if (this.manga && this.manga.image &&
@@ -90,7 +106,8 @@ export default {
     window.removeEventListener('scroll', this.onScroll)
   },
   components: {
-    Chapters
+    Chapters,
+    Spinner
   }
 }
 </script>

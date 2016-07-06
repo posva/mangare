@@ -52,7 +52,6 @@ export function fetchManga ({ dispatch }, id) {
 export function fetchChapter ({ dispatch }, mangaId, id) {
   const chapters = fetchival(`/api/mangas/${mangaId}/chapters/${id}`)
   // dispatch('START_REFRESH_MANGA', id)
-  console.log('hello', mangaId, id)
   return chapters.get()
     .then((chapter) => {
       dispatch('UPDATE_CHAPTER', mangaId, chapter)
