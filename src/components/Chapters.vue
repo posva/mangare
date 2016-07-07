@@ -3,19 +3,35 @@
     <table class="chapters">
       <thead>
         <tr class="chapters__header">
-          <th>Chapter</th>
-          <th>Title</th>
-          <th>Page count</th>
-          <th>Published</th>
+          <th :class="getThClass('_id')"
+              @click.prevent="toggleOrder('_id')">
+            Chapter
+            <span class="arrow" :class="getOrderClass('_id')"></span>
+          </th>
+          <th :class="getThClass('name')"
+              @click.prevent="toggleOrder('name')">
+            Title
+            <span class="arrow" :class="getOrderClass('name')"></span>
+          </th>
+          <th :class="getThClass('pageCount')"
+              @click.prevent="toggleOrder('pageCount')">
+            Page count
+            <span class="arrow" :class="getOrderClass('pageCount')"></span>
+          </th>
+          <th :class="getThClass('date')"
+              @click.prevent="toggleOrder('date')">
+            Published
+            <span class="arrow" :class="getOrderClass('date')"></span>
+          </th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <template v-for="(cIndex, chapter) in chapters" track-by="$index">
+        <template v-for="(cIndex, chapter) in chapterList" track-by="$index">
           <tr class="chapters__row">
-            <td class="chapter__row__index">{{ $index + 1 }}</td>
+            <td class="chapter__row__index">{{ chapter._id }}</td>
             <td class="chapter__row__title">
-              <a @click.prevent="togglePreview(cIndex)" href="#">{{ chapter.name }}</a>
+              <a @click.prevent="togglePreview(chapter._id)" href="#">{{ chapter.name }}</a>
             </td>
             <td class="chapter__row__page-count">{{ chapter.pageCount ? chapter.pageCount : '?' }}</td>
             <td class="chapter__row__published" :title="formattedDate(chapter.date)">{{ chapter.date | moment 'from' }}</td>
@@ -28,8 +44,8 @@
               <div class="chapter__preview"
                    transition="height"
                    :data-image="$index"
-                   v-show="isPreviewVisible(cIndex)">
-                <div v-show="!isLoading(cIndex)"
+                   v-show="isPreviewVisible(chapter._id)">
+                <div v-show="!isLoading(chapter._id)"
                      class="chapter__preview-inner">
                   <div class="chapter__preview__page-image"
                        track-by="$index"
@@ -37,7 +53,7 @@
                     <img :src="page" @click="openPage($index)" >
                   </div>
                 </div>
-                <div v-show="isLoading(cIndex)"
+                <div v-show="isLoading(chapter._id)"
                      class="spinner-container">
                   <div class="spinner-div">
                     <spinner></spinner>
@@ -59,6 +75,7 @@
 
 <script>
 import Vue from 'vue'
+import _ from 'lodash'
 import ChapterActions from './ChapterActions'
 import Spinner from './Spinner'
 import PagePreview from './PagePreview'
@@ -76,20 +93,63 @@ export default {
     chapters: Array
   },
   computed: {
+    currentChapter () {
+      return _.find(this.chapters, {_id: this.currentPreview})
+    },
     currentPages () {
-      this.chapters
-      return this.currentPreview > -1
-           ? this.chapters[this.currentPreview].pages
+      return this.currentChapter
+           ? this.currentChapter.pages
            : []
+    },
+    chapterList () {
+      const sort = this.orders.reduce((sorting, {column, order}) => {
+        sorting[0].push(column)
+        sorting[1].push(order)
+        return sorting
+      }, [[], []])
+      return _.take(_.orderBy(this.chapters, ...sort), this.chaptersPerPage)
     }
   },
   data () {
     return {
       currentPreview: -1,
+      currentPage: 0,
+      chaptersPerPage: 20,
+      orders: [
+        {
+          column: '_id',
+          order: 'desc'
+        },
+        {
+          column: 'name',
+          order: 'asc'
+        },
+        {
+          column: 'pageCount',
+          order: 'asc'
+        },
+        {
+          column: 'date',
+          order: 'asc'
+        }
+      ],
       loading: {}
     }
   },
   methods: {
+    getThClass (column) {
+      const order = this.orders[0]
+      return order && order.column === column ? 'active' : ''
+    },
+    getOrderClass (column) {
+      const order = _.find(this.orders, {column})
+      return order && order.order
+    },
+    toggleOrder (column) {
+      let order = _.remove(this.orders, {column})[0]
+      order.order = order.order === 'asc' ? 'desc' : 'asc'
+      this.orders.unshift(order)
+    },
     isLoading (index) {
       return this.currentPreview === index && this.loading[index]
     },
@@ -105,9 +165,10 @@ export default {
       if (this.currentPreview === current) {
         this.currentPreview = this.currentPreview === index ? -1 : index
       }
-      if (!this.chapters[index].pages) {
+      const chapter = _.find(this.chapters, {_id: index})
+      if (!chapter.pages) {
         Vue.set(this.loading, index, true)
-        this.fetchChapter(this.$route.params.mangaId, this.chapters[index]._id)
+        this.fetchChapter(this.$route.params.mangaId, chapter._id)
             .then(() => {
               this.loading[index] = false
             })
@@ -194,6 +255,22 @@ previewMargin = 2px
     text-align left
     padding 0 1rem
   }
+  th:not(.active) {
+    opacity 0.66
+  }
+
+  .chapters__header {
+    background-color darken(clear, 10%)
+  }
+
+  th {
+    cursor pointer
+    user-select none
+    min-width 8rem
+  }
+  th:first-child {
+    min-width 5rem
+  }
 }
 
 .chapters__row__index {
@@ -231,7 +308,24 @@ previewMargin = 2px
   }
 }
 
-.spinner-div {
+.arrow {
+  size = 4px
+  color = dark
+  display inline-block
+  vertical-align middle
+  width 0
+  height 0
+  margin-left 5px
 
+  &.asc {
+    border-left size solid transparent
+    border-right size solid transparent
+    border-bottom size solid dark
+  }
+  &.desc {
+    border-left size solid transparent
+    border-right size solid transparent
+    border-top size solid dark
+  }
 }
 </style>
