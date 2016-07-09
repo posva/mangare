@@ -95,6 +95,7 @@
     "sinon-chai": "^2.8.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^2.1.0",
+    "supertest": "^1.2.0",
     "url-loader": "^0.5.7",
     "vue": "^1.0.24",
     "vue-clickaway": "^1.1.1",

@@ -1,36 +1,10 @@
 const express = require('express')
-const bodyParser = require('body-parser')
-const compression = require('compression')
-const fallback = require('express-history-api-fallback')
 const mongoose = require('mongoose')
-const passport = require('passport')
-const jwtAuth = require('./auth/jwt')
-require('./auth/anonymous')
+const fallback = require('express-history-api-fallback')
 
-const api = require('./api')
 const dbLogger = require('./logger')('MongoDB')
 const logger = require('./logger')()
-
-process.env.PORT = process.env.PORT || 8080
-const app = express()
-
-app.use(compression())
-app.use(bodyParser.json())
-app.use(passport.initialize())
-
-const authenticate = passport.authenticate(['jwt', 'anonymous'], {session: false})
-
-app.get('/api/mangas', authenticate, api.mangaList)
-app.get('/api/mangas/:id/chapters/:chapterId', authenticate, api.mangaChapter)
-app.get('/api/mangas/:id', authenticate, api.manga)
-app.get('/api/image', authenticate, api.imageBase64)
-
-app.post('/api/register', api.register)
-
-app.post('/api/auth-token', jwtAuth.generateToken)
-app.get('/api/test-auth', authenticate, function (req, res) {
-  res.json(req.user || {})
-})
+const app = require('./app')
 
 // XXX don't use this in production
 if (process.env.NODE_ENV !== 'production' &&
