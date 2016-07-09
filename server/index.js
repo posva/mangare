@@ -5,6 +5,7 @@ const fallback = require('express-history-api-fallback')
 const mongoose = require('mongoose')
 const passport = require('passport')
 const jwtAuth = require('./auth/jwt')
+require('./auth/anonymous')
 
 const api = require('./api')
 const dbLogger = require('./logger')('MongoDB')
@@ -17,15 +18,17 @@ app.use(compression())
 app.use(bodyParser.json())
 app.use(passport.initialize())
 
-app.get('/api/mangas', api.mangaList)
-app.get('/api/mangas/:id/chapters/:chapterId', api.mangaChapter)
-app.get('/api/mangas/:id', api.manga)
-app.get('/api/image', api.imageBase64)
+const authenticate = passport.authenticate(['jwt', 'anonymous'], {session: false})
+
+app.get('/api/mangas', authenticate, api.mangaList)
+app.get('/api/mangas/:id/chapters/:chapterId', authenticate, api.mangaChapter)
+app.get('/api/mangas/:id', authenticate, api.manga)
+app.get('/api/image', authenticate, api.imageBase64)
 
 app.post('/api/register', api.register)
 
-app.post('/api/auth-token', jwtAuth.token)
-app.get('/api/test-auth', jwtAuth.authenticate, function (req, res) {
+app.post('/api/auth-token', jwtAuth.generateToken)
+app.get('/api/test-auth', authenticate, function (req, res) {
   res.json(req.user || {})
 })
 

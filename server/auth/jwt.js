@@ -29,8 +29,7 @@ passport.use(new Strategy(params, function ({_id}, done) {
   })
 }))
 
-exports.authenticate = passport.authenticate('jwt', {session: false})
-exports.token = function (req, res) {
+exports.generateToken = function (req, res) {
   if (req.body.username && req.body.password) {
     const username = req.body.username
     const password = req.body.password
