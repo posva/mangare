@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const userSchema = require('../../server/schemas/user')
 const clearDB = require('mocha-mongoose')(dbURI)
 
-describe.only('User', () => {
+describe('User', () => {
   'use strict'
   let User = mongoose.model('User', userSchema)
   beforeEach((done) => {

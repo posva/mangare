@@ -3,8 +3,9 @@ const mongoose = require('mongoose')
 const prettyHrtime = require('pretty-hrtime')
 const _ = require('lodash')
 const chapterSchema = require('../schemas/chapter')
+const logger = require('../logger')('model/manga')
 
-let mangaSchema = mongoose.Schema({
+const mangaSchema = mongoose.Schema({
   _id: String,
   name: String,
   description: String,
@@ -41,9 +42,10 @@ mangaSchema.methods.updateChapters = function (chapters) {
 
 mangaSchema.statics.populateMangaList = function (mangaList) {
   return new Promise((resolve, reject) => {
-    let start = process.hrtime()
+    const start = process.hrtime()
     this.find({}, {_id: true}, (err, mangas) => {
       if (err) {
+        logger.error(err)
         reject(err)
       }
       mangaList.forEach(manga => manga._id = _.kebabCase(manga.name))
@@ -53,6 +55,7 @@ mangaSchema.statics.populateMangaList = function (mangaList) {
       if (newMangas.length) {
         this.collection.insert(newMangas, (err, data) => {
           if (err) {
+            logger.error(err)
             reject(err)
           }
           resolve({

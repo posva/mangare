@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 const promisify = require('promisify-node')
 const bcrypt = promisify('bcrypt-nodejs')
+const logger = require('../logger')('model/user')
 
-let userSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
   username: {
     type: String,
     unique: true,
@@ -18,11 +19,8 @@ let userSchema = mongoose.Schema({
 function assurePasswordHash (user) {
   if (user.isModified('password')) {
     return bcrypt.genSalt(5)
-      .then((salt, err) => {
-        if (err) throw err
-        return bcrypt.hash(user.password, salt, null)
-      }).then((hash, err) => {
-        if (err) throw err
+      .then(salt => bcrypt.hash(user.password, salt, null))
+      .then(hash => {
         user.password = hash
       })
   } else {
@@ -33,7 +31,17 @@ function assurePasswordHash (user) {
 userSchema.pre('save', function (next) {
   assurePasswordHash(this)
     .then(next)
-    .catch(err => next(err))
+    .catch(err => {
+      logger.error(err)
+      next(err)
+    })
 })
+
+userSchema.methods.verifyPassword = function (password) {
+  return bcrypt.compare(password, this.password)
+    .catch(err => {
+      logger.error(err)
+    })
+}
 
 module.exports = userSchema
