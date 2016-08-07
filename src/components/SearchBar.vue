@@ -67,7 +67,7 @@ export default {
       transform scale3d(120, 120, 1)
 
     &::after
-      transform translate3d(-100%, 0, 0)
+      transform translate3d(0, 0, 0)
 
   &::after
     content ''
@@ -77,7 +77,7 @@ export default {
     background @background-color
     bottom 0
     transform translate3d(-200%, 0, 0)
-    transition transform 0.3s
+    transition transform 0.3s cubic-bezier(1, -0.02, 0.44, 0.96)
 
   label
     position absolute
