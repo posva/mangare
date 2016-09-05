@@ -1,0 +1,20 @@
+pad = 20px
+.grid
+  width: 100%
+  margin: 0 0 pad 0
+  [class*='column']
+    float: left
+    padding: (pad / 2)
+  &:after
+    content: ""
+    display: table
+    clear: both
+
+v = zero one two three four five six seven eight nine ten eleven twelve
+columns = 12
+plural(i)
+  i > 1 ? 'columns' : 'column'
+for i in 1..columns
+  .{v[i]}-{plural(i)}
+     width: (100 * i / columns)%
+     display: inline-block

@@ -11,6 +11,11 @@
       <img v-show="mangaList.length" src="../assets/img/gon.png">
       <p>{{ message }}</p>
     </div>
+    <button @click="login('posva', 'posva')">Login</button>
+    <button @click="login('posva', 'fail')">Fail Login</button>
+    <button @click="logout">Logout</button>
+    <button @click="noAuth">Auth route</button>
+    <pre>{{ res | json }}</pre>
   </div>
 </template>
 
@@ -27,6 +32,9 @@ import _ from 'lodash'
 import { filter as fuzzy } from 'fuzzy'
 import SearchBar from '../components/SearchBar'
 import MangaCard from '../components/MangaCard'
+import fetchival from 'fetchival'
+
+const login = fetchival('/api/auth-token')
 
 const fuzzyOptions = {
   pre: '<em>',
@@ -47,7 +55,9 @@ export default {
   },
   data () {
     return {
-      searchQuery: ''
+      searchQuery: '',
+      token: '',
+      res: ''
     }
   },
   watch: {
@@ -83,6 +93,28 @@ export default {
           query: this.searchQuery
         }
       })
+    },
+    logout () {
+      this.token = ''
+    },
+    noAuth () {
+      const noAuth = fetchival('/api/test-auth', {
+        headers: {
+          'Authorization': `JWT ${this.token}`
+        }
+      })
+      noAuth.get({
+      })
+            .then(json => this.res = json)
+            .catch(err => this.res = err)
+    },
+    login (username, password) {
+      login.post({username, password})
+           .then(json => {
+             this.res = json
+             this.token = json.token
+           })
+           .catch(err => this.res = err)
     }
   },
   created () {
