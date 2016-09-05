@@ -67,17 +67,16 @@ export default {
       transform scale3d(120, 120, 1)
 
     &::after
-      transform translate3d(-100%, 0, 0)
+      width 100%
 
   &::after
     content ''
     position absolute
-    width 100%
+    width 0
     height 2px
     background @background-color
     bottom 0
-    transform translate3d(-200%, 0, 0)
-    transition transform 0.3s
+    transition width 0.3s ease
 
   label
     position absolute
