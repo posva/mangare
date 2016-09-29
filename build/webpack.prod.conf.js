@@ -9,7 +9,6 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
   : config.build.env
-var vendors = /(lib\/|node_modules)/
 
 var webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -66,8 +65,10 @@ var webpackConfig = merge(baseWebpackConfig, {
         // any required modules inside node_modules are extracted to vendor
         return (
           module.resource &&
-            /\.js$/.test(module.resource) &&
-            vendors.test(module.resource)
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(
+            path.join(__dirname, '../node_modules')
+          ) === 0
         )
       }
     }),

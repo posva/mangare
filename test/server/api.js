@@ -259,7 +259,6 @@ describe('API', () => {
 
     // directly use mongo to hack updatedAt
     let updatedAt = new Date()
-    let now = new Date()
     updatedAt.setMonth(updatedAt.getMonth() - 1)
     Manga.collection.insert(Object.assign({}, mangaFromList, {updatedAt, image: 'image'}))
 
