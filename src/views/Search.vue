@@ -1,16 +1,17 @@
 <template>
   <div class="_flex">
-    <search-bar :disabled="!mangaList.length" :value.sync="searchQuery" @change="updateQuery">
+    <SearchBar :disabled="true" v-model="searchQuery" @change="updateQuery"/>
+    <!-- <search-bar :disabled="!mangaList.length" :value.sync="searchQuery" @change="updateQuery"> -->
     </search-bar>
-    <div v-if="isReady" class="search-resutls">
-      <manga-card v-for="manga in searchResults"
-        :manga="manga"
-      ></manga-card>
-    </div>
-    <div v-else class="search-message">
-      <img v-show="mangaList.length" src="../assets/img/gon.png">
-      <p>{{ message }}</p>
-    </div>
+    <!-- <div v-if="isReady" class="search-resutls"> -->
+    <!-- <manga-card v-for="manga in searchResults" -->
+    <!-- :manga="manga" -->
+    <!-- ></manga-card> -->
+    <!-- </div> -->
+    <!-- <div v-else class="search-message"> -->
+    <!-- <img v-show="mangaList.length" src="../assets/img/gon.png"> -->
+    <!-- <p>{{ message }}</p> -->
+    <!-- </div> -->
   </div>
 </template>
 
@@ -86,6 +87,7 @@ export default {
     }
   },
   created () {
+    if (window) return
     this.searchQuery = this.$route.query.query || ''
     if (!this.mangaList.length) {
       this.$progress.start()
@@ -102,22 +104,26 @@ export default {
 </script>
 
 <style lang="stylus">
-@import '../assets/style/palette'
-@import '../assets/style/flex'
+@import '../assets/style/palette';
+@import '../assets/style/flex';
 
-.search-message
+.search-message {
   baseSize = 148px
-  img
-    max-width baseSize
-  @extend .flex
-  font-size 2rem
-  @media (max-width 700px)
-    font-size 1rem
-  font-weight 300
-  flex-direction column
+  img {
+    max-width: baseSize;
+  }
+  @extend .flex;
+  font-size: 2rem;
+  @media (max-width 700px) {
+    font-size: 1rem;
+  }
+  font-weight: 300;
+  flex-direction: column;
+}
 
-.search-resutls
-  @extend .flex
-  flex-wrap wrap
-  justify-content space-around
+.search-resutls {
+  @extend .flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
 </style>

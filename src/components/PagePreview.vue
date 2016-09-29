@@ -17,9 +17,9 @@
 <script>
 const ESC_KEY = 27
 const LEFT_KEY = 37
-/* const UP_KEY = 38*/
+/* const UP_KEY = 38 */
 const RIGHT_KEY = 39
-/* const DOWN_KEY = 39*/
+/* const DOWN_KEY = 39 */
 
 const MIN_SCALE = 0.375
 

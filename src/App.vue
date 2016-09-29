@@ -11,7 +11,7 @@
       </a>
     </nav>
     <section id="container">
-      <!-- <router-view></router-view> -->
+      <router-view></router-view>
     </section>
   </div>
 </template>
