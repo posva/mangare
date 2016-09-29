@@ -1,9 +1,15 @@
 <template>
   <div class="search-container" :class="searchContainerClass">
-    <input :disabled="disabled" autocomplete="off" id="search-input" v-model="value" debounce="100"
-      name="query" type="text" @change="$emit($event)"
-      @focus="searchFocused = true"
-      @blur="searchFocused = false"
+    <input :disabled="disabled"
+           autocomplete="off"
+           id="search-input"
+           v-model="model"
+           name="query"
+           type="text"
+           @change="$emit('change', $event)"
+           @focus="searchFocused = true"
+           @blur="searchFocused = false"
+           @input="$emit('input', $event.target.value)"
     >
     <label for="search-input">
       <span>{{ label }}</span>
@@ -27,6 +33,7 @@ export default {
     }
   },
   computed: {
+    model () { return this.value },
     label () {
       return this.disabled
         ? 'Loading...'

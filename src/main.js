@@ -6,7 +6,7 @@ import VueRouter from 'vue-router'
 // import VueTransferDom from 'vue-transfer-dom'
 // import VueTouch from 'vue-touch'
 // import configRouter from './config-router'
-// import store from './vuex/store'
+import store from './vuex/store'
 // import { sync } from 'vuex-router-sync'
 // import { heightToggle } from './transitions'
 
@@ -28,5 +28,6 @@ Vue.use(VueRouter)
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)
 })

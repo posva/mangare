@@ -1,28 +1,21 @@
 <template>
   <div class="_flex">
-    <SearchBar :disabled="true" v-model="searchQuery" @change="updateQuery"/>
-    <!-- <search-bar :disabled="!mangaList.length" :value.sync="searchQuery" @change="updateQuery"> -->
+    <SearchBar :disabled="!mangaList.length" v-model="searchQuery" @change="updateQuery"/>
     </search-bar>
-    <!-- <div v-if="isReady" class="search-resutls"> -->
-    <!-- <manga-card v-for="manga in searchResults" -->
-    <!-- :manga="manga" -->
-    <!-- ></manga-card> -->
-    <!-- </div> -->
-    <!-- <div v-else class="search-message"> -->
-    <!-- <img v-show="mangaList.length" src="../assets/img/gon.png"> -->
-    <!-- <p>{{ message }}</p> -->
-    <!-- </div> -->
+    <div v-if="isReady" class="search-resutls">
+      <MangaCard v-for="manga in searchResults"
+                 :manga="manga"
+      />
+    </div>
+    <div v-else class="search-message">
+      <img v-show="mangaList.length" src="../assets/img/gon.png">
+      <p>{{ message }}</p>
+    </div>
   </div>
 </template>
 
 <script>
-import {
-  fetchMangaList
-} from '../vuex/actions'
-
-import {
-  mangaList
-} from '../vuex/getters'
+import { mapGetters, mapActions } from 'vuex'
 
 import _ from 'lodash'
 import { filter as fuzzy } from 'fuzzy'
@@ -38,14 +31,6 @@ const fuzzyOptions = {
 }
 
 export default {
-  vuex: {
-    actions: {
-      fetchMangaList
-    },
-    getters: {
-      mangaList
-    }
-  },
   data () {
     return {
       searchQuery: ''
@@ -73,27 +58,29 @@ export default {
         manga.original.highlighted = manga.string
         return manga.original
       })
-    }
+    },
+    ...mapGetters(['mangaList'])
   },
   methods: {
     updateQuery () {
-      this.$router.go({
-        replace: true,
-        name: 'search',
+      let route = {
+        name: this.$route.name,
         query: {
           query: this.searchQuery
         }
-      })
-    }
+      }
+
+      this.$router.replace(route)
+    },
+    ...mapActions(['fetchMangaList'])
   },
   created () {
-    if (window) return
     this.searchQuery = this.$route.query.query || ''
     if (!this.mangaList.length) {
-      this.$progress.start()
+      // this.$progress.start()
       this.fetchMangaList()
-          .then(() => this.$progress.finish())
-          .catch(() => this.$progress.failed())
+          // .then(() => this.$progress.finish())
+          // .catch(() => this.$progress.failed())
     }
   },
   components: {

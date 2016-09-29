@@ -35,25 +35,9 @@
 </template>
 
 <script>
-import {
-  fetchManga
-} from '../vuex/actions'
-
-import {
-  refreshingMangas,
-  pendingRefreshRequests
-} from '../vuex/getters'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  vuex: {
-    actions: {
-      fetchManga
-    },
-    getters: {
-      refreshingMangas,
-      pendingRefreshRequests
-    }
-  },
   props: {
     manga: Object
   },
@@ -89,7 +73,8 @@ export default {
           mangaId: this.manga._id
         }
       }
-    }
+    },
+    ...mapGetters(['refreshingMangas', 'pendingRefreshRequests'])
   },
   methods: {
     refreshManga () {
@@ -101,7 +86,8 @@ export default {
     quickRead () {
     },
     quickDownload () {
-    }
+    },
+    ...mapActions(['fetchManga'])
   },
   directives: {
     fit () {

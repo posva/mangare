@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
 
+import * as getters from './getters'
+import * as actions from './actions'
+
 Vue.use(Vuex)
 
 export const state = {
@@ -52,6 +55,7 @@ export const mutations = {
       }
     })
   },
+  // TODO Use payload
   UPDATE_CHAPTER (state, mangaId, chapterData) {
     if (state.manga._id !== mangaId) return
     let chapter = _.find(state.manga.chapters, { _id: chapterData._id })
@@ -72,5 +76,7 @@ export const mutations = {
 
 export default new Vuex.Store({
   state,
-  mutations
+  mutations,
+  getters,
+  actions
 })
