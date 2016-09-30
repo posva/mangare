@@ -2,13 +2,12 @@
   <div id="mangare">
     <!-- <vue-progress v-ref:progress :percent.sync="progress.percent" :options="progress.options"></vue-progress> -->
     <nav id="nav">
-      <!-- <a v-link="{ name: 'search' }"> -->
-      <a>
+      <router-link :to="{ name: 'search' }">
         <h1>
           <img class="logo emoji" draggable="false" alt="🍙" src="//twemoji.maxcdn.com/2/72x72/1f359.png">
           Mangare
         </h1>
-      </a>
+      </router-link>
     </nav>
     <section id="container">
       <router-view></router-view>

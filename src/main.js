@@ -1,7 +1,7 @@
 import 'whatwg-fetch'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import VueMoment from 'vue-moment'
+import VueMoment from 'vue-moment'
 // import VueProgressbar from 'vue-progressbar'
 // import VueTransferDom from 'vue-transfer-dom'
 // import VueTouch from 'vue-touch'
@@ -20,7 +20,7 @@ Vue.use(VueRouter)
 // TODO sync vuex vue-router
 // Vue.use(VueProgressbar)
 // Vue.use(VueTransferDom)
-// Vue.use(VueMoment)
+Vue.use(VueMoment)
 // Vue.use(VueTouch)
 // Vue.transition('height-toggle', heightToggle)
 

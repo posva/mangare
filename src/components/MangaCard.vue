@@ -2,22 +2,25 @@
 <figure class="manga-card">
   <img class="manga-card__image" :title="manga.name" :src="image">
   <figcaption class="manga-card__hover">
-    <a v-link="route">
+    <router-link :to="route">
       <div class="manga-card__title-container">
+        <!-- <h2 v-if="manga.name === 'Tengen Toppa Gurren Lagann: Yoko\'s Belly Button'" v-fit="manga.name" class="manga-card__title">{{ manga.name }}</h2> -->
         <h2 v-fit="manga.name" class="manga-card__title">{{ manga.name }}</h2>
       </div>
-    </a>
+    </router-link>
     <div class="manga-card__information">
       <p class="manga-card__information__chapters">{{ chapterCount }} Chapters</p>
       <div class="manga-card__information__updated-at">
-        <span>Updated {{ manga.updatedAt | moment 'from' }}</span>
+        <span>Updated {{ manga.updatedAt | moment('from') }}</span>
         <button :disabled="!canRefresh" @click="refreshManga" class="manga-card__refresh-button">
           <img src="../assets/img/refresh-icon.png">
         </button>
       </div>
       <ul class="manga-card__information__actions">
         <li>
-          <a title="Go to the Manga page" v-link="route">Details</a>
+          <router-link title="Go to the Manga page"
+                       :to="route"
+          >Details</router-link>
         </li>
         <li>
           <a @click.stop.prevent="quickRead" title="Read last chapter online" href="#">Quick Read</a>
@@ -78,7 +81,7 @@ export default {
   },
   methods: {
     refreshManga () {
-      this.$progress.start()
+      /* this.$progress.start() */
       this.fetchManga(this.manga._id)
           .then(() => this.$progress.finish())
           .catch(() => this.$progress.failed())
@@ -90,27 +93,31 @@ export default {
     ...mapActions(['fetchManga'])
   },
   directives: {
-    fit () {
-      requestAnimationFrame(() => {
-        // exit if this element has been removed from the dom
-        // this may happen when the user type fast enough
-        if (!this.el || !this.el.parentNode) return
-        const maxHeight = this.el.parentNode.offsetHeight
-        let height = this.el.offsetHeight
-        let fontSize = parseInt(window.getComputedStyle(this.el).fontSize)
-        // let 1rem of distance
-        while (height > maxHeight - 2 * fontSize) {
-          this.el.style.fontSize = `${--fontSize}px`
-          // 1rem padding on parent
-          this.el.parentNode.style.padding = `${fontSize}px`
-          height = this.el.offsetHeight
-        }
-      })
+    fit: {
+      inserted (el) {
+        requestAnimationFrame(() => {
+          // exit if this element has been removed from the dom
+          // this may happen when the user type fast enough
+
+          if (!el || !el.parentNode) return
+          console.log('confirm')
+          const maxHeight = el.parentNode.offsetHeight
+          let height = el.offsetHeight
+          let fontSize = parseInt(window.getComputedStyle(el).fontSize)
+          // let 1rem of distance
+          while (height > maxHeight - 2 * fontSize) {
+            el.style.fontSize = `${--fontSize}px`
+            // 1rem padding on parent
+            el.parentNode.style.padding = `${fontSize}px`
+            height = el.offsetHeight
+          }
+        })
+      }
     }
   },
   ready () {
     this.refreshMangaTimeout = -1
-      // in case a manga doesn't have an image
+    // in case a manga doesn't have an image
     if (!this.manga.image &&
         ((new Date() - new Date(this.manga.updatedAt) > 1000 * 69 * 60 * 24) ||
          !this.manga.chapterCount)

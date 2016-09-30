@@ -6,10 +6,9 @@
            v-model="model"
            name="query"
            type="text"
-           @change="$emit('change', $event)"
            @focus="searchFocused = true"
            @blur="searchFocused = false"
-           @input="$emit('input', $event.target.value)"
+           @input="onInput"
     >
     <label for="search-input">
       <span>{{ label }}</span>
@@ -18,6 +17,8 @@
 </template>
 
 <script>
+import { debounce } from 'lodash'
+
 export default {
   props: {
     disabled: Boolean,
@@ -31,6 +32,11 @@ export default {
     return {
       searchFocused: false
     }
+  },
+  methods: {
+    onInput: debounce(function (event) {
+      this.$emit('input', event.target.value)
+    }, 100)
   },
   computed: {
     model () { return this.value },
@@ -83,6 +89,7 @@ export default {
     height 2px
     background @background-color
     bottom 0
+    left: 0
     transition width 0.3s ease
 
   label

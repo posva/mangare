@@ -1,9 +1,10 @@
 <template>
   <div class="_flex">
-    <SearchBar :disabled="!mangaList.length" v-model="searchQuery" @change="updateQuery"/>
+    <SearchBar :disabled="!mangaList.length" v-model="searchQuery" @change.native="updateQuery"/>
     </search-bar>
     <div v-if="isReady" class="search-resutls">
       <MangaCard v-for="manga in searchResults"
+                 :key="manga._id"
                  :manga="manga"
       />
     </div>
