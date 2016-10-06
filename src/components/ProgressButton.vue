@@ -8,8 +8,8 @@
       </span>
     </span>
     <div v-show="!isDisabled" :class="moreClasses" @click="toggleMenu"
-         v-clickaway="showMenu = false"
          class="progress-button__more">
+      <!-- v-clickaway="showMenu = false" -->
       <div class="arrow-down">
       </div>
       <div class="progress-button__more__content">
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { directive as Clickaway } from 'vue-clickaway'
+/* import { directive as Clickaway } from 'vue-clickaway' */
 import {
   resetDownloadProgress
 } from '../vuex/actions'
@@ -42,7 +42,7 @@ export default {
       resetDownloadProgress
     }
   },
-  directives: { Clickaway },
+  /* directives: { Clickaway }, */
   props: {
     disabled: {
       type: [String, Boolean],

@@ -1,0 +1,33 @@
+{
+  "extends": "stylelint-config-standard",
+  "processors": ["stylelint-processor-html"],
+  "plugins": [
+    "stylelint-selector-bem-pattern"
+  ],
+  "rules": {
+    "block-no-empty": null,
+    "color-no-invalid-hex": true,
+    "block-no-single-line": true,
+    "comment-empty-line-before": [
+      "always", {
+        "ignore": ["stylelint-commands", "between-comments"]
+      }
+    ],
+    "declaration-colon-space-after": "always",
+    "indentation": [2, {
+      "except": ["value"]
+    }],
+    "max-empty-lines": 2,
+    "rule-nested-empty-line-before": [ "always", {
+      "except": ["first-nested"]
+    } ],
+    "unit-whitelist": ["em", "rem", "%", "s", "px"],
+    "selector-no-id": true,
+    "selector-no-type": true,
+
+
+    "plugin/selector-bem-pattern": {
+      "preset": "bem"
+    }
+  }
+}
