@@ -1,5 +1,4 @@
 var path = require('path')
-var webpack = require('webpack')
 var config = require('../config')
 var utils = require('./utils')
 var projectRoot = path.resolve(__dirname, '../')
@@ -80,6 +79,12 @@ module.exports = {
     formatter: require('eslint-friendly-formatter')
   },
   vue: {
-    loaders: utils.cssLoaders()
+    loaders: utils.cssLoaders(),
+    postcss: [
+      require('postcss-import'),
+      require('postcss-cssnext'),
+      require('postcss-property-lookup'),
+      require('postcss-browser-reporter')
+    ]
   }
 }

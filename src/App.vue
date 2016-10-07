@@ -45,16 +45,16 @@ export default {
 </script>
 
 <style lang="stylus">
+@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700');
 @import './assets/style/palette';
 @import './assets/style/flex';
-@import url(//fonts.googleapis.com/css?family=Lato:100,300,400,700);
 
 * {
   box-sizing: border-box;
 }
 
 body {
-  background-color: clear;
+  background-color: $clear;
 }
 
 #mangare {
@@ -62,7 +62,7 @@ body {
   justify-content: space-between;
   flex-direction: column;
   font-family: Lato, Source Sans Pro, Helvetica, sans-serif;
-  color: dark;
+  color: $dark;
 }
 
 #container {
@@ -76,8 +76,8 @@ body {
   @extend .flex;
   padding: 0.5rem;
   width: 100%;
-  background-color: lighten(dark, 30%);
-  color: clear;
+  background-color: lighten($dark, 30%);
+  color: $clear;
   z-index: 10;
 
   a {
@@ -97,7 +97,7 @@ body {
       height: @font-size;
     }
 
-    @media (max-width 700px) {
+    @media (max-width: 700px) {
       font-size: 1.5rem;
       .logo {
         height: @font-size;

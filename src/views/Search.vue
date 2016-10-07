@@ -91,18 +91,22 @@ export default {
 }
 </script>
 
-<style lang="stylus">
-@import '../assets/style/palette';
-@import '../assets/style/flex';
+<style>
+@import '../ui/flex.css';
+
+:root {
+  --baseSize: 148px;
+}
 
 .search-message {
-  baseSize = 148px
-  img {
-    max-width: baseSize;
+  & img {
+    max-width: var(--baseSize);
   }
-  @extend .flex;
+  @apply --flex;
   font-size: 2rem;
-  @media (max-width 700px) {
+
+  /* Replace these with custom media queries */
+  @media (max-width: 700px) {
     font-size: 1rem;
   }
   font-weight: 300;
@@ -110,7 +114,7 @@ export default {
 }
 
 .search-resutls {
-  @extend .flex;
+  @apply --flex;
   flex-wrap: wrap;
   justify-content: space-around;
 }

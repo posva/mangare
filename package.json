@@ -33,7 +33,7 @@
     "winston": "^2.2.0"
   },
   "devDependencies": {
-    "autoprefixer": "^6.4.0",
+    "autoprefixer": "^6.5.0",
     "babel-core": "^6.9.1",
     "babel-eslint": "^7.0.0",
     "babel-loader": "^6.2.4",
@@ -83,6 +83,11 @@
     "normalize.css": "^4.1.1",
     "ora": "^0.3.0",
     "phantomjs-prebuilt": "^2.1.7",
+    "postcss-browser-reporter": "^0.5.0",
+    "postcss-cssnext": "^2.8.0",
+    "postcss-import": "^8.1.2",
+    "postcss-inline-comment": "^3.0.0",
+    "postcss-property-lookup": "^1.2.1",
     "postcss-reporter": "^1.4.1",
     "selenium-server": "2.53.0",
     "shelljs": "^0.7.4",

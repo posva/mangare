@@ -14,12 +14,16 @@
       }
     ],
     "declaration-colon-space-after": "always",
+    "declaration-empty-line-before": "never",
     "indentation": [2, {
       "except": ["value"]
     }],
     "max-empty-lines": 2,
     "rule-nested-empty-line-before": [ "always", {
       "except": ["first-nested"]
+    } ],
+    "at-rule-empty-line-before": [ "always", {
+      "ignore": ["blockless-group", "after-comment"]
     } ],
     "unit-whitelist": ["em", "rem", "%", "s", "px"],
     "selector-no-id": true,
