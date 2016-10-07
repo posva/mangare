@@ -20,12 +20,15 @@ let mangaReader = {
   getListURL () {
     return `${host}/alphabetical`
   },
+
   getChapterURL (chapter) {
     return `${host}${chapter.uri}`
   },
+
   getMangaURL (manga) {
     return `${host}${manga.uri}`
   },
+
   getList () {
     logger.info('Retrieving Manga List')
     return new Promise((resolve, reject) => {
@@ -61,6 +64,7 @@ let mangaReader = {
       })
     })
   },
+
   getManga (mangaDescriptor) {
     logger.info(`Retrieving Manga ${mangaDescriptor.uri}`)
     return new Promise((resolve, reject) => {
@@ -104,6 +108,7 @@ let mangaReader = {
       })
     })
   },
+
   getPages (chapterDescriptor) {
     logger.info(`Retrieving chapter ${chapterDescriptor.uri}`)
     return new Promise((resolve, reject) => {
