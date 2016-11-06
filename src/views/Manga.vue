@@ -16,16 +16,16 @@
     </div>
     <div v-show="isReady" class="manga__content-container">
       <div class="manga__chapters">
-        <div v-show="isLoading"
+        <div v-if="isLoading"
              class="spinner-container">
           <div class="spinner-div">
-            <spinner></spinner>
+            <Spinner/>
             <p>Retrieving chapters...</p>
           </div>
         </div>
-        <chapters v-show="!isLoading"
+        <Chapters v-else
                   :chapters="manga.chapters">
-        </chapters>
+        </Chapters>
       </div>
     </div>
     <div v-show="!isReady" class="manga__content-loader">
@@ -37,24 +37,11 @@
 <script>
 import Chapters from '../components/Chapters'
 import Spinner from '../components/Spinner'
-import {
-  manga,
-  refreshingMangas
-} from '../vuex/getters'
-import {
-  viewManga
-} from '../vuex/actions'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  vuex: {
-    actions: {
-      viewManga
-    },
-    getters: {
-      manga,
-      refreshingMangas
-    }
-  },
+  name: 'Manga',
+
   computed: {
     title () {
       return this.isReady ? this.manga.name : 'Opening books...'
@@ -79,32 +66,40 @@ export default {
     },
     bannerStyle () {
       return {
-        'background-image': 'url(' + this.banner + ')',
+        'background-image': `url("${this.banner}")`,
         transform: `translate3d(0, ${this.imageOffset}px, 0)`
       }
-    }
+    },
+    ...mapGetters(['refreshingMangas', 'manga'])
   },
+
   data () {
     return {
       imageOffset: 0
     }
   },
+
+  methods: mapActions(['viewManga']),
+
   created () {
-    this.$progress.start()
+    /* this.$progress.start() */
     this.viewManga(this.$route.params.mangaId)
-        .then(() => this.$progress.finish())
-        .catch(() => this.$progress.failed())
+    /* .then(() => this.$progress.finish()) */
+    /* .catch(() => this.$progress.failed()) */
   },
-  ready () {
+
+  mounted () {
     this.onScroll = () => {
       this.imageOffset = window.scrollY * 0.7 - 45
     }
 
     window.addEventListener('scroll', this.onScroll, false)
   },
-  destroy () {
+
+  destroyed () {
     window.removeEventListener('scroll', this.onScroll)
   },
+
   components: {
     Chapters,
     Spinner

@@ -11,36 +11,36 @@
         </tr>
       </thead>
       <tbody>
-        <template v-for="(cIndex, chapter) in chapters" track-by="$index">
+        <template v-for="(chapter, cIndex) in chapters">
           <tr class="chapters__row">
-            <td class="chapter__row__index">{{ $index + 1 }}</td>
+            <td class="chapter__row__index">{{ cIndex + 1 }}</td>
             <td class="chapter__row__title">
               <a @click.prevent="togglePreview(cIndex)" href="#">{{ chapter.name }}</a>
             </td>
             <td class="chapter__row__page-count">{{ chapter.pageCount ? chapter.pageCount : '?' }}</td>
-            <td class="chapter__row__published" :title="formattedDate(chapter.date)">{{ chapter.date | moment 'from' }}</td>
+            <td class="chapter__row__published" :title="formattedDate(chapter.date)">{{ chapter.date | moment('from') }}</td>
             <td class="chapter__row__actions">
-              <chapter-actions :chapter="chapter"></chapter-actions>
+              <!-- <chapter-actions :chapter="chapter"></chapter-actions> -->
             </td>
           </tr>
           <tr class="chapter__preview-tr no-highlight">
             <td colspan="5">
               <div class="chapter__preview"
                    transition="height"
-                   :data-image="$index"
+                   :data-image="cIndex"
                    v-show="isPreviewVisible(cIndex)">
-                <div v-show="!isLoading(cIndex)"
+                <div v-if="!isLoading(cIndex)"
                      class="chapter__preview-inner">
                   <div class="chapter__preview__page-image"
-                       track-by="$index"
-                       v-for="page in chapter.pages">
-                    <img :src="page" @click="openPage($index)" >
+                       :key="cIndex"
+                       v-for="(page, pageIndex) in chapter.pages">
+                    <img v-lazy="page" @click="openPage(pageIndex)" >
                   </div>
                 </div>
-                <div v-show="isLoading(cIndex)"
+                <div v-else
                      class="spinner-container">
                   <div class="spinner-div">
-                    <spinner></spinner>
+                    <Spinner/>
                   </div>
                 </div>
               </div>
@@ -49,32 +49,20 @@
         </template>
       </tbody>
     </table>
-    <page-preview v-transfer-dom
-                  v-ref:page-preview
-                  :pages="currentPages"
-    >
-    </page-preview>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
 import ChapterActions from './ChapterActions'
 import Spinner from './Spinner'
 import PagePreview from './PagePreview'
-import {
-  fetchChapter
-} from '../vuex/actions'
+import { mapActions } from 'vuex'
 
 export default {
-  vuex: {
-    actions: {
-      fetchChapter
-    }
-  },
   props: {
     chapters: Array
   },
+
   computed: {
     currentPages () {
       this.chapters
@@ -83,12 +71,14 @@ export default {
            : []
     }
   },
+
   data () {
     return {
       currentPreview: -1,
       loading: {}
     }
   },
+
   methods: {
     isLoading (index) {
       return this.currentPreview === index && this.loading[index]
@@ -97,26 +87,26 @@ export default {
       return this.currentPreview === index
     },
     openPage (index) {
-      this.$refs.pagePreview.currentPage = index
-      this.$refs.pagePreview.display = true
+      // TODO use a link instead
     },
     togglePreview (index) {
-      const current = this.currentPreview
-      if (this.currentPreview === current) {
-        this.currentPreview = this.currentPreview === index ? -1 : index
-      }
+      this.currentPreview = this.currentPreview === index ? -1 : index
       if (!this.chapters[index].pages) {
-        Vue.set(this.loading, index, true)
-        this.fetchChapter(this.$route.params.mangaId, this.chapters[index]._id)
-            .then(() => {
-              this.loading[index] = false
-            })
+        /* Vue.set(this.loading, index, true) */
+        this.fetchChapter({
+          mangaId: this.$route.params.mangaId,
+          id: this.chapters[index]._id
+        }).then(() => {
+          this.loading[index] = false
+        })
       }
     },
     formattedDate (date) {
       return this.$moment(date).calendar()
-    }
+    },
+    ...mapActions(['fetchChapter'])
   },
+
   components: {
     ChapterActions,
     PagePreview,
@@ -211,7 +201,10 @@ previewMargin = 2px
   border previewBorder solid black
   margin previewMargin
   img {
+    /* TODO Use a placeholder image instead directly into lazy options */
+    min-height previewMaxHeight
     max-height previewMaxHeight
+    min-width 87px
     &:hover {
       cursor zoom-in
     }

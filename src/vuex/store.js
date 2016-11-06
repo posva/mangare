@@ -56,7 +56,7 @@ export const mutations = {
     })
   },
   // TODO Use payload
-  UPDATE_CHAPTER (state, mangaId, chapterData) {
+  UPDATE_CHAPTER (state, { mangaId, chapterData }) {
     if (state.manga._id !== mangaId) return
     let chapter = _.find(state.manga.chapters, { _id: chapterData._id })
     ;['pageCount', 'pages'].forEach((key) => {
@@ -74,9 +74,28 @@ export const mutations = {
   }
 }
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state,
   mutations,
   getters,
   actions
 })
+
+export default store
+
+if (module.hot) {
+  // accept actions and mutations as hot modules
+  console.log('HOOOT')
+  module.hot.accept(['./actions.js', './getters.js'], () => {
+    console.log('HOOOT UPDATE')
+    // require the updated modules
+    // have to add .default here due to babel 6 module output
+    const newGetters = require('./getters.js').default
+    const newActions = require('./actions.js').default
+    // swap in the new actions and mutations
+    store.hotUpdate({
+      getters: newGetters,
+      actions: newActions
+    })
+  })
+}

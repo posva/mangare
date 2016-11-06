@@ -32,6 +32,7 @@ const fuzzyOptions = {
 }
 
 export default {
+  name: 'Search',
   data () {
     return {
       searchQuery: ''

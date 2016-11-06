@@ -2,6 +2,7 @@ import 'whatwg-fetch'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueMoment from 'vue-moment'
+import VueLazyload from 'vue-lazyload'
 // import VueProgressbar from 'vue-progressbar'
 // import VueTransferDom from 'vue-transfer-dom'
 // import VueTouch from 'vue-touch'
@@ -16,6 +17,7 @@ import 'normalize.css'
 import App from './App'
 import router from './views'
 
+Vue.use(VueLazyload)
 Vue.use(VueRouter)
 // TODO sync vuex vue-router
 // Vue.use(VueProgressbar)

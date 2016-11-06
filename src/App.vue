@@ -17,10 +17,9 @@
 
 <script>
 // import VueProgress from 'vue-progressbar/vue-progressbar.vue'
-// import store from './vuex/store'
 
 export default {
-  // store,
+  name: 'App',
   data () {
     return {
       progress: {

@@ -4,7 +4,6 @@
   <figcaption class="manga-card__hover">
     <router-link :to="route">
       <div class="manga-card__title-container">
-        <!-- <h2 v-if="manga.name === 'Tengen Toppa Gurren Lagann: Yoko\'s Belly Button'" v-fit="manga.name" class="manga-card__title">{{ manga.name }}</h2> -->
         <h2 v-fit="manga.name" class="manga-card__title">{{ manga.name }}</h2>
       </div>
     </router-link>
@@ -44,6 +43,7 @@ export default {
   props: {
     manga: Object
   },
+
   computed: {
     isVisible () {
       const rect = this.$el.getBoundingClientRect()
@@ -67,7 +67,7 @@ export default {
     image () {
       this.manga.updatedAt
       return this.manga.image ||
-        '//placeholdit.imgix.net/~text?txtsize=33&txt=%F0%9F%8D%99Mangare&w=221&h=350'
+        'https://placeholdit.imgix.net/~text?txtsize=33&txt=%F0%9F%8D%99Mangare&w=221&h=350'
     },
     route () {
       return {
@@ -79,12 +79,13 @@ export default {
     },
     ...mapGetters(['refreshingMangas', 'pendingRefreshRequests'])
   },
+
   methods: {
     refreshManga () {
       /* this.$progress.start() */
       this.fetchManga(this.manga._id)
-          .then(() => this.$progress.finish())
-          .catch(() => this.$progress.failed())
+      /* .then(() => this.$progress.finish()) */
+      /* .catch(() => this.$progress.failed()) */
     },
     quickRead () {
     },
@@ -92,6 +93,7 @@ export default {
     },
     ...mapActions(['fetchManga'])
   },
+
   directives: {
     fit: {
       inserted (el) {
@@ -100,7 +102,6 @@ export default {
           // this may happen when the user type fast enough
 
           if (!el || !el.parentNode) return
-          console.log('confirm')
           const maxHeight = el.parentNode.offsetHeight
           let height = el.offsetHeight
           let fontSize = parseInt(window.getComputedStyle(el).fontSize)
@@ -115,7 +116,8 @@ export default {
       }
     }
   },
-  ready () {
+
+  mounted () {
     this.refreshMangaTimeout = -1
     // in case a manga doesn't have an image
     if (!this.manga.image &&
@@ -132,6 +134,7 @@ export default {
       this.refreshMangaTimeout = setTimeout(refreshMangaFn, 850)
     }
   },
+
   destroyed () {
     clearTimeout(this.refreshMangaTimeout)
   }
