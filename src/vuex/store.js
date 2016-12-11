@@ -4,6 +4,7 @@ import _ from 'lodash'
 
 import * as getters from './getters'
 import * as actions from './actions'
+import reading from '../Reading/module'
 
 Vue.use(Vuex)
 
@@ -78,7 +79,10 @@ const store = new Vuex.Store({
   state,
   mutations,
   getters,
-  actions
+  actions,
+  modules: {
+    reading
+  }
 })
 
 export default store

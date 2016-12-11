@@ -34,7 +34,11 @@
                   <div class="chapter__preview__page-image"
                        :key="cIndex"
                        v-for="(page, pageIndex) in chapter.pages">
-                    <img v-lazy="page" @click="openPage(pageIndex)" >
+                    <router-link tag="img"
+                                 v-lazy="page"
+                                 :to="pageLink(pageIndex)"
+                    >
+                    </router-link>
                   </div>
                 </div>
                 <div v-else
@@ -55,7 +59,6 @@
 <script>
 import ChapterActions from './ChapterActions'
 import Spinner from './Spinner'
-import PagePreview from './PagePreview'
 import { mapActions } from 'vuex'
 
 export default {
@@ -89,6 +92,16 @@ export default {
     openPage (index) {
       // TODO use a link instead
     },
+    pageLink (pageIndex) {
+      return {
+        name: 'page',
+        params: {
+          mangaId: this.$route.params.mangaId,
+          chapter: this.currentPreview + 1,
+          page: pageIndex + 1
+        }
+      }
+    },
     togglePreview (index) {
       this.currentPreview = this.currentPreview === index ? -1 : index
       if (!this.chapters[index].pages) {
@@ -109,7 +122,6 @@ export default {
 
   components: {
     ChapterActions,
-    PagePreview,
     Spinner
   }
 }
