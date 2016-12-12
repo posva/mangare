@@ -67,7 +67,7 @@ export default {
           mangaId: this.$route.params.mangaId
         },
         query: {
-          chapterPreview: this.$route.params.chapter
+          previewChapter: this.$route.params.chapter
         }
       }
     },

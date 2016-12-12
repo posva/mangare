@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router'
 import Search from './Search'
-import Manga from './Manga'
+import Manga from 'src/Reading/views/Manga'
 import Chapter from 'src/Reading/views/Chapter'
 import Page from 'src/Reading/views/Page'
 

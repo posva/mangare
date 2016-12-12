@@ -24,8 +24,11 @@
           </div>
         </div>
         <Chapters v-else
-                  :chapters="manga.chapters">
-        </Chapters>
+                  ref="chapters"
+                  :chapters="manga.chapters"
+                  :current-preview="currentPreview"
+                  @current-preview="currentPreview = $event"
+        />
       </div>
     </div>
     <div v-show="!isReady" class="manga__content-loader">
@@ -35,8 +38,8 @@
 </template>
 
 <script>
-import Chapters from '../components/Chapters'
-import Spinner from '../components/Spinner'
+import Chapters from '../../components/Chapters'
+import Spinner from '../../components/Spinner'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -75,7 +78,8 @@ export default {
 
   data () {
     return {
-      imageOffset: 0
+      imageOffset: 0,
+      currentPreview: -1
     }
   },
 
@@ -83,7 +87,12 @@ export default {
 
   created () {
     /* this.$progress.start() */
-    this.viewManga(this.$route.params.mangaId)
+    this.viewManga(this.$route.params.mangaId).then(() => {
+      const preview = Number(this.$route.query.previewChapter) - 1
+      if (preview > -1) {
+        this.currentPreview = preview
+      }
+    })
     /* .then(() => this.$progress.finish()) */
     /* .catch(() => this.$progress.failed()) */
   },
@@ -100,6 +109,24 @@ export default {
     window.removeEventListener('scroll', this.onScroll)
   },
 
+  watch: {
+    '$route.query.previewChapter' (currentPreview) {
+      const preview = Number(currentPreview) - 1
+      preview !== this.currentPreview && this.togglePreview()
+    },
+    currentPreview (currentPreview) {
+      const preview = currentPreview + 1
+      if (preview !== Number(this.$route.query.previewChapter)) {
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            previewChapter: preview
+          }
+        })
+      }
+    }
+  },
+
   components: {
     Chapters,
     Spinner
@@ -108,8 +135,8 @@ export default {
 </script>
 
 <style lang="stylus">
-@import '../assets/style/palette'
-@import '../assets/style/flex'
+@import '../../assets/style/palette'
+@import '../../assets/style/flex'
 
 .manga
   width 100%

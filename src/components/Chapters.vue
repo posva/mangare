@@ -63,7 +63,8 @@ import { mapActions } from 'vuex'
 
 export default {
   props: {
-    chapters: Array
+    chapters: Array,
+    currentPreview: Number
   },
 
   computed: {
@@ -77,7 +78,6 @@ export default {
 
   data () {
     return {
-      currentPreview: -1,
       loading: {}
     }
   },
@@ -103,16 +103,9 @@ export default {
       }
     },
     togglePreview (index) {
-      this.currentPreview = this.currentPreview === index ? -1 : index
-      if (!this.chapters[index].pages) {
-        /* Vue.set(this.loading, index, true) */
-        this.fetchChapter({
-          mangaId: this.$route.params.mangaId,
-          id: this.chapters[index]._id
-        }).then(() => {
-          this.loading[index] = false
-        })
-      }
+      this.$emit('current-preview',
+                 this.currentPreview === index ? -1 : index
+      )
     },
     formattedDate (date) {
       return this.$moment(date).calendar()
@@ -123,6 +116,23 @@ export default {
   components: {
     ChapterActions,
     Spinner
+  },
+
+  watch: {
+    currentPreview (currentPreview, old) {
+      if (currentPreview !== old && currentPreview > -1) {
+        // fetch the chapter if necessary
+        if (this.chapters && !this.chapters[currentPreview].pages) {
+          /* Vue.set(this.loading, index, true) */
+          this.fetchChapter({
+            mangaId: this.$route.params.mangaId,
+            id: this.chapters[currentPreview]._id
+          }).then(() => {
+            this.loading[currentPreview] = false
+          })
+        }
+      }
+    }
   }
 }
 </script>
