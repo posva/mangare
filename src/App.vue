@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <!-- <vue-progress v-ref:progress :percent.sync="progress.percent" :options="progress.options"></vue-progress> -->
+    <ProgressBar/>
     <nav id="nav">
       <router-link :to="{ name: 'search' }">
         <h1>
@@ -17,6 +18,7 @@
 
 <script>
 // import VueProgress from 'vue-progressbar/vue-progressbar.vue'
+import ProgressBar from 'src/Loading/ProgressBar'
 
 export default {
   name: 'App',
@@ -35,7 +37,7 @@ export default {
     }
   },
   components: {
-    // VueProgress
+    ProgressBar
   },
   ready () {
     // this.$progress.setHolder(this.$refs.progress)

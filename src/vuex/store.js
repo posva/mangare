@@ -5,6 +5,7 @@ import _ from 'lodash'
 import * as getters from './getters'
 import * as actions from './actions'
 import reading from '../Reading/module'
+import loading from '../Loading/module'
 
 Vue.use(Vuex)
 
@@ -81,7 +82,8 @@ const store = new Vuex.Store({
   getters,
   actions,
   modules: {
-    reading
+    reading,
+    loading
   }
 })
 

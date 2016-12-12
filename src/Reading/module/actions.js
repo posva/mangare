@@ -1,32 +1,38 @@
 import fetchival from 'fetchival'
 import * as types from './types.js'
+import {
+  startRequest,
+  endRequest
+} from 'src/shared/utils'
+startRequest
+endRequest
 
 const mangas = fetchival('/api/mangas')
 
 export function fetchManga ({ commit }, id) {
-  // commit('START_REFRESH_MANGA', id)
+  startRequest(commit)
   return mangas(id).get()
     .then(manga => {
       commit(types.SET_MANGA, manga)
-      // commit('END_REFRESH_MANGA', id)
+      endRequest(commit)
     }).catch(err => {
       console.error(err)
-      // commit('END_REFRESH_MANGA', id)
+      endRequest(commit)
       // commit('ERROR_REQUEST', err)
     })
 }
 
 export function fetchChapter ({ commit }, { mangaId, chapter }) {
   const chapters = fetchival(`/api/mangas/${mangaId}/chapters/${chapter}`)
-  // commit('START_REFRESH_MANGA', chapter)
+  startRequest(commit)
   return chapters.get()
     .then((chapterData) => {
       commit(types.SET_CHAPTER, chapterData)
-      // commit('END_REFRESH_MANGA', chapter)
+      endRequest(commit)
     }).catch((err) => {
       console.error(err)
+      endRequest(commit)
       // commit('ERROR_REQUEST', err)
-      // commit('END_REFRESH_MANGA', chapter)
     })
 }
 
