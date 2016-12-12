@@ -146,8 +146,31 @@ export default {
         default:
           break
       }
+    },
+
+    // private methods
+    resolveManga () {
+      const manga = this.$route.params.mangaId
+      if (!this.manga || manga !== this.manga._id) {
+        return this.fetchManga(this.$route.params.mangaId)
+      } else {
+        return Promise.resolve(this.manga)
+      }
+    },
+
+    resolveChapter () {
+      const chapter = this.$route.params.chapter
+      if (!this.chapter || chapter !== this.chapter._id) {
+        return this.fetchChapter({
+          mangaId: this.manga._id,
+          chapter: this.$route.params.chapter
+        })
+      } else {
+        return Promise.resolve(this.chapter)
+      }
     }
   },
+
   mounted () {
     this.keyupListener = this.handleKey.bind(this)
     document.addEventListener('keyup', this.keyupListener)
@@ -157,34 +180,27 @@ export default {
     const manga = this.$route.params.mangaId
     this.setCurrentPage(this.$route.params.page)
 
-    if (!this.manga || manga !== this.manga._id) {
-      this.fetchManga(this.$route.params.mangaId).then(() => {
-        return this.fetchChapter({
-          mangaId: this.manga._id,
-          chapter: this.$route.params.chapter
-        }).then(() => {
-          if (this.currentPageIndex > this.chapter.pageCount) {
-            this.$router.push({
-              name: 'page',
-              params: {
-                mangaId: manga,
-                chapter: this.$route.params.chapter,
-                page: this.chapter.pageCount
-              }
-            })
-          } else if (this.currentPageIndex < 1) {
-            this.$router.push({
-              name: 'page',
-              params: {
-                mangaId: manga,
-                chapter: this.$route.params.chapter,
-                page: 1
-              }
-            })
+    this.resolveManga().then(() => this.resolveChapter()).then(() => {
+      if (this.currentPageIndex > this.chapter.pageCount) {
+        this.$router.push({
+          name: 'page',
+          params: {
+            mangaId: manga,
+            chapter: this.$route.params.chapter,
+            page: this.chapter.pageCount
           }
         })
-      })
-    }
+      } else if (this.currentPageIndex < 1) {
+        this.$router.push({
+          name: 'page',
+          params: {
+            mangaId: manga,
+            chapter: this.$route.params.chapter,
+            page: 1
+          }
+        })
+      }
+    })
   },
 
   watch: {
