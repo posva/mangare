@@ -160,7 +160,9 @@ export default {
 
     resolveChapter () {
       const chapter = this.$route.params.chapter
-      if (!this.chapter || chapter !== this.chapter._id) {
+      if (!this.chapter || chapter !== this.chapter._id ||
+          this.manga._id === this.$route.params.mangaId
+      ) {
         return this.fetchChapter({
           mangaId: this.manga._id,
           chapter: this.$route.params.chapter

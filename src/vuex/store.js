@@ -86,20 +86,3 @@ const store = new Vuex.Store({
 })
 
 export default store
-
-if (module.hot) {
-  // accept actions and mutations as hot modules
-  console.log('HOOOT')
-  module.hot.accept(['./actions.js', './getters.js'], () => {
-    console.log('HOOOT UPDATE')
-    // require the updated modules
-    // have to add .default here due to babel 6 module output
-    const newGetters = require('./getters.js').default
-    const newActions = require('./actions.js').default
-    // swap in the new actions and mutations
-    store.hotUpdate({
-      getters: newGetters,
-      actions: newActions
-    })
-  })
-}

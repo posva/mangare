@@ -1,5 +1,5 @@
 <template>
-  <div id="mangare">
+  <div id="app">
     <!-- <vue-progress v-ref:progress :percent.sync="progress.percent" :options="progress.options"></vue-progress> -->
     <nav id="nav">
       <router-link :to="{ name: 'search' }">
@@ -56,7 +56,7 @@ body {
   background-color: $clear;
 }
 
-#mangare {
+#app {
   @extend .flex;
   justify-content: space-between;
   flex-direction: column;
