@@ -203,6 +203,17 @@ export default {
     position: relative;
     min-height: 100%;
     max-width: 100%;
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://placeholdit.imgix.net/~text?txtsize=33&txt=%E2%9D%8C%0AImage%20Missing&w=221&h=350');
+    }
   }
 
   em {

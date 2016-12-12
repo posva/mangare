@@ -134,8 +134,21 @@ export default {
 
     &__manga-image {
       max-width: 100px;
+      height: 158px;
       border-radius: 2px;
       margin-bottom: .7rem;
+      position: relative;
+
+      &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://placeholdit.imgix.net/~text?txtsize=33&txt=No%20Image&w=100&h=158');
+      }
     }
   }
 }
