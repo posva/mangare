@@ -34,6 +34,7 @@ const getters = {
       getters[types.PAGES][state.currentPage - 1] ||
       ''
   ),
+  [types.CURRENT_PAGE_INDEX]: state => state.currentPage,
   [types.PREVIOUS_PAGE_PARAMS]: (state) => {
     return {
       mangaId: state.manga && state.manga._id || 0,

@@ -8,6 +8,7 @@ export const MANGA = 'Reading/MANGA'
 export const CHAPTER = 'Reading/CHAPTER'
 export const PAGES = 'Reading/PAGES'
 export const CURRENT_PAGE = 'Reading/CURRENT_PAGE'
+export const CURRENT_PAGE_INDEX = 'Reading/CURRENT_PAGE_INDEX'
 export const NEXT_PAGE_PARAMS = 'Reading/NEXT_PAGE_PARAMS'
 export const PREVIOUS_PAGE_PARAMS = 'Reading/PREVIOUS_PAGE_PARAMS'
 

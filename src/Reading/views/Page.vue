@@ -1,9 +1,12 @@
 <template>
-  <PagePreview v-if="!loading && currentPage"
-               :page-url="currentPage"
+  <PagePreview :page-url="currentPage"
+               :page-index="currentPageIndex"
+               :page-count="pageCount"
                :next-page-link="nextPageLink"
+               :manga-link="mangaLink"
+               :manga="manga"
+               @exit="returnToManga"
   />
-  <Spinner v-else />
     <!-- v-touch:swipeleft="nextPage" -->
     <!-- v-touch:swiperight="previousPage" -->
     <!-- v-touch:pinchend="pinch" -->
@@ -26,7 +29,6 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { types } from '../module'
 import PagePreview from '../PagePreview.vue'
-import Spinner from '../../components/Spinner.vue'
 
 const ESC_KEY = 27
 const LEFT_KEY = 37
@@ -38,20 +40,35 @@ const MIN_SCALE = 0.375
 
 export default {
   name: 'Page',
-  components: { PagePreview, Spinner },
+  components: { PagePreview },
 
   computed: {
     ...mapGetters({
       manga: types.MANGA,
       chapter: types.CHAPTER,
       currentPage: types.CURRENT_PAGE,
+      currentPageIndex: types.CURRENT_PAGE_INDEX,
       nextPageParams: types.NEXT_PAGE_PARAMS,
       previousPageParams: types.PREVIOUS_PAGE_PARAMS
     }),
+    pageCount () {
+      return this.chapter && this.chapter.pageCount
+    },
     nextPageLink () {
       return {
         name: 'page',
         params: this.nextPageParams
+      }
+    },
+    mangaLink () {
+      return {
+        name: 'manga',
+        params: {
+          mangaId: this.$route.params.mangaId
+        },
+        query: {
+          chapterPreview: this.$route.params.chapter
+        }
       }
     },
     style () {
@@ -71,7 +88,6 @@ export default {
 
   data () {
     return {
-      loading: false,
       display: false,
       currentPage: 0,
       scaling: false,
@@ -87,6 +103,9 @@ export default {
       fetchManga: types.FETCH_MANGA,
       fetchChapter: types.FETCH_CHAPTER
     }),
+    returnToManga () {
+      this.$router.push(this.mangaLink)
+    },
     pinch (event) {
       if (event.scale < MIN_SCALE) this.display = false
       this.scaling = false
@@ -130,7 +149,8 @@ export default {
     }
   },
   mounted () {
-    document.addEventListener('keyup', this.handleKey.bind(this))
+    this.keyupListener = this.handleKey.bind(this)
+    document.addEventListener('keyup', this.keyupListener)
 
     /* this.$el.hammer.get('pinch').set({ enable: true }) */
     /* this.$el.hammer.on('pinchmove', (event) => this.pinchmove(event)) */
@@ -138,34 +158,43 @@ export default {
     this.setCurrentPage(this.$route.params.page)
 
     if (!this.manga || manga !== this.manga._id) {
-      console.log('fetching')
-      this.fetchManga(this.$route.params.mangaId)
-             .then(() => {
-               return this.fetchChapter({
-                 mangaId: this.manga._id,
-                 chapter: this.$route.params.chapter
-               })
-             })
+      this.fetchManga(this.$route.params.mangaId).then(() => {
+        return this.fetchChapter({
+          mangaId: this.manga._id,
+          chapter: this.$route.params.chapter
+        }).then(() => {
+          if (this.currentPageIndex > this.chapter.pageCount) {
+            this.$router.push({
+              name: 'page',
+              params: {
+                mangaId: manga,
+                chapter: this.$route.params.chapter,
+                page: this.chapter.pageCount
+              }
+            })
+          } else if (this.currentPageIndex < 1) {
+            this.$router.push({
+              name: 'page',
+              params: {
+                mangaId: manga,
+                chapter: this.$route.params.chapter,
+                page: 1
+              }
+            })
+          }
+        })
+      })
     }
   },
 
   watch: {
     '$route.params.page' (page) {
       this.setCurrentPage(page)
-    },
-    currentPage (url) {
-      console.log('load')
-      this.loading = true
-      const img = new Image()
-      img.onload = () => this.loading = false
-      img.src = url
-
-      // TODO precache next 5 images
     }
   },
 
   beforeDestroy () {
-    document.removeEventListener('keyup', this.handleKey)
+    document.removeEventListener('keyup', this.keyupListener)
   }
 }
 </script>
