@@ -31,7 +31,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       reportFilename: '../bundle-report.html',
-      open: false
+      openAnalyzer: false
     }),
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
