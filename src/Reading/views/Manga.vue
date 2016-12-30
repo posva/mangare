@@ -16,6 +16,7 @@
     </div>
     <div v-show="isReady" class="manga__content-container">
       <div class="manga__chapters">
+        <!-- TODO make the spinner easily customisable -->
         <div v-if="isLoading"
              class="spinner-container">
           <div class="spinner-div">
@@ -40,6 +41,7 @@
 <script>
 import Chapters from '../../components/Chapters'
 import Spinner from '../../components/Spinner'
+import { types } from '../module'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -56,16 +58,19 @@ export default {
       return this.manga && this.manga.image
     },
     isLoading () {
-      this.refreshingMangas
-      return this.manga && this.refreshingMangas[this.manga._id]
+      return !this.manga
+      // return this.manga && this.refreshingMangas[this.manga._id]
     },
     banner () {
-      if (this.manga && this.manga.image &&
-        this.manga.image.match('cloudinary') && window.innerWidth < 700) {
-        return this.manga.image.replace('upload/', 'upload/c_scale,e_blur:1188,w_700/')
-      } else {
-        return this.manga.image
+      if (this.manga) {
+        if (this.manga.image &&
+            this.manga.image.match('cloudinary') && window.innerWidth < 700) {
+          return this.manga.image.replace('upload/', 'upload/c_scale,e_blur:1188,w_700/')
+        } else {
+          return this.manga.image
+        }
       }
+      return ''
     },
     bannerStyle () {
       return {
@@ -73,7 +78,9 @@ export default {
         transform: `translate3d(0, ${this.imageOffset}px, 0)`
       }
     },
-    ...mapGetters(['refreshingMangas', 'manga'])
+    ...mapGetters({
+      manga: types.MANGA
+    })
   },
 
   data () {
@@ -83,11 +90,13 @@ export default {
     }
   },
 
-  methods: mapActions(['viewManga']),
+  methods: mapActions({
+    fetchManga: types.FETCH_MANGA
+  }),
 
   created () {
     /* this.$progress.start() */
-    this.viewManga(this.$route.params.mangaId).then(() => {
+    this.fetchManga(this.$route.params.mangaId).then(() => {
       const preview = Number(this.$route.query.previewChapter) - 1
       if (preview > -1) {
         this.currentPreview = preview
