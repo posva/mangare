@@ -1,4 +1,4 @@
-/*global describe it before :true*/
+/* global describe it before :true */
 'use strict'
 const should = require('should')
 const nock = require('nock')

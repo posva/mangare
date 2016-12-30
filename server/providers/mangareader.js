@@ -134,10 +134,8 @@ let mangaReader = {
           uri: match[1],
           image: reChapterPage.exec(data)[1]
         })
-        let index = 0
         match = reChapterSinglePage.exec(pagesText)
         while (match) {
-          ++index
           pages.push({
             uri: match[1]
           })
