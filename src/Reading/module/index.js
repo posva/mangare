@@ -54,7 +54,7 @@ const getters = {
       page: state.currentPage - 1
     }
   },
-  [types.NEXT_PAGE_PARAMS]: (state) => {
+  [types.NEXT_PAGE_PARAMS]: (state, getters) => {
     return {
       mangaId: state.manga && state.manga._id || 0,
       chapter: getters[types.CHAPTER] && getters[types.CHAPTER]._id || 0,

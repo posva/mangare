@@ -120,18 +120,17 @@ export default {
 
   watch: {
     '$route.query.previewChapter' (currentPreview) {
-      const preview = Number(currentPreview) - 1
-      preview !== this.currentPreview && this.togglePreview()
+      const preview = (Number(currentPreview) || 0) - 1
+      this.currentPreview = preview
     },
     currentPreview (currentPreview) {
       const preview = currentPreview + 1
       if (preview !== Number(this.$route.query.previewChapter)) {
-        this.$router.replace({
-          query: {
-            ...this.$route.query,
-            previewChapter: preview
-          }
-        })
+        const query = { ...this.$route.query }
+        delete query.previewChapter
+        // Only add the query if previewChapter > 0
+        if (preview) query.previewChapter = preview
+        this.$router.replace({ query })
       }
     }
   },
