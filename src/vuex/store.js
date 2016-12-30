@@ -2,6 +2,11 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
 
+import * as getters from './getters'
+import * as actions from './actions'
+import reading from '../Reading/module'
+import loading from '../Loading/module'
+
 Vue.use(Vuex)
 
 export const state = {
@@ -52,13 +57,6 @@ export const mutations = {
       }
     })
   },
-  UPDATE_CHAPTER (state, mangaId, chapterData) {
-    if (state.manga._id !== mangaId) return
-    let chapter = _.find(state.manga.chapters, { _id: chapterData._id })
-    ;['pageCount', 'pages'].forEach((key) => {
-      Vue.set(chapter, key, chapterData[key])
-    })
-  },
   ERROR_REQUEST (state, err) {
     console.error(err)
   },
@@ -70,7 +68,16 @@ export const mutations = {
   }
 }
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
+  strict: process.env.NODE_ENV !== 'production',
   state,
-  mutations
+  mutations,
+  getters,
+  actions,
+  modules: {
+    reading,
+    loading
+  }
 })
+
+export default store

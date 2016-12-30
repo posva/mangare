@@ -1,4 +1,4 @@
-/*global describe before after afterEach it :true*/
+/* global describe before after afterEach it :true */
 const dbURI = 'mongodb://localhost/test-mangare'
 const should = require('should')
 const sinon = require('sinon')
@@ -146,10 +146,15 @@ describe('API', () => {
       if (err) {
         done(err)
       }
-      api.imageBase64({query: {url: doc.chapters[0].pages[0].image}}, {send (encodedImage) {
-        encodedImage.should.be.eql('T0sk')
-        manga.remove(done)
-      }, status () { return this }})
+      api.imageBase64({query: {url: doc.chapters[0].pages[0].image}}, {
+        send (encodedImage) {
+          encodedImage.should.be.eql('T0sk')
+          manga.remove(done)
+        },
+        status () {
+          return this
+        }
+      })
     })
   })
 
@@ -221,32 +226,38 @@ describe('API', () => {
             chapterId: mangaDetail.chapters[0]._id
           }
         }
-        api.mangaChapter(req, {send (chapter) {
-          mangareader.getPages.calledOnce.should.be.true()
-          should(chapter).be.ok()
-          should(chapter._id).be.ok()
-          should(chapter.updatedAt).be.ok()
-          should(chapter.date).be.ok()
-          chapter.name.should.be.ok()
-          chapter.uri.should.be.ok()
-          chapter.pageCount.should.equal(53)
-          chapter.pages.length.should.be.eql(53)
-
-          api.mangaChapter(req, {send (chapter) {
+        api.mangaChapter(req, {
+          send (chapter) {
             mangareader.getPages.calledOnce.should.be.true()
             should(chapter).be.ok()
-            should(chapter.updatedAt).be.ok()
             should(chapter._id).be.ok()
+            should(chapter.updatedAt).be.ok()
+            should(chapter.date).be.ok()
             chapter.name.should.be.ok()
             chapter.uri.should.be.ok()
             chapter.pageCount.should.equal(53)
             chapter.pages.length.should.be.eql(53)
-            const page = chapter.pages[0]
-            page.should.be.a.String
 
-            manga.remove(done)
-          }, status () { return this }})
-        }, status () { return this }})
+            api.mangaChapter(req, {
+              send (chapter) {
+                mangareader.getPages.calledOnce.should.be.true()
+                should(chapter).be.ok()
+                should(chapter.updatedAt).be.ok()
+                should(chapter._id).be.ok()
+                chapter.name.should.be.ok()
+                chapter.uri.should.be.ok()
+                chapter.pageCount.should.equal(53)
+                chapter.pages.length.should.be.eql(53)
+                const page = chapter.pages[0]
+                page.should.be.a.String
+
+                manga.remove(done)
+              },
+              status () { return this }
+            })
+          },
+          status () { return this }
+        })
       }})
     })
   })
@@ -259,7 +270,6 @@ describe('API', () => {
 
     // directly use mongo to hack updatedAt
     let updatedAt = new Date()
-    let now = new Date()
     updatedAt.setMonth(updatedAt.getMonth() - 1)
     Manga.collection.insert(Object.assign({}, mangaFromList, {updatedAt, image: 'image'}))
 

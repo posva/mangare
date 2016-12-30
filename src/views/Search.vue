@@ -1,11 +1,12 @@
 <template>
   <div class="_flex">
-    <search-bar :disabled="!mangaList.length" :value.sync="searchQuery" @change="updateQuery">
+    <SearchBar :disabled="!mangaList.length" v-model="searchQuery" @change.native="updateQuery"/>
     </search-bar>
     <div v-if="isReady" class="search-resutls">
-      <manga-card v-for="manga in searchResults"
-        :manga="manga"
-      ></manga-card>
+      <MangaCard v-for="manga in searchResults"
+                 :key="manga._id"
+                 :manga="manga"
+      />
     </div>
     <div v-else class="search-message">
       <img v-show="mangaList.length" src="../assets/img/gon.png">
@@ -15,13 +16,7 @@
 </template>
 
 <script>
-import {
-  fetchMangaList
-} from '../vuex/actions'
-
-import {
-  mangaList
-} from '../vuex/getters'
+import { mapGetters, mapActions } from 'vuex'
 
 import _ from 'lodash'
 import { filter as fuzzy } from 'fuzzy'
@@ -37,14 +32,7 @@ const fuzzyOptions = {
 }
 
 export default {
-  vuex: {
-    actions: {
-      fetchMangaList
-    },
-    getters: {
-      mangaList
-    }
-  },
+  name: 'Search',
   data () {
     return {
       searchQuery: ''
@@ -72,26 +60,29 @@ export default {
         manga.original.highlighted = manga.string
         return manga.original
       })
-    }
+    },
+    ...mapGetters(['mangaList'])
   },
   methods: {
     updateQuery () {
-      this.$router.go({
-        replace: true,
-        name: 'search',
+      let route = {
+        name: this.$route.name,
         query: {
           query: this.searchQuery
         }
-      })
-    }
+      }
+
+      this.$router.replace(route)
+    },
+    ...mapActions(['fetchMangaList'])
   },
   created () {
     this.searchQuery = this.$route.query.query || ''
     if (!this.mangaList.length) {
-      this.$progress.start()
+      // this.$progress.start()
       this.fetchMangaList()
-          .then(() => this.$progress.finish())
-          .catch(() => this.$progress.failed())
+          // .then(() => this.$progress.finish())
+          // .catch(() => this.$progress.failed())
     }
   },
   components: {
@@ -101,23 +92,31 @@ export default {
 }
 </script>
 
-<style lang="stylus">
-@import '../assets/style/palette'
-@import '../assets/style/flex'
+<style>
+@import '../ui/flex.css';
 
-.search-message
-  baseSize = 148px
-  img
-    max-width baseSize
-  @extend .flex
-  font-size 2rem
-  @media (max-width 700px)
-    font-size 1rem
-  font-weight 300
-  flex-direction column
+:root {
+  --baseSize: 148px;
+}
 
-.search-resutls
-  @extend .flex
-  flex-wrap wrap
-  justify-content space-around
+.search-message {
+  & img {
+    max-width: var(--baseSize);
+  }
+  @apply --flex;
+  font-size: 2rem;
+
+  /* Replace these with custom media queries */
+  @media (max-width: 700px) {
+    font-size: 1rem;
+  }
+  font-weight: 300;
+  flex-direction: column;
+}
+
+.search-resutls {
+  @apply --flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
 </style>

@@ -3,7 +3,7 @@ import store from 'src/vuex/store'
 import ProgressButton from 'src/components/ProgressButton'
 import { timeout } from 'src/utils'
 
-describe('ProgressButton.vue', () => {
+describe.skip('ProgressButton.vue', () => {
   let vm, progress
   before(() => {
     vm = new Vue({

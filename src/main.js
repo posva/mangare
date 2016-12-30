@@ -2,32 +2,34 @@ import 'whatwg-fetch'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueMoment from 'vue-moment'
-import VueProgressbar from 'vue-progressbar'
-import VueTransferDom from 'vue-transfer-dom'
-import VueTouch from 'vue-touch'
-import configRouter from './config-router'
+import VueLazyload from 'vue-lazyload'
+// import VueProgressbar from 'vue-progressbar'
+// import VueTransferDom from 'vue-transfer-dom'
+// import VueTouch from 'vue-touch'
+// import configRouter from './config-router'
 import store from './vuex/store'
-import { sync } from 'vuex-router-sync'
-import { heightToggle } from './transitions'
+// import { sync } from 'vuex-router-sync'
+// import { heightToggle } from './transitions'
 
 import '../lib/ga'
 import 'normalize.css'
 
 import App from './App'
+import router from './views'
 
+Vue.use(VueLazyload)
 Vue.use(VueRouter)
-Vue.use(VueProgressbar)
-Vue.use(VueTransferDom)
+// TODO sync vuex vue-router
+// Vue.use(VueProgressbar)
+// Vue.use(VueTransferDom)
 Vue.use(VueMoment)
-Vue.use(VueTouch)
-Vue.transition('height-toggle', heightToggle)
+// Vue.use(VueTouch)
+// Vue.transition('height-toggle', heightToggle)
 
-let router = new VueRouter({
-  history: true,
-  saveScrollPosition: true
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  store,
+  render: h => h(App)
 })
-sync(store, router)
-configRouter(router)
-
-router.start(App, '#app')
-

@@ -1,9 +1,11 @@
 var config = require('../config')
 var webpack = require('webpack')
+var path = require('path')
 var merge = require('webpack-merge')
 var utils = require('./utils')
 var baseWebpackConfig = require('./webpack.base.conf')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+var StyleLintPlugin = require('stylelint-webpack-plugin')
 
 // add hot-reload related code to entry chunks
 Object.keys(baseWebpackConfig.entry).forEach(function (name) {
@@ -12,7 +14,7 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
 
 module.exports = merge(baseWebpackConfig, {
   module: {
-    loaders: utils.styleLoaders()
+    loaders: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
   },
   // eval-source-map is faster for development
   devtool: '#eval-source-map',
@@ -28,8 +30,14 @@ module.exports = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
-      favicon: 'favicon.png',
       inject: true
+    }),
+    new StyleLintPlugin({
+      configFile: path.resolve(__dirname, '../.stylelintrc.json'),
+      context: 'inherits from webpack',
+      // files: '../src/**/*.@(?(s)?(a|c)ss|vue|html)',
+      files: '../src/**/*.@(?css)',
+      failOnError: false
     })
   ]
 })

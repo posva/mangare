@@ -1,4 +1,4 @@
-/*global describe it after beforeEach :true*/
+/* global describe it after beforeEach :true */
 const dbURI = 'mongodb://localhost/test-mangare'
 const should = require('should')
 const mongoose = require('mongoose')

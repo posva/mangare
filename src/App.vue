@@ -1,13 +1,14 @@
 <template>
-  <div id="mangare">
-    <vue-progress v-ref:progress :percent.sync="progress.percent" :options="progress.options"></vue-progress>
+  <div id="app">
+    <!-- <vue-progress v-ref:progress :percent.sync="progress.percent" :options="progress.options"></vue-progress> -->
+    <ProgressBar/>
     <nav id="nav">
-      <a v-link="{ name: 'search' }">
+      <router-link :to="{ name: 'search' }">
         <h1>
           <img class="logo emoji" draggable="false" alt="🍙" src="//twemoji.maxcdn.com/2/72x72/1f359.png">
           Mangare
         </h1>
-      </a>
+      </router-link>
     </nav>
     <section id="container">
       <router-view></router-view>
@@ -16,11 +17,11 @@
 </template>
 
 <script>
-import VueProgress from 'vue-progressbar/vue-progressbar.vue'
-import store from './vuex/store'
+// import VueProgress from 'vue-progressbar/vue-progressbar.vue'
+import ProgressBar from 'src/Loading/ProgressBar'
 
 export default {
-  store,
+  name: 'App',
   data () {
     return {
       progress: {
@@ -36,71 +37,71 @@ export default {
     }
   },
   components: {
-    VueProgress
+    ProgressBar
   },
   ready () {
-    this.$progress.setHolder(this.$refs.progress)
+    // this.$progress.setHolder(this.$refs.progress)
   }
 }
 </script>
 
 <style lang="stylus">
-@import './assets/style/palette'
-@import './assets/style/flex'
-@import url(//fonts.googleapis.com/css?family=Lato:100,300,400,700)
+@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700');
+@import './assets/style/palette';
+@import './assets/style/flex';
 
 * {
-  box-sizing border-box
+  box-sizing: border-box;
 }
 
 body {
-  background-color clear
+  background-color: $clear;
 }
 
-#mangare {
-  @extend .flex
-  justify-content space-between
-  flex-direction column
-  font-family Lato, Source Sans Pro, Helvetica, sans-serif
-  color dark
+#app {
+  @extend .flex;
+  justify-content: space-between;
+  flex-direction: column;
+  font-family: Lato, Source Sans Pro, Helvetica, sans-serif;
+  color: $dark;
 }
 
 #container {
-  width 100%
+  width: 100%;
   a {
-    text-decoration none
+    text-decoration: none;
   }
 }
 
 #nav {
-  @extend .flex
-  padding 0.5rem
-  width 100%
-  background-color lighten(dark, 30%)
-  color clear
-  z-index 10
+  @extend .flex;
+  padding: 0.5rem;
+  width: 100%;
+  background-color: lighten($dark, 30%);
+  color: $clear;
+  z-index: 10;
 
   a {
-    color @color
-    text-decoration none
+    color: @color;
+    text-decoration: none;
   }
 
   h1 {
-    display inline-flex
-    font-weight 300
-    letter-spacing 2px
-    margin 0
-    font-size 2rem
+    display: inline-flex;
+    font-weight: 300;
+    letter-spacing: 2px;
+    margin: 0;
+    font-size: 2rem;
 
     .logo {
-      margin-right .75rem
-      height: @font-size
+      margin-right: .75rem;
+      height: @font-size;
     }
 
-    @media (max-width 700px) {
-      font-size 1.5rem
+    @media (max-width: 700px) {
+      font-size: 1.5rem;
       .logo {
-        height @font-size
+        height: @font-size;
       }
     }
   }

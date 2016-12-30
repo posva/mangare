@@ -1,9 +1,14 @@
 <template>
   <div class="search-container" :class="searchContainerClass">
-    <input :disabled="disabled" autocomplete="off" id="search-input" v-model="value" debounce="100"
-      name="query" type="text" @change="$emit($event)"
-      @focus="searchFocused = true"
-      @blur="searchFocused = false"
+    <input :disabled="disabled"
+           autocomplete="off"
+           id="search-input"
+           v-model="model"
+           name="query"
+           type="text"
+           @focus="searchFocused = true"
+           @blur="searchFocused = false"
+           @input="onInput"
     >
     <label for="search-input">
       <span>{{ label }}</span>
@@ -12,6 +17,8 @@
 </template>
 
 <script>
+import { debounce } from 'lodash'
+
 export default {
   props: {
     disabled: Boolean,
@@ -26,7 +33,13 @@ export default {
       searchFocused: false
     }
   },
+  methods: {
+    onInput: debounce(function (event) {
+      this.$emit('input', event.target.value)
+    }, 100)
+  },
   computed: {
+    model () { return this.value },
     label () {
       return this.disabled
         ? 'Loading...'
@@ -76,6 +89,7 @@ export default {
     height 2px
     background @background-color
     bottom 0
+    left: 0
     transition width 0.3s ease
 
   label
