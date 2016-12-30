@@ -2,6 +2,7 @@
 export const SET_MANGA = 'Reading/SET_MANGA'
 export const SET_CHAPTER = 'Reading/SET_CHAPTER'
 export const SET_CURRENT_PAGE = 'Reading/SET_CURRENT_PAGE'
+export const SET_CURRENT_CHAPTER = 'Reading/SET_CURRENT_CHAPTER'
 
 // Getters
 export const MANGA = 'Reading/MANGA'

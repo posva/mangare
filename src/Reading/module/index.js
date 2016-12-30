@@ -4,7 +4,7 @@ import Vue from 'vue'
 
 const state = {
   manga: null,
-  chapter: null,
+  currentChapter: 0,
   currentPage: 0
 }
 
@@ -13,9 +13,8 @@ const mutations = {
     state.manga = manga
   },
   [types.SET_CHAPTER] (state, { mangaId, chapter }) {
-    // TODO remove this
     if (mangaId !== state.manga._id) return
-    state.chapter = chapter
+    // Update the cache
     const chapters = state.manga.chapters
     for (let i = 0, l = chapters.length; i < l; ++i) {
       if (chapters[i]._id === chapter._id) {
@@ -26,6 +25,9 @@ const mutations = {
   },
   [types.SET_CURRENT_PAGE] (state, currentPage) {
     state.currentPage = Number(currentPage)
+  },
+  [types.SET_CURRENT_CHAPTER] (state, currentChapter) {
+    state.currentChapter = Number(currentChapter)
   }
 }
 
@@ -36,26 +38,26 @@ const actions = {
 }
 
 const getters = {
-  [types.PAGES]: state => state.chapter && state.chapter.pages || [],
+  [types.PAGES]: (state, getters) => getters[types.CHAPTER] && getters[types.CHAPTER].pages || [],
   [types.MANGA]: state => state.manga,
-  [types.CHAPTER]: state => state.chapter,
+  [types.CHAPTER]: ({ manga, currentChapter }) => manga && manga.chapters[currentChapter - 1],
   [types.CURRENT_PAGE]: (state, getters) => (
     getters[types.PAGES] &&
       getters[types.PAGES][state.currentPage - 1] ||
       ''
   ),
   [types.CURRENT_PAGE_INDEX]: state => state.currentPage,
-  [types.PREVIOUS_PAGE_PARAMS]: (state) => {
+  [types.PREVIOUS_PAGE_PARAMS]: (state, getters) => {
     return {
       mangaId: state.manga && state.manga._id || 0,
-      chapter: state.chapter && state.chapter._id || 0,
+      chapter: getters[types.CHAPTER] && getters[types.CHAPTER]._id || 0,
       page: state.currentPage - 1
     }
   },
   [types.NEXT_PAGE_PARAMS]: (state) => {
     return {
       mangaId: state.manga && state.manga._id || 0,
-      chapter: state.chapter && state.chapter._id || 0,
+      chapter: getters[types.CHAPTER] && getters[types.CHAPTER]._id || 0,
       page: state.currentPage + 1
     }
   }
