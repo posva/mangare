@@ -17,7 +17,7 @@
     "unit:server": "NODE_ENV=testing mocha",
     "dev:unit:server": "NODE_ENV=testing mocha -w",
     "e2e": "node test/e2e/runner.js",
-    "test": "npm run unit #&& npm run e2e",
+    "test": "npm run lint && npm run unit:server",
     "lint": "eslint --ext .js,.vue src server test/unit/specs test/e2e/specs test/server",
     "start": "node server/index.js"
   },
