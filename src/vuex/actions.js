@@ -15,10 +15,6 @@ export function fetchMangaList ({ commit }) {
   })
 }
 
-export function updateManga ({ commit }, manga) {
-  commit('UPDATE_MANGA', manga)
-}
-
 export function viewManga ({ commit, state }, id) {
   commit('SET_MANGA', _.find(state.mangaList, { _id: id }))
   commit('START_REFRESH_MANGA', id)

@@ -13,6 +13,7 @@ export function fetchManga ({ commit, state }, id) {
   // Exit if manga is already fetched
   if (state.manga && state.manga._id === id) return Promise.resolve()
   startRequest(commit)
+  commit(types.RESET_MANGA)
   return mangas(id).get()
     .then(manga => {
       commit(types.SET_MANGA, manga)

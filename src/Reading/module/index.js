@@ -12,6 +12,9 @@ const mutations = {
   [types.SET_MANGA] (state, manga) {
     state.manga = manga
   },
+  [types.RESET_MANGA] (state) {
+    state.manga = null
+  },
   [types.SET_CHAPTER] (state, { mangaId, chapter }) {
     if (mangaId !== state.manga._id) return
     // Update the cache

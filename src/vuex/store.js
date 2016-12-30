@@ -57,14 +57,6 @@ export const mutations = {
       }
     })
   },
-  // TODO Use payload
-  UPDATE_CHAPTER (state, { mangaId, chapterData }) {
-    if (state.manga._id !== mangaId) return
-    let chapter = _.find(state.manga.chapters, { _id: chapterData._id })
-    ;['pageCount', 'pages'].forEach((key) => {
-      Vue.set(chapter, key, chapterData[key])
-    })
-  },
   ERROR_REQUEST (state, err) {
     console.error(err)
   },
