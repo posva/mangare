@@ -43,7 +43,7 @@ export default {
 
   computed: {
     loadingPageMessage () {
-      return `Loading page ${this.pageIndex}/${this.pageCount}`
+      return `Loading page ${this.pageIndex}/${this.pageCount || '?'}`
     }
   },
 

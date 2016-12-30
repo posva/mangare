@@ -19,10 +19,6 @@ export function updateManga ({ commit }, manga) {
   commit('UPDATE_MANGA', manga)
 }
 
-export function updateChapter ({ commit }, mangaId, chapter) {
-  commit('UPDATE_CHAPTER', { mangaId, chapter })
-}
-
 export function viewManga ({ commit, state }, id) {
   commit('SET_MANGA', _.find(state.mangaList, { _id: id }))
   commit('START_REFRESH_MANGA', id)
@@ -46,19 +42,6 @@ export function fetchManga ({ commit }, id) {
     }).catch((err) => {
       commit('END_REFRESH_MANGA', id)
       commit('ERROR_REQUEST', err)
-    })
-}
-
-export function fetchChapter ({ commit }, { mangaId, id }) {
-  const chapters = fetchival(`/api/mangas/${mangaId}/chapters/${id}`)
-  commit('START_REFRESH_MANGA', id)
-  return chapters.get()
-    .then((chapterData) => {
-      commit('UPDATE_CHAPTER', { mangaId, chapterData })
-      commit('END_REFRESH_MANGA', id)
-    }).catch((err) => {
-      commit('ERROR_REQUEST', err)
-      commit('END_REFRESH_MANGA', id)
     })
 }
 

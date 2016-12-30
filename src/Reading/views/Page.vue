@@ -149,27 +149,19 @@ export default {
     },
 
     // private methods
-    resolveManga () {
-      const manga = this.$route.params.mangaId
-      if (!this.manga || manga !== this.manga._id) {
-        return this.fetchManga(this.$route.params.mangaId)
-      } else {
-        return Promise.resolve(this.manga)
-      }
-    },
-
-    resolveChapter () {
-      const chapter = this.$route.params.chapter
-      if (!this.chapter || chapter !== this.chapter._id ||
-          this.manga._id === this.$route.params.mangaId
-      ) {
-        return this.fetchChapter({
-          mangaId: this.manga._id,
-          chapter: this.$route.params.chapter
-        })
-      } else {
-        return Promise.resolve(this.chapter)
-      }
+    fixPage (mangaId, chapter) {
+      const page = Math.min(
+        this.chapter && this.chapter.pageCount || Infinity,
+        Math.max(1, this.$route.params.page)
+      )
+      this.$router.replace({
+        name: 'page',
+        params: {
+          mangaId,
+          chapter,
+          page
+        }
+      })
     }
   },
 
@@ -179,29 +171,17 @@ export default {
 
     /* this.$el.hammer.get('pinch').set({ enable: true }) */
     /* this.$el.hammer.on('pinchmove', (event) => this.pinchmove(event)) */
-    const manga = this.$route.params.mangaId
+    const mangaId = this.$route.params.mangaId
+    const chapter = this.$route.params.chapter
     this.setCurrentPage(this.$route.params.page)
 
-    this.resolveManga().then(() => this.resolveChapter()).then(() => {
-      if (this.currentPageIndex > this.chapter.pageCount) {
-        this.$router.push({
-          name: 'page',
-          params: {
-            mangaId: manga,
-            chapter: this.$route.params.chapter,
-            page: this.chapter.pageCount
-          }
-        })
-      } else if (this.currentPageIndex < 1) {
-        this.$router.push({
-          name: 'page',
-          params: {
-            mangaId: manga,
-            chapter: this.$route.params.chapter,
-            page: 1
-          }
-        })
-      }
+    this.fetchManga(mangaId).then(
+      () => this.fetchChapter({
+        mangaId,
+        chapter
+      })
+    ).then(() => {
+      this.fixPage(mangaId, chapter)
     })
   },
 
