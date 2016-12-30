@@ -27,8 +27,7 @@ export function fetchManga ({ commit, state }, id) {
 
 // TODO don't fetch if already fetched
 export function fetchChapter ({ commit, state, getters }, { mangaId, chapter }) {
-  const chapters = mangas(`${mangaId}/chapters/${chapter}`)
-  // Exit if currentManga isn't the one
+  // Exit if current Manga isn't the one
   if (!state.manga || state.manga._id !== mangaId) return Promise.resolve()
   commit(types.SET_CURRENT_CHAPTER, chapter)
 
@@ -37,6 +36,7 @@ export function fetchChapter ({ commit, state, getters }, { mangaId, chapter }) 
   if (cachedChapter && cachedChapter.pages) {
     return Promise.resolve()
   }
+  const chapters = mangas(`${mangaId}/chapters/${chapter}`)
   startRequest(commit)
   return chapters.get()
     .then((chapterData) => {

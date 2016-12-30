@@ -51,17 +51,32 @@ const getters = {
   ),
   [types.CURRENT_PAGE_INDEX]: state => state.currentPage,
   [types.PREVIOUS_PAGE_PARAMS]: (state, getters) => {
+    let page = state.currentPage - 1
+    let chapter = state.currentChapter
+    if (page < 1 && chapter > 1) {
+      --chapter
+      page = 9999
+    }
+    page = Math.max(1, page)
     return {
       mangaId: state.manga && state.manga._id || 0,
-      chapter: getters[types.CHAPTER] && getters[types.CHAPTER]._id || 0,
-      page: state.currentPage - 1
+      chapter,
+      page
     }
   },
   [types.NEXT_PAGE_PARAMS]: (state, getters) => {
+    let page = state.currentPage + 1
+    let chapter = state.currentChapter
+    const pageCount = getters[types.CHAPTER] && getters[types.CHAPTER].pageCount || Infinity
+    if (page > pageCount && chapter < state.manga.chapterCount) {
+      ++chapter
+      page = 1
+    }
+    page = Math.min(pageCount, page)
     return {
       mangaId: state.manga && state.manga._id || 0,
-      chapter: getters[types.CHAPTER] && getters[types.CHAPTER]._id || 0,
-      page: state.currentPage + 1
+      chapter,
+      page
     }
   }
 }

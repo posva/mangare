@@ -151,7 +151,7 @@ export default {
     // private methods
     fixPage (mangaId, chapter) {
       const page = Math.min(
-        this.chapter && this.chapter.pageCount || Infinity,
+        this.pageCount || Infinity,
         Math.max(1, this.$route.params.page)
       )
       this.$router.replace({
@@ -188,6 +188,18 @@ export default {
   watch: {
     '$route.params.page' (page) {
       this.setCurrentPage(page)
+    },
+    '$route.params.chapter' (chapter, old) {
+      old = Number(old)
+      chapter = Number(chapter)
+      if (old !== chapter) {
+        this.fetchChapter({
+          mangaId: this.$route.params.mangaId,
+          chapter
+        }).then(() => {
+          this.fixPage(this.$route.params.mangaId, chapter)
+        })
+      }
     }
   },
 

@@ -74,6 +74,11 @@ export default {
         clearTimeout(timeout)
         this.imageReady = true
       }
+      img.onerror = () => {
+        clearTimeout(timeout)
+        this.imageReady = true
+        // TODO add error image
+      }
       img.src = url
 
       // TODO precache next 5 images
