@@ -24,7 +24,7 @@
             <p>Retrieving chapters...</p>
           </div>
         </div>
-        <Chapters v-else
+        <ChapterList v-else
                   ref="chapters"
                   :chapters="manga.chapters"
                   :current-preview="currentPreview"
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import Chapters from '../../components/Chapters'
+import ChapterList from '../ChapterList.vue'
 import Spinner from '../../components/Spinner'
 import { types } from '../module'
 import { mapGetters, mapActions } from 'vuex'
@@ -74,7 +74,7 @@ export default {
     },
     bannerStyle () {
       return {
-        'background-image': `url("${this.banner}")`,
+        backgroundImage: `url("${this.banner}")`,
         transform: `translate3d(0, ${this.imageOffset}px, 0)`
       }
     },
@@ -137,7 +137,7 @@ export default {
   },
 
   components: {
-    Chapters,
+    ChapterList,
     Spinner
   }
 }

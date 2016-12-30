@@ -57,11 +57,13 @@
 </template>
 
 <script>
-import ChapterActions from './ChapterActions'
-import Spinner from './Spinner'
+// import ChapterActions from './ChapterActions'
+import Spinner from 'src/components/Spinner.vue'
+import { FETCH_CHAPTER } from './module/types.js'
 import { mapActions } from 'vuex'
 
 export default {
+  name: 'ChapterList',
   props: {
     chapters: Array,
     currentPreview: Number
@@ -76,15 +78,9 @@ export default {
     }
   },
 
-  data () {
-    return {
-      loading: {}
-    }
-  },
-
   methods: {
     isLoading (index) {
-      return this.currentPreview === index && this.loading[index]
+      return this.currentPreview === index && !this.chapters[index].pages
     },
     isPreviewVisible (index) {
       return this.currentPreview === index
@@ -103,18 +99,21 @@ export default {
       }
     },
     togglePreview (index) {
-      this.$emit('current-preview',
-                 this.currentPreview === index ? -1 : index
+      this.$emit(
+        'current-preview',
+        this.currentPreview === index ? -1 : index
       )
     },
     formattedDate (date) {
       return this.$moment(date).calendar()
     },
-    ...mapActions(['fetchChapter'])
+    ...mapActions({
+      fetchChapter: FETCH_CHAPTER
+    })
   },
 
   components: {
-    ChapterActions,
+    // ChapterActions,
     Spinner
   },
 
@@ -123,12 +122,9 @@ export default {
       if (currentPreview !== old && currentPreview > -1) {
         // fetch the chapter if necessary
         if (this.chapters && !this.chapters[currentPreview].pages) {
-          /* Vue.set(this.loading, index, true) */
           this.fetchChapter({
             mangaId: this.$route.params.mangaId,
-            id: this.chapters[currentPreview]._id
-          }).then(() => {
-            this.loading[currentPreview] = false
+            chapter: this.chapters[currentPreview]._id
           })
         }
       }

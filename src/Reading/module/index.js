@@ -1,5 +1,6 @@
 import * as types from './types.js'
 import * as a from './actions.js'
+import Vue from 'vue'
 
 const state = {
   manga: null,
@@ -11,8 +12,17 @@ const mutations = {
   [types.SET_MANGA] (state, manga) {
     state.manga = manga
   },
-  [types.SET_CHAPTER] (state, chapter) {
+  [types.SET_CHAPTER] (state, { mangaId, chapter }) {
+    // TODO remove this
+    if (mangaId !== state.manga._id) return
     state.chapter = chapter
+    const chapters = state.manga.chapters
+    for (let i = 0, l = chapters.length; i < l; ++i) {
+      if (chapters[i]._id === chapter._id) {
+        Vue.set(chapters, i, chapter)
+        break
+      }
+    }
   },
   [types.SET_CURRENT_PAGE] (state, currentPage) {
     state.currentPage = Number(currentPage)

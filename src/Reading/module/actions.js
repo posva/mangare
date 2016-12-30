@@ -22,12 +22,16 @@ export function fetchManga ({ commit }, id) {
     })
 }
 
+// TODO don't fetch if already fetched
 export function fetchChapter ({ commit }, { mangaId, chapter }) {
   const chapters = fetchival(`/api/mangas/${mangaId}/chapters/${chapter}`)
   startRequest(commit)
   return chapters.get()
     .then((chapterData) => {
-      commit(types.SET_CHAPTER, chapterData)
+      commit(types.SET_CHAPTER, {
+        mangaId,
+        chapter: chapterData
+      })
       endRequest(commit)
     }).catch((err) => {
       console.error(err)
