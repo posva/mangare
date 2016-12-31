@@ -7,11 +7,11 @@
            @tap.prevent="handleTap"
            @swipeleft="$emit('next')"
            @swiperight="$emit('previous')"
+           @press="toggleOverlay"
   >
     <!-- :style="imageStyle" -->
-    <img tag="img"
+    <img v-if="pageUrl && imageReady"
          :src="pageUrl"
-         events="tap"v-if="pageUrl && imageReady"
          class="page-preview__image"
          title="Next Page"
     />
@@ -69,6 +69,8 @@ export default {
 
   methods: {
     handleTap (e) {
+      // Do nothing if loading
+      if (!this.imageReady) return
       if (this.$refs.container.$el === e.target) {
         this.$emit('exit')
       } else {

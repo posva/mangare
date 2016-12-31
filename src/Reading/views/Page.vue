@@ -199,7 +199,7 @@ export default {
   },
 
   beforeDestroy () {
-    document.removeEventListener('keyup', this.keyListener)
+    document.removeEventListener('keydown', this.keyListener)
   }
 }
 </script>
