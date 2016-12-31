@@ -9,13 +9,11 @@
            @swiperight="$emit('previous')"
   >
     <!-- :style="imageStyle" -->
-    <router-link v-if="pageUrl && imageReady"
-                 class="page-preview__image"
-                 :to="nextPageLink"
-                 title="Next Page"
-                 events="tap"
-                 tag="img"
-                 :src="pageUrl"
+    <img tag="img"
+         :src="pageUrl"
+         events="tap"v-if="pageUrl && imageReady"
+         class="page-preview__image"
+         title="Next Page"
     />
     <div v-else class="page-preview__loader">
       <div class="page-preview__loader-container">
@@ -66,7 +64,6 @@ export default {
     pageUrl: String,
     pageIndex: [Number, String],
     chapterIndex: [Number, String],
-    nextPageLink: Object,
     mangaLink: Object
   },
 
@@ -74,6 +71,8 @@ export default {
     handleTap (e) {
       if (this.$refs.container.$el === e.target) {
         this.$emit('exit')
+      } else {
+        this.$emit('next')
       }
     }
   },

@@ -3,7 +3,6 @@
                :page-index="currentPageIndex"
                :chapter-index="$route.params.chapter"
                :page-count="pageCount"
-               :next-page-link="nextPageLink"
                :manga-link="mangaLink"
                :manga="manga"
                @exit="returnToManga"
@@ -56,12 +55,6 @@ export default {
     }),
     pageCount () {
       return this.chapter && this.chapter.pageCount
-    },
-    nextPageLink () {
-      return {
-        name: 'page',
-        params: this.nextPageParams
-      }
     },
     mangaLink () {
       return {
@@ -143,7 +136,7 @@ export default {
           this.nextPage()
           break
         case ESC_KEY:
-          this.display = false
+          this.returnToManga()
           break
         default:
           break
@@ -168,8 +161,8 @@ export default {
   },
 
   mounted () {
-    this.keyupListener = this.handleKey.bind(this)
-    document.addEventListener('keyup', this.keyupListener)
+    this.keyListener = this.handleKey.bind(this)
+    document.addEventListener('keydown', this.keyListener)
 
     /* this.$el.hammer.get('pinch').set({ enable: true }) */
     /* this.$el.hammer.on('pinchmove', (event) => this.pinchmove(event)) */
@@ -206,7 +199,7 @@ export default {
   },
 
   beforeDestroy () {
-    document.removeEventListener('keyup', this.keyupListener)
+    document.removeEventListener('keyup', this.keyListener)
   }
 }
 </script>
