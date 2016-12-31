@@ -12,7 +12,6 @@ export const routes = [
   },
 
   {
-    name: 'chapter',
     path: '/manga/:mangaId/:chapter',
     component: Chapter,
     children: [
