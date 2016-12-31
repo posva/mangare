@@ -10,7 +10,7 @@
     <div class="manga-card__information">
       <p class="manga-card__information__chapters">{{ chapterCount }} Chapters</p>
       <div class="manga-card__information__updated-at">
-        <span>Updated {{ manga.updatedAt | moment('from') }}</span>
+        <span>Updated {{ manga.updatedAt | formattedDate }}</span>
         <button :disabled="!canRefresh" @click="refreshManga" class="manga-card__refresh-button">
           <img src="../assets/img/refresh-icon.png">
         </button>

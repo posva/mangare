@@ -18,7 +18,7 @@
               <a @click.prevent="togglePreview(cIndex)" href="#">{{ chapter.name }}</a>
             </td>
             <td class="chapter__row__page-count">{{ chapter.pageCount ? chapter.pageCount : '?' }}</td>
-            <td class="chapter__row__published" :title="formattedDate(chapter.date)">{{ chapter.date | moment('from') }}</td>
+            <td class="chapter__row__published" :title="formattedDate(chapter.date)">{{ chapter.date | formattedDate }}</td>
             <td class="chapter__row__actions">
               <!-- <chapter-actions :chapter="chapter"></chapter-actions> -->
             </td>
@@ -61,6 +61,7 @@
 import Spinner from 'src/components/Spinner.vue'
 import { FETCH_CHAPTER } from './module/types.js'
 import { mapActions } from 'vuex'
+import { formattedDate } from 'src/shared/utils.js'
 
 export default {
   name: 'ChapterList',
@@ -104,9 +105,7 @@ export default {
         this.currentPreview === index ? -1 : index
       )
     },
-    formattedDate (date) {
-      return this.$moment(date).calendar()
-    },
+    formattedDate,
     ...mapActions({
       fetchChapter: FETCH_CHAPTER
     })
