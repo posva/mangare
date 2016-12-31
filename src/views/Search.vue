@@ -18,7 +18,8 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import _ from 'lodash'
+import map from 'lodash/map'
+import take from 'lodash/take'
 import { filter as fuzzy } from 'fuzzy'
 import SearchBar from '../components/SearchBar'
 import MangaCard from '../components/MangaCard'
@@ -55,7 +56,7 @@ export default {
     },
     searchResults () {
       let results = fuzzy(this.searchQuery, this.mangaList, fuzzyOptions)
-      return _.map(_.take(results, 20)
+      return map(take(results, 20)
       , (manga) => {
         manga.original.highlighted = manga.string
         return manga.original

@@ -1,5 +1,5 @@
 import fetchival from 'fetchival'
-import _ from 'lodash'
+import find from 'lodash/find'
 import Pdf from '../../lib/jspdf'
 import { nextTick, timeout } from '../utils'
 
@@ -16,7 +16,7 @@ export function fetchMangaList ({ commit }) {
 }
 
 export function viewManga ({ commit, state }, id) {
-  commit('SET_MANGA', _.find(state.mangaList, { _id: id }))
+  commit('SET_MANGA', find(state.mangaList, { _id: id }))
   commit('START_REFRESH_MANGA', id)
   return mangas(id).get()
   .then((manga) => {
