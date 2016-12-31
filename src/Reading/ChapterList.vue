@@ -20,6 +20,7 @@
             <td class="chapter__row__page-count">{{ chapter.pageCount ? chapter.pageCount : '?' }}</td>
             <td class="chapter__row__published" :title="formattedDate(chapter.date)">{{ chapter.date | formattedDate }}</td>
             <td class="chapter__row__actions">
+              <button @click="downloadChapter(chapter._id)">Download</button>
               <!-- <chapter-actions :chapter="chapter"></chapter-actions> -->
             </td>
           </tr>
@@ -105,9 +106,18 @@ export default {
         this.currentPreview === index ? -1 : index
       )
     },
+    downloadChapter (chapterIndex) {
+      this.fetchChapter({
+        mangaId: this.$route.params.mangaId,
+        chapter: chapterIndex
+      }).then(
+        (chapter) => this.generatePdf(chapter)
+      )
+    },
     formattedDate,
     ...mapActions({
-      fetchChapter: FETCH_CHAPTER
+      fetchChapter: FETCH_CHAPTER,
+      generatePdf: 'downloadChapter'
     })
   },
 

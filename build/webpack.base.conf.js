@@ -34,6 +34,7 @@ module.exports = {
     fallback: [path.join(__dirname, '../node_modules')]
   },
   module: {
+    noParse: /node_modules\/jspdf\/dist\/jspdf\.debug\.js/,
     preLoaders: [
       {
         test: /\.vue$/,
