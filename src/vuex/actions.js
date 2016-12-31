@@ -1,6 +1,6 @@
 import fetchival from 'fetchival'
 import find from 'lodash/find'
-import Pdf from '../../lib/jspdf'
+import Pdf from 'jspdf'
 import { nextTick, timeout } from '../utils'
 
 const mangas = fetchival('/api/mangas')
@@ -53,11 +53,12 @@ export function setDownloadProgress ({ commit }, id, progress) {
   })
 }
 
-export function downloadChapter ({ commit }, { _id, pages, name }, downloadButton) {
+export function downloadChapter ({ commit }, { _id, pages, name }) {
   let imagesPromises = []
   let images = []
   const chapterId = `${name} ${_id}`
-  downloadButton.start()
+  chapterId
+  // downloadButton.start()
   let counter = 0
   const total = pages.length * 2
   pages.forEach((page, i) => {
@@ -73,14 +74,15 @@ export function downloadChapter ({ commit }, { _id, pages, name }, downloadButto
           const img = new Image()
           img.onload = () => {
             image.format = img.width > img.height ? ['a3', 'l'] : ['a4', 'p']
-            setDownloadProgress({ commit }, chapterId, ++counter / total)
+            console.log(++counter / total)
+            // setDownloadProgress({ commit }, chapterId, ++counter / total)
             resolve()
           }
           img.src = image.data
         })
       }).catch((err) => {
         commit('ERROR_REQUEST', err)
-        downloadButton.fail()
+        // downloadButton.fail()
       })
     )
   })
@@ -95,7 +97,8 @@ export function downloadChapter ({ commit }, { _id, pages, name }, downloadButto
         }
         pdf.addImage(image.data, 0, 0, image.format[1] === 'l' ? 420 : 210, 297)
 
-        setDownloadProgress({ commit }, chapterId, ++counter / total)
+        // setDownloadProgress({ commit }, chapterId, ++counter / total)
+        console.log(++counter / total)
         // using nextTick doesn't work
         return timeout(0)
       })
@@ -104,7 +107,7 @@ export function downloadChapter ({ commit }, { _id, pages, name }, downloadButto
       pdf.save(name + '.pdf')
     }).catch((err) => {
       commit('ERROR', err)
-      downloadButton.fail()
+      // downloadButton.fail()
     })
   })
 }

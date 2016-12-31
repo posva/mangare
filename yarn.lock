@@ -3696,7 +3696,7 @@ jsontoxml@0.0.11:
   version "0.0.11"
   resolved "https://registry.yarnpkg.com/jsontoxml/-/jsontoxml-0.0.11.tgz#373ab5b2070be3737a5fb3e32fd1b7b81870caa4"
 
-jspdf@^1.2.61:
+jspdf@^1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/jspdf/-/jspdf-1.3.2.tgz#c9b10e53d1dd0a989b901ac9867db48a93380390"
   dependencies:
