@@ -8,6 +8,7 @@
            @swipeleft="$emit('next')"
            @swiperight="$emit('previous')"
            @press="toggleOverlay"
+           :press-options="pressOptions"
   >
     <!-- :style="imageStyle" -->
     <img v-if="pageUrl && imageReady"
@@ -29,6 +30,25 @@
         >Go Back to {{ manga && manga.name }}</router-link>
       </div>
     </div>
+    <div class="page-preview__overlay"
+         v-if="displayOverlay"
+    >
+      <div class="page-preview__overlay__previous-page">
+        Swipe right / ←
+        <br/>
+        Go to previous page
+      </div>
+      <div class="page-preview__overlay__exit">
+        Tap outside / ESC
+        <br/>
+        Go back to the manga
+      </div>
+      <div class="page-preview__overlay__next-page">
+        Tap / Swipe Left / →
+        <br/>
+        Go to next page
+      </div>
+    </div>
   </v-touch>
   </div>
 </template>
@@ -42,7 +62,11 @@ export default {
 
   data () {
     return {
-      imageReady: true
+      imageReady: true,
+      displayOverlay: false,
+      pressOptions: {
+        time: 400
+      }
     }
   },
 
@@ -71,16 +95,24 @@ export default {
     handleTap (e) {
       // Do nothing if loading
       if (!this.imageReady) return
+      if (this.displayOverlay) {
+        this.displayOverlay = false
+        return
+      }
       if (this.$refs.container.$el === e.target) {
         this.$emit('exit')
       } else {
         this.$emit('next')
       }
+    },
+    toggleOverlay () {
+      this.displayOverlay = true
     }
   },
 
   watch: {
     pageUrl (url) {
+      this.displayOverlay = false
       // Use a timeout to prevent the image from appearing when
       // the connection is fast
       const timeout = setTimeout(() => this.imageReady = false, 180)
@@ -130,6 +162,35 @@ export default {
 
     &:hover {
       cursor: pointer;
+    }
+  }
+
+  &__overlay {
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: clear;
+    display: flex;
+    height: 100%;
+    justify-content: space-between;
+    margin: auto;
+    position: fixed;
+    font-size: 2rem;
+    width: 100%;
+
+    & > div {
+      margin: 0.5rem;
+    }
+
+    &__previous-page {
+      text-align: left;
+    }
+
+    &__next-page {
+      text-align: right;
+    }
+
+    &__exit {
+      text-align: center;
     }
   }
 
