@@ -1,9 +1,13 @@
 <template>
   <!-- :style="style" -->
   <!-- @click="handleClick" -->
-  <div class="page-preview"
-       ref="container"
-       @click="handleClick"
+  <v-touch class="page-preview"
+           tag="div"
+           ref="container"
+           @click="handleClick"
+           @tap="$emit('next')"
+           @swipeleft="$emit('next')"
+           @swiperight="$emit('previous')"
   >
     <!-- :style="imageStyle" -->
     <router-link v-if="pageUrl && imageReady"
@@ -25,11 +29,12 @@
         >Go Back to {{ manga && manga.name }}</router-link>
       </div>
     </div>
+  </v-touch>
   </div>
 </template>
 
 <script>
-import Spinner from '../components/Spinner.vue'
+import Spinner from 'src/components/Spinner.vue'
 
 export default {
   name: 'PagePreview',
