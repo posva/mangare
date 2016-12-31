@@ -4,8 +4,7 @@
   <v-touch class="page-preview"
            tag="div"
            ref="container"
-           @click="handleClick"
-           @tap="$emit('next')"
+           @tap.prevent="handleTap"
            @swipeleft="$emit('next')"
            @swiperight="$emit('previous')"
   >
@@ -14,6 +13,7 @@
                  class="page-preview__image"
                  :to="nextPageLink"
                  title="Next Page"
+                 events="tap"
                  tag="img"
                  :src="pageUrl"
     />
@@ -25,6 +25,8 @@
         <img class="page-preview__loader__manga-image"
              :alt="manga && manga.name"
              :src="manga && manga.image"/>
+        <p class="page-preview__loader__text"
+        >{{ chapterMessage }}</p>
         <router-link :to="mangaLink"
         >Go Back to {{ manga && manga.name }}</router-link>
       </div>
@@ -49,6 +51,12 @@ export default {
   computed: {
     loadingPageMessage () {
       return `Loading page ${this.pageIndex}/${this.pageCount || '?'}`
+    },
+    chapterMessage () {
+      return `Chapter ${this.chapterIndex}/${this.chapterCount}`
+    },
+    chapterCount () {
+      return this.manga && this.manga.chapterCount || '?'
     }
   },
 
@@ -57,13 +65,14 @@ export default {
     pageCount: [Number, String],
     pageUrl: String,
     pageIndex: [Number, String],
+    chapterIndex: [Number, String],
     nextPageLink: Object,
     mangaLink: Object
   },
 
   methods: {
-    handleClick ({ target }) {
-      if (this.$refs.container === target) {
+    handleTap (e) {
+      if (this.$refs.container.$el === e.target) {
         this.$emit('exit')
       }
     }

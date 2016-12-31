@@ -1,6 +1,7 @@
 <template>
   <PagePreview :page-url="currentPage"
                :page-index="currentPageIndex"
+               :chapter-index="$route.params.chapter"
                :page-count="pageCount"
                :next-page-link="nextPageLink"
                :manga-link="mangaLink"
