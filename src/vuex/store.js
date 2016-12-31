@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import _ from 'lodash'
+import find from 'lodash/find'
 
 import * as getters from './getters'
 import * as actions from './actions'
@@ -49,7 +49,7 @@ export const mutations = {
   },
   UPDATE_MANGA (state, mangaData) {
     if (!state.mangaList.length) return
-    let manga = _.find(state.mangaList, { _id: mangaData._id })
+    let manga = find(state.mangaList, { _id: mangaData._id })
     ;['image', 'name', 'description', 'updatedAt', 'completed', 'uri', 'chapterCount']
     .forEach((key) => {
       if (mangaData[key] !== undefined) {

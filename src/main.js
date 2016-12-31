@@ -1,13 +1,14 @@
 import 'whatwg-fetch'
+import 'intl'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import VueMoment from 'vue-moment'
 import VueLazyload from 'vue-lazyload'
 // import VueProgressbar from 'vue-progressbar'
 // import VueTransferDom from 'vue-transfer-dom'
 import VueTouch from './Touch/VueTouch.js'
 // import configRouter from './config-router'
 import store from './vuex/store'
+import { formattedDate } from './shared/utils.js'
 // import { sync } from 'vuex-router-sync'
 // import { heightToggle } from './transitions'
 
@@ -22,9 +23,9 @@ Vue.use(VueRouter)
 // TODO sync vuex vue-router
 // Vue.use(VueProgressbar)
 // Vue.use(VueTransferDom)
-Vue.use(VueMoment)
 Vue.use(VueTouch)
 // Vue.transition('height-toggle', heightToggle)
+Vue.filter('formattedDate', formattedDate)
 
 /* eslint-disable no-new */
 new Vue({
