@@ -6,6 +6,8 @@
                :manga-link="mangaLink"
                :manga="manga"
                @exit="returnToManga"
+               @previous="previousPage"
+               @next="nextPage"
   />
     <!-- v-touch:swipeleft="nextPage" -->
     <!-- v-touch:swiperight="previousPage" -->
@@ -89,7 +91,6 @@ export default {
   data () {
     return {
       display: false,
-      currentPage: 0,
       scaling: false,
       scale: 1
     }
