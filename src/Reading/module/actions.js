@@ -2,10 +2,9 @@ import fetchival from 'fetchival'
 import * as types from './types.js'
 import {
   startRequest,
+  failRequest,
   endRequest
 } from 'src/shared/utils'
-startRequest
-endRequest
 
 const mangas = fetchival('/api/mangas')
 
@@ -17,10 +16,10 @@ export function fetchManga ({ commit, state }, id) {
   return mangas(id).get()
     .then(manga => {
       commit(types.SET_MANGA, manga)
-      endRequest(commit)
+      failRequest(commit)
     }).catch(err => {
       console.error(err)
-      endRequest(commit)
+      failRequest(commit)
       // commit('ERROR_REQUEST', err)
     })
 }
@@ -46,7 +45,7 @@ export function fetchChapter ({ commit, state, getters }, { mangaId, chapter }) 
       return chapterData
     }).catch((err) => {
       console.error(err)
-      endRequest(commit)
+      failRequest(commit)
       // commit('ERROR_REQUEST', err)
     })
 }

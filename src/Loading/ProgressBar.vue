@@ -1,6 +1,8 @@
 <template>
   <div class="pb"
+       :class="classes"
        :style="style"
+       @transitionend="resetFailed"
   ></div>
 </template>
 
@@ -22,12 +24,18 @@ export default {
 
   computed: {
     ...mapGetters({
-      pendingRequests: types.PENDING_REQUESTS
+      pendingRequests: types.PENDING_REQUESTS,
+      failed: types.FAILED
     }),
     style () {
       return {
         opacity: +(!!this.pendingRequests || this.disappearing),
         width: `${Math.round(100 * this.progress)}%`
+      }
+    },
+    classes () {
+      return {
+        'pb--failed': this.failed
       }
     },
     progress () {
@@ -51,6 +59,11 @@ export default {
       if (this.currentProgress < maxProgress * this.pendingRequests) {
         this.currentProgress += increment
         setTimeout(() => this.increment(), incrementDelay)
+      }
+    },
+    resetFailed ({ propertyName }) {
+      if (this.failed && propertyName === 'opacity') {
+        this.$store.commit(types.SET_FAILED_STATE, false)
       }
     }
   },
@@ -76,18 +89,19 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
+<style scoped>
 .pb {
   position: fixed;
   z-index: 50;
   top: 0;
   left: 0;
   height: 4px;
-  transition: width ease-out .2s, opacity .6s;
+  transition: width ease-out 0.2s, opacity 0.6s;
   background-color: #20a1ff;
 
-  &--fail {
+  &--failed {
     background-color: #dc0707;
+    transition: width ease-out 0.2s, opacity 3.6s;
   }
 }
 </style>
