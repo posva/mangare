@@ -16,7 +16,7 @@ export function fetchManga ({ commit, state }, id) {
   return mangas(id).get()
     .then(manga => {
       commit(types.SET_MANGA, manga)
-      failRequest(commit)
+      endRequest(commit)
     }).catch(err => {
       console.error(err)
       failRequest(commit)
