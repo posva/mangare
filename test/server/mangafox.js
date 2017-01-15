@@ -1,48 +1,40 @@
 /* global describe it before :true */
-'use strict'
 const should = require('should')
 const nock = require('nock')
 const path = require('path')
 
-const mangareader = require('../../server/providers/mangareader.js')
+const mangafox = require('../../server/providers/mangafox.js')
 
 const mangaFromList = {
   name: 'Naruto',
-  uri: '/naruto',
-  completed: true
+  uri: '/read-manga/naruto',
+  completed: null
 }
 const chapterFromList = {
   _id: 1,
-  uri: '/naruto/1',
-  name: 'Uzumaki Naruto (1)'
+  uri: '/read-manga/naruto/naruto-0-v01',
+  name: 'Naruto 0 vol 1 : Naruto Pilot Manga'
 }
 
-describe('Providers', () => {
+describe('Mangafox.site', () => {
   before(() => {
-    nock(mangareader.host)
-    .get('/alphabetical')
-    .replyWithFile(200, path.join(__dirname, './fixtures/mangareader/list.html'))
+    nock(mangafox.host)
+    .get('/list')
+    .replyWithFile(200, path.join(__dirname, './fixtures/mangafox/list.html'))
 
-    nock(mangareader.host)
+    nock(mangafox.host)
     .get(mangaFromList.uri)
-    .replyWithFile(200, path.join(__dirname, './fixtures/mangareader/naruto.html'))
+    .replyWithFile(200, path.join(__dirname, './fixtures/mangafox/naruto.html'))
 
-    nock(mangareader.host)
+    nock(mangafox.host)
     .get(chapterFromList.uri)
-    .replyWithFile(200, path.join(__dirname, './fixtures/mangareader/naruto-1.html'))
-
-    // All pages
-    for (let i = 1; i < 54; ++i) {
-      nock(mangareader.host)
-      .get(`${chapterFromList.uri}/${i}`)
-      .replyWithFile(200, path.join(__dirname, `./fixtures/mangareader/naruto-${i}.html`))
-    }
+    .replyWithFile(200, path.join(__dirname, './fixtures/mangafox/naruto-0.html'))
   })
 
   it('should get the list of mangas', done => {
-    mangareader.getList()
+    mangafox.getList()
     .then(list => {
-      list.should.have.length(4094)
+      list.should.have.length(126)
       let manga = list[0]
       manga.should.have.property('name')
       manga.should.have.property('uri')
@@ -53,15 +45,15 @@ describe('Providers', () => {
   })
 
   it('should get a specific manga', done => {
-    mangareader.getManga(mangaFromList)
+    mangafox.getManga(mangaFromList)
     .then(manga => {
       manga.should.have.property('name', 'Naruto')
-      manga.should.have.property('alternate', '???,Naruto')
+      manga.should.have.property('alternate', '火影忍者, 狐忍, นินจาคาถาโอ้โฮเฮะ, 나루토, NARUTO―ナルト―, Naruto Shippuden')
       manga.should.have.property('chapters')
       manga.should.have.property('description')
-      manga.description.should.match(/a great demon/)
-      manga.should.have.property('image', 'http://s3.mangareader.net/cover/naruto/naruto-l0.jpg')
-      manga.chapters.should.have.length(700)
+      manga.description.should.match(/Nine-tailed Demon Fox /)
+      manga.should.have.property('image', 'http://images.gogomanga.me/naruto/naruto.jpg')
+      manga.chapters.should.have.length(746)
       manga.chapters.forEach(chapter => {
         chapter.should.have.property('_id')
         chapter.should.have.property('uri')
@@ -75,7 +67,7 @@ describe('Providers', () => {
   })
 
   it('should get a specific chapter', done => {
-    mangareader.getPages(chapterFromList)
+    mangafox.getPages(chapterFromList)
     .then(pages => {
       pages.forEach(page => {
         page.should.have.property('uri')
