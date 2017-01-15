@@ -17,7 +17,7 @@ const chapterFromList = {
   name: 'Uzumaki Naruto (1)'
 }
 
-describe('Providers', () => {
+describe('Mangareader.net', () => {
   before(() => {
     nock(mangareader.host)
     .get('/alphabetical')
