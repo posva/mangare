@@ -5,7 +5,7 @@
   "author": "Eduardo San Martin Morote <posva13@gmail.com>",
   "index": "server/index.js",
   "engines": {
-    "node": "6.11.1"
+    "node": "8.x.x"
   },
   "private": true,
   "scripts": {
