@@ -11,6 +11,10 @@ process.env.PORT = process.env.PORT || 8080
 const app = express()
 app.use(compression())
 
+app.get('/.well-known/acme-challenge/:content', function(req, res) {
+  res.send('efZ8jWwebW50V7Bd43YIfm2Y5CzzjomYcrOqXX1DpXk.zyqwDXTmdGEMY_zA-s6gOF0uw1SNcAnFFDl0FuVsL-8')
+})
+
 app.get('/api/mangas', api.mangaList)
 app.get('/api/mangas/:id/chapters/:chapterId', api.mangaChapter)
 app.get('/api/mangas/:id', api.manga)
